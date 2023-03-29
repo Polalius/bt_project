@@ -15,4 +15,6 @@ type Employee struct {
 	User   User
 	RoleID		*uint
 	Role		Role
+	
+	LeaveList []LeaveList `gorm:"foreignKey:EmployeeID"`
 }

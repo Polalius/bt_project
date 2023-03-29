@@ -38,12 +38,22 @@ func main() {
 	r.Use(CORSMiddleware())
 
 	r.GET("/users", controller.ListUser)
+
+
 	r.GET("/employeeId/:id", controller.GetEmployeeByUserID)
-	
-
 	r.GET("/employees", controller.ListEmployee)
+	r.GET("/employeeID/:id", controller.GetEmployee)
 
+
+	r.GET("/leavelists", controller.ListLeaveList)
+	r.GET("/leavelistempid/:id", controller.ListLeaveListByEmpID)
+
+	r.GET("/leavetypes", controller.ListLeaveType)
 	
+
+	r.GET("/manager/:id", controller.GetManager)
+
+	r.POST("/leavelists", controller.CreateLeaveList)
 	r.POST("/signin", controller.Signin)
 	r.GET("/valid", controller.Validation)
 	r.Run()

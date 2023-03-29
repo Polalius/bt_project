@@ -8,10 +8,10 @@ import (
 
 type LeaveType struct {
 	gorm.Model
-	NameType   string
+	TypeName   string
 	Information string
 
-	LeaveList []LeaveList `gorm:"foreignKey:Leave_TypeID"`
+	LeaveList []LeaveList `gorm:"foreignKey:LeaveTypeID"`
 }
 type LeaveList struct {
 	gorm.Model
@@ -21,5 +21,7 @@ type LeaveList struct {
 	LeaveType   LeaveType
 	StartTime   time.Time
 	StopTime    time.Time
+	ManagerID	*uint
+	Manager		Manager
 	Status       string
 }

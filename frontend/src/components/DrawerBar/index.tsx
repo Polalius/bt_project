@@ -18,10 +18,10 @@ export default function DrawerBar({ role, drawerWidth, handleDrawerClose, open, 
         var menu: any[] = [
             { "text": "หน้าแรก", "icon": <HomeIcon />, "link": "/"},
         ];
-        if (role === "admin") {
+        if (role === "employee") {
             menu = [
                 { "text": "A", "icon": <InboxIcon />, "link": "/"},
-                { "text": "B", "icon": <InboxIcon />, "link": "/dashboard"},
+                { "text": "B", "icon": <InboxIcon />, "link": "/show"},
                 { "text": "C", "icon": <InboxIcon />, "link": "/localdashboard"},
             ]
         } else if (role === "trainer") {
@@ -65,7 +65,7 @@ export default function DrawerBar({ role, drawerWidth, handleDrawerClose, open, 
                 </DrawerHeader>
                 <Divider />
                 <List>
-                    Listitemlink()
+                    {Listitemlink()}
                 </List>
             </Drawer>
     )

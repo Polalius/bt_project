@@ -8,12 +8,14 @@ import { Box } from '@mui/system';
 import Navbar from './components/NavBar';
 import DrawerBar from './components/DrawerBar';
 import Home from './components/Home';
+import Show from './components/Employee/show';
+import Form from './components/Employee/form';
 const drawerWidth = 240;
 function App() {
   const theme = createTheme({
     palette: {
       primary: {
-        main: "#FF8F8F",
+        main: "#C0C0C0",
       },
       secondary: {
         main: "#8FCCB6"
@@ -112,9 +114,14 @@ function App() {
             
             <Main open={open}>
               <DrawerHeader />
-              <Routes>
-                <Route path="/" element={<Home role={role} />} />
-                {role === "employee" && <Route path='/Home' element={<Home/>} />}
+              <Routes>{role === "employee" && (
+                <>
+                  <Route path='/' element={<Home role={role}/>} />
+                  <Route path="/show" element={<Show  />} />
+                  <Route path="/form" element={<Form  />} />
+                  
+                </>
+              )} 
               </Routes>
             </Main>
 

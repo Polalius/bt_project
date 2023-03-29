@@ -1,4 +1,5 @@
 import { EmployeeInterface } from "./IEmployee";
+import { ManagerInterface } from "./IManager";
 
 export interface LeaveTypeInterface{
     ID?: number;
@@ -10,8 +11,10 @@ export interface LeaveInterface{
     EmployeeID?: number;
     EmployeeInterface?: EmployeeInterface;
     LeaveTypeID?: number;
-    LeaveTypeInterface?: LeaveTypeInterface
-    StartTime?:  Date
-	StopTime?:    Date
+    LeaveTypeInterface?: LeaveTypeInterface;
+    StartTime?:  Date;
+	StopTime?:    Date;
+    ManagerID?: number;
+    ManagerInterface?: ManagerInterface;
     Status?: string;
 }

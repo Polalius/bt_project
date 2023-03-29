@@ -96,7 +96,7 @@ func CreateEmployee(c *gin.Context) {
 func GetEmployeeByUserID(c *gin.Context) {
 	var employee entity.Employee
 	id := c.Param("id")
-	if err := entity.DB().Raw("SELECT * FROM employees WHERE user_id = ?", id).Scan(&employee).Error; err != nil {
+	if err := entity.DB().Preload("Manager").Preload("User").Preload("Role").Raw("SELECT * FROM employees WHERE user_id = ?", id).Scan(&employee).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}

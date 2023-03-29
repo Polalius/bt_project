@@ -74,12 +74,12 @@ func SutupDatabase() {
 
 	///////////////
 	l_type1 := LeaveType{
-		NameType:   "ลาป่วย",
+		TypeName:   "ลาป่วย",
 		Information: "---------",
 	}
 
 	l_type2 := LeaveType{
-		NameType:   "ลากิจ",
+		TypeName:   "ลากิจ",
 		Information: "---------",
 	}
 	db.Model(&LeaveType{}).Create(&l_type1)
@@ -120,6 +120,7 @@ func SutupDatabase() {
 		LeaveType: l_type1,
 		StartTime: time.Now(),
 		StopTime:  time.Now(),
+		Manager: man1,
 		Status: "รอพิจารณา",
 	}
 	db.Model(&LeaveList{}).Create(&list1)
@@ -128,6 +129,7 @@ func SutupDatabase() {
 		LeaveType: l_type2,
 		StartTime: time.Now(),
 		StopTime:  time.Now(),
+		Manager: man1,
 		Status: "รอพิจารณา",
 	}
 	db.Model(&LeaveList{}).Create(&list2)

@@ -43,10 +43,9 @@ export default function Signin(){
             .then((res) => {
                 if (res.data) {
                     setSuccess(true);
-                    // console.log(res.data)
                     localStorage.setItem("token", res.data.Token)
-                    localStorage.setItem("lid", res.data.user_id)
-                    localStorage.setItem("uid", res.data.emp_id)
+                    localStorage.setItem("uid", res.data.user_id)
+                    localStorage.setItem("eid", res.data.emp_id)
                     localStorage.setItem("role", res.data.role_name)
                     window.location.reload()
                 } else {
@@ -111,7 +110,7 @@ export default function Signin(){
                             <Button
                                 fullWidth
                                 variant="contained"
-                                style={{ backgroundColor: "#FF8F8F", color: "#F4F6F6" }}
+                                style={{ backgroundColor: "#7484AD", color: "#F4F6F6" }}
                                 className='submit'
                                 onClick={login}>
                                 Sign In

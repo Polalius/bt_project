@@ -84,6 +84,7 @@ func CreateLeaveList(c *gin.Context) {
 	var employees entity.Employee
 	var l_type entity.LeaveType
 	var leavelists entity.LeaveList
+	var manager entity.Manager
 
 	// ผลลัพธ์ที่ได้จากขั้นตอนที่  จะถูก bind เข้าตัวแปร leavelists
 	if err := c.ShouldBindJSON(&leavelists); err != nil {
@@ -104,12 +105,18 @@ func CreateLeaveList(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "leave type not found"})
 		return
 	}
+	// ค้นหา leave type ด้วย id
+	if tx := entity.DB().Where("id = ?", leavelists.ManagerID).First(&manager); tx.RowsAffected == 0 {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "manager not found"})
+		return
+	}
 	// 12: สร้าง leave_list
 	l_list := entity.LeaveList{
 		Employee:   employees,             // โยงความสัมพันธ์กับ Entity Employee
 		LeaveType: l_type,                // โยงความสัมพันธ์กับ Entity Leave type
 		StartTime: leavelists.StartTime, // ตั้งค่าฟิลด์ Start_time
 		StopTime:  leavelists.StopTime,  // ตั้งค่าฟิลด์ Stop_time
+		Manager: manager,
 		Status:     leavelists.Status,     // ตั้งค่าฟิลด์ Status
 	}
 	// ขั้นตอนการ validate
@@ -130,7 +137,7 @@ func CreateLeaveList(c *gin.Context) {
 func GetLeaveList(c *gin.Context) {
 	var leavelist entity.LeaveList
 	id := c.Param("id")
-	if err := entity.DB().Preload("Employee").Preload("Manager").Preload("Leave_Type").Raw("SELECT * FROM leave_lists WHERE id = ?", id).Find(&leavelist).Error; err != nil {
+	if err := entity.DB().Preload("Employee").Preload("Manager").Preload("LeaveType").Raw("SELECT * FROM leave_lists WHERE id = ?", id).Find(&leavelist).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
@@ -140,7 +147,19 @@ func GetLeaveList(c *gin.Context) {
 // LIST /leave_list
 func ListLeaveList(c *gin.Context) {
 	var leavelists []entity.LeaveList
-	if err := entity.DB().Preload("Employee").Preload("Manager").Preload("Leave_Type").Raw("SELECT * FROM leave_lists").Find(&leavelists).Error; err != nil {
+	
+	if err := entity.DB().Preload("Employee").Preload("Manager").Preload("LeaveType").Raw("SELECT * FROM leave_lists").Find(&leavelists).Error; err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"data": leavelists})
+}
+// LIST /leave_list
+func ListLeaveListByEmpID(c *gin.Context) {
+	var leavelists []entity.LeaveList
+	emp_id := c.Param("id")
+	if err := entity.DB().Preload("Employee").Preload("Manager").Preload("LeaveType").Raw("SELECT * FROM leave_lists WHERE employee_id = ?", emp_id).Find(&leavelists).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
