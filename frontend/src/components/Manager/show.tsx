@@ -9,7 +9,7 @@ import { LeaveInterface } from '../../models/ILeave';
 
 import { GetEmployeeID, ListLeaveListByEmpID } from '../../services/HttpClientService';
 
-function EmployeeShow(){
+function ManagerShow(){
 
     const [leavelist, setLeavelist] = useState<LeaveInterface[]>([])
     const [emp, setEmp] = useState<EmployeeInterface>();
@@ -30,10 +30,10 @@ function EmployeeShow(){
     }
 
     useEffect(() => {    
-        setLeavelist(JSON.parse(localStorage.getItem("uid") || ""));
+        setLeavelist(JSON.parse(localStorage.getItem("eid") || ""));
         
-        getLeaveList(JSON.parse(localStorage.getItem("uid") || ""));
-        getEmployeeID(JSON.parse(localStorage.getItem("uid") || ""))
+        getLeaveList(JSON.parse(localStorage.getItem("eid") || ""));
+        getEmployeeID(JSON.parse(localStorage.getItem("eid") || ""))
     }, []);
 
     const columns: GridColDef[] = [
@@ -108,4 +108,4 @@ function EmployeeShow(){
         </div>
     )
 }
-export default EmployeeShow
+export default ManagerShow

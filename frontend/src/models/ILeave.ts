@@ -1,3 +1,4 @@
+import dayjs, { Dayjs } from "dayjs";
 import { EmployeeInterface } from "./IEmployee";
 import { ManagerInterface } from "./IManager";
 
@@ -12,8 +13,8 @@ export interface LeaveInterface{
     EmployeeInterface?: EmployeeInterface;
     LeaveTypeID?: number;
     LeaveTypeInterface?: LeaveTypeInterface;
-    StartTime?:  Date;
-	StopTime?:    Date;
+    StartTime?:  Dayjs | null;
+	StopTime?:    Dayjs | null;
     ManagerID?: number;
     ManagerInterface?: ManagerInterface;
     Status?: string;

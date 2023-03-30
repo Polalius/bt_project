@@ -54,18 +54,22 @@ func SutupDatabase() {
 	userEmp1 := User{
 		UserName: "Employee1",
 		Password: string(pw),
+		Role: emp,
 	}
 	userEmp2 := User{
 		UserName: "Employee2",
 		Password: string(pw),
+		Role: emp,
 	}
 	userMan := User{
 		UserName: "Manager",
 		Password: string(pw),
+		Role: man,
 	}
 	userPay := User{
 		UserName: "Payroll",
 		Password: string(pw),
+		Role: pay,
 	}
 	db.Model(&User{}).Create(&userEmp1)
 	db.Model(&User{}).Create(&userEmp2)

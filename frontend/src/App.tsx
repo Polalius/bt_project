@@ -1,15 +1,18 @@
 import React, { useEffect } from 'react';
-import logo from './logo.svg';
-import './App.css';
-import Signin from './components/Signin';
-import { createTheme, CssBaseline, styled, ThemeProvider } from '@mui/material';
 import { BrowserRouter as Router, NavLink, Route, Routes } from 'react-router-dom';
+
+import './App.css';
+
+import { createTheme, CssBaseline, styled, ThemeProvider } from '@mui/material';
 import { Box } from '@mui/system';
+
+import Signin from './components/Signin';
 import Navbar from './components/NavBar';
 import DrawerBar from './components/DrawerBar';
 import Home from './components/Home';
-import Show from './components/Employee/show';
 import Form from './components/Employee/form';
+import EmployeeShow from './components/Employee/show';
+import ManagerShow from './components/Manager/show';
 const drawerWidth = 240;
 function App() {
   const theme = createTheme({
@@ -79,6 +82,7 @@ function App() {
     console.log(statustoken)
     return <Signin />
   }
+
   const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open'})<{ open?: Boolean; }>(({theme, open}) => ({
     flexGrow: 1,
     padding: theme.spacing(3),
@@ -102,7 +106,8 @@ function App() {
 
     ...theme.mixins.toolbar,
     justifyContent: 'flex-end',
-}));
+  }));
+
   return (
       <ThemeProvider theme={theme}>
       <Router>
@@ -117,11 +122,17 @@ function App() {
               <Routes>{role === "employee" && (
                 <>
                   <Route path='/' element={<Home role={role}/>} />
-                  <Route path="/show" element={<Show  />} />
+                  <Route path="/show" element={<EmployeeShow  />} />
                   <Route path="/form" element={<Form  />} />
+                  <Route path="/managershow" element={<ManagerShow  />} />
                   
                 </>
-              )} 
+              )}{role === "manager" && (
+                <>
+                  <Route path='/' element={<Home role={role}/>} />
+                  <Route path="/managershow" element={<ManagerShow  />} />
+                </>
+              )}
               </Routes>
             </Main>
 

@@ -166,7 +166,17 @@ func ListLeaveListByEmpID(c *gin.Context) {
 
 	c.JSON(http.StatusOK, gin.H{"data": leavelists})
 }
+// LIST /leave_list
+func ListLeaveListByManID(c *gin.Context) {
+	var leavelists []entity.LeaveList
+	man_id := c.Param("id")
+	if err := entity.DB().Preload("Employee").Preload("Manager").Preload("LeaveType").Raw("SELECT * FROM leave_lists WHERE manager_id = ?", man_id).Find(&leavelists).Error; err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
 
+	c.JSON(http.StatusOK, gin.H{"data": leavelists})
+}
 // DELETE /leave_list/:id
 func DeleteLeaveListByID(c *gin.Context) {
 	id := c.Param("id")

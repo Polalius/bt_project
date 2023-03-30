@@ -77,6 +77,25 @@ async function ListLeaveList() {
   
     return res;
   }
+  async function ListLeaveListByManID(id:any) {
+    const requestOptions = {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+        "Content-Type": "application/json",
+      },
+    };
+  
+    let res = await fetch(`${apiUrl}/leavelistmanid/${id}`, requestOptions)
+      .then((response) => response.json())
+      .then((res) => {
+        if (res) {
+          return res;
+        } 
+      });
+  
+    return res;
+  }
   async function GetEmployeeByUID(id:any) {
     const requestOptions = {
       method: "GET",
@@ -143,7 +162,7 @@ async function ListLeaveList() {
       },
     };
   
-    let res = await fetch(`${apiUrl}/employeeId/${id}`, requestOptions)
+    let res = await fetch(`${apiUrl}/manager/${id}`, requestOptions)
       .then((response) => response.json())
       .then((res) => {
         if (res.data) {
@@ -157,6 +176,7 @@ async function ListLeaveList() {
     ListLeaveList,
     ListLeaveType,
     ListLeaveListByEmpID,
+    ListLeaveListByManID,
     GetEmployeeByUID,
     CreateLeavaList,
     ListEmployee,

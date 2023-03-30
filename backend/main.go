@@ -47,6 +47,7 @@ func main() {
 
 	r.GET("/leavelists", controller.ListLeaveList)
 	r.GET("/leavelistempid/:id", controller.ListLeaveListByEmpID)
+	r.GET("/leavelistmanid/:id", controller.ListLeaveListByManID)
 
 	r.GET("/leavetypes", controller.ListLeaveType)
 	

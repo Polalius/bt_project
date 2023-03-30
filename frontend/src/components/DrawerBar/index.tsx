@@ -22,15 +22,14 @@ export default function DrawerBar({ role, drawerWidth, handleDrawerClose, open, 
             menu = [
                 { "text": "A", "icon": <InboxIcon />, "link": "/"},
                 { "text": "B", "icon": <InboxIcon />, "link": "/show"},
-                { "text": "C", "icon": <InboxIcon />, "link": "/localdashboard"},
+                { "text": "C", "icon": <InboxIcon />, "link": "/managershow"},
             ]
-        } else if (role === "trainer") {
+        } else if (role === "manager") {
             menu = [
                 ...menu,
-                { "text": "ระบบโปรแกรมออกกำลังกาย", "icon": <InboxIcon />, "link": "/eplist/Home"},
-                { "text": "บันทึกโปรแกรม", "icon": <InboxIcon />, "link": "/eplist/program"},
+                { "text": "manager", "icon": <InboxIcon />, "link": "/managershow"},
             ]
-        }
+        } 
         const navigator = useNavigate();
         return (
             menu.map((data, index) => (
