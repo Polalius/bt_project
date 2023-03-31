@@ -14,10 +14,16 @@ type LoginPayload struct {
 	Password string `json:"password"`
 }
 
-type LoginResponse struct {
+type EmployeeResponse struct {
 	Token    string
 	UserID   uint   `json:"user_id"`
-	EmpID    uint   `json:"emp_id"`
+	EmpID    uint   `json:"p_id"`
+	RoleName string `json:"role_name"`
+}
+type ManagerResponse struct {
+	Token    string
+	UserID   uint   `json:"user_id"`
+	ManID    uint   `json:"p_id"`
 	RoleName string `json:"role_name"`
 }
 
@@ -26,7 +32,6 @@ func Signin(c *gin.Context) {
 	var payload LoginPayload
 	var login entity.User
 	var role entity.Role
-	var employee entity.Employee
 
 	if err := c.ShouldBindJSON(&payload); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
@@ -46,14 +51,8 @@ func Signin(c *gin.Context) {
 		return
 	}
 
-	//ค้นหา Employee Role ID ด้วย login_id
-	if err := entity.DB().Raw("SELECT * FROM employees WHERE user_id = ?", login.ID).Scan(&employee).Error; err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
-	}
-
 	//ค้นหา Role ด้วย role_id
-	if err := entity.DB().Raw("SELECT * FROM roles WHERE id = ?", employee.RoleID).Scan(&role).Error; err != nil {
+	if err := entity.DB().Raw("SELECT * FROM roles WHERE id = ?", login.RoleID).Scan(&role).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
@@ -69,15 +68,36 @@ func Signin(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "error signing token"})
 		return
 	}
-
-	tokenResponse := LoginResponse{
-		Token:    signedToken,
-		UserID:   login.ID,
-		EmpID:    employee.ID,
-		RoleName: role.Name,
+	if role.Name == "employee"{
+		var emp entity.Employee
+		if tx := entity.DB().
+			Raw("SELECT * FROM employees WHERE user_id = ?", login.ID).Find(&emp); tx.RowsAffected == 0 {
+			c.JSON(http.StatusBadRequest, gin.H{"error": "employees not found"})
+			return
+		}
+		tokenResponse := EmployeeResponse{
+			Token:    signedToken,
+			UserID:   login.ID,
+			EmpID: emp.ID,
+			RoleName: role.Name,
+		}
+		c.JSON(http.StatusOK, gin.H{"data": tokenResponse})
+	}else if role.Name == "manager"{
+		var man entity.Manager
+		if tx := entity.DB().
+			Raw("SELECT * FROM managers WHERE user_id = ?", login.ID).Find(&man); tx.RowsAffected == 0 {
+			c.JSON(http.StatusBadRequest, gin.H{"error": "managers not found"})
+			return
+		}
+		tokenResponse := ManagerResponse{
+			Token:    signedToken,
+			UserID:   login.ID,
+			ManID: man.ID,
+			RoleName: role.Name,
+		}
+		c.JSON(http.StatusOK, gin.H{"data": tokenResponse})
 	}
-	// fmt.Print(tokenResponse)
-	c.JSON(http.StatusOK, gin.H{"data": tokenResponse})
+	
 }
 
 // GET /valid

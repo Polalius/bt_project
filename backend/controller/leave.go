@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/Polalius/bt_project/entity"
@@ -177,6 +178,28 @@ func ListLeaveListByManID(c *gin.Context) {
 
 	c.JSON(http.StatusOK, gin.H{"data": leavelists})
 }
+// LIST /leave_list status wait
+func ListLeaveListByManIDnSwait(c *gin.Context) {
+	var leavelists []entity.LeaveList
+	man_id := c.Param("id")
+	if err := entity.DB().Preload("Employee").Preload("Manager").Preload("LeaveType").Raw("SELECT * FROM leave_lists WHERE manager_id = ? and status ='pending approval'", man_id).Find(&leavelists).Error; err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"data": leavelists})
+}
+// LIST /leave_list status wait
+func ListLeaveListByManIDnSNwait(c *gin.Context) {
+	var leavelists []entity.LeaveList
+	man_id := c.Param("id")
+	if err := entity.DB().Preload("Employee").Preload("Manager").Preload("LeaveType").Raw("SELECT * FROM leave_lists WHERE manager_id = ? and status !='pending approval'", man_id).Find(&leavelists).Error; err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"data": leavelists})
+}
 // DELETE /leave_list/:id
 func DeleteLeaveListByID(c *gin.Context) {
 	id := c.Param("id")
@@ -186,4 +209,81 @@ func DeleteLeaveListByID(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, gin.H{"data": id})
+}
+func UpdateLeaveList(c *gin.Context){
+	var leavelist entity.LeaveList
+	var newleavelist entity.LeaveList
+	var employees entity.Employee
+	var ltype entity.LeaveType
+	var manager entity.Manager
+
+	if err := c.ShouldBindJSON(&newleavelist); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+	if _, err := govalidator.ValidateStruct(&newleavelist); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": err.Error(),
+		})
+		return
+	}
+	if tx := entity.DB().Where("id = ?", newleavelist.ID).First(&leavelist); tx.RowsAffected == 0 {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Leave not found"})
+		return
+	}
+	// ค้นหา employee ด้วย id
+	if newleavelist.EmployeeID != nil {
+		if tx := entity.DB().Where("id = ?", newleavelist.EmployeeID).First(&employees); tx.RowsAffected == 0 {
+			c.JSON(http.StatusBadRequest, gin.H{"error": "employeesss not found"})
+			return
+		}
+		fmt.Print("NOT NULL")
+		newleavelist.Employee = employees
+	}else {
+		if tx := entity.DB().Where("id = ?", newleavelist.EmployeeID).First(&employees); tx.RowsAffected == 0 {
+			c.JSON(http.StatusBadRequest, gin.H{"error": "not found employee"})
+			return
+		}
+		fmt.Print("NULL")
+		newleavelist.Employee = employees
+	}
+	// ค้นหา ltype ด้วย id
+	if newleavelist.LeaveTypeID != nil {
+		if tx := entity.DB().Where("id = ?", newleavelist.LeaveTypeID).First(&ltype); tx.RowsAffected == 0 {
+			c.JSON(http.StatusBadRequest, gin.H{"error": "leave type not found"})
+			return
+		}
+		newleavelist.LeaveType = ltype
+	}else {
+		if tx := entity.DB().Where("id = ?", newleavelist.LeaveTypeID).First(&ltype); tx.RowsAffected == 0 {
+			c.JSON(http.StatusBadRequest, gin.H{"error": "leave type not found"})
+			return
+		}
+		newleavelist.LeaveType = ltype
+	}
+	// ค้นหา exercise ด้วย id
+	if newleavelist.ManagerID != nil {
+		if tx := entity.DB().Where("id = ?", newleavelist.ManagerID).First(&manager); tx.RowsAffected == 0 {
+			c.JSON(http.StatusBadRequest, gin.H{"error": "manager not found"})
+			return
+		}
+		newleavelist.Manager = manager
+	} else {
+		if tx := entity.DB().Where("id = ?", newleavelist.ManagerID).First(&manager); tx.RowsAffected == 0 {
+			c.JSON(http.StatusBadRequest, gin.H{"error": "manager not found"})
+			return
+		}
+		newleavelist.Manager = manager
+	}
+	leavelist.StartTime = newleavelist.StartTime
+	leavelist.StopTime = newleavelist.StopTime
+	leavelist.Status = newleavelist.Status
+
+	// ขั้นตอนการ validate
+	if err := entity.DB().Save(&leavelist).Error; err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"data": leavelist})
 }

@@ -30,10 +30,10 @@ function EmployeeShow(){
     }
 
     useEffect(() => {    
-        setLeavelist(JSON.parse(localStorage.getItem("uid") || ""));
+        setLeavelist(JSON.parse(localStorage.getItem("pid") || ""));
         
-        getLeaveList(JSON.parse(localStorage.getItem("uid") || ""));
-        getEmployeeID(JSON.parse(localStorage.getItem("uid") || ""))
+        getLeaveList(JSON.parse(localStorage.getItem("pid") || ""));
+        getEmployeeID(JSON.parse(localStorage.getItem("pid") || ""))
     }, []);
 
     const columns: GridColDef[] = [
@@ -52,7 +52,7 @@ function EmployeeShow(){
           { field: "Manager.FirstName", headerName: "ผู้จัดการ", width: 150, headerAlign: "center", align: "center", renderCell: (params: GridRenderCellParams<any>) => {
             return <>{params.row.Manager.FirstName+"    "+params.row.Manager.LastName}</>;
           }, },
-        { field: "Status", headerName: "สถานะ", width: 100, headerAlign: "center", align: "center" },  
+        { field: "Status", headerName: "สถานะ", width: 150, headerAlign: "center", align: "center" },  
     ];
 
 

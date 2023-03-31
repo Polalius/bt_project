@@ -98,6 +98,14 @@ func SutupDatabase() {
 		Role: man,
 	}
 	db.Model(&Manager{}).Create(&man1)
+	pay1 := Manager{
+		FirstName: "Will",
+		LastName:  "Smith",
+		Email:     "will@email.com",
+		User:      userPay,
+		Role: pay,
+	}
+	db.Model(&Manager{}).Create(&pay1)
 
 	emp1 := Employee{
 		FirstName: "Chris",
@@ -125,7 +133,7 @@ func SutupDatabase() {
 		StartTime: time.Now(),
 		StopTime:  time.Now(),
 		Manager: man1,
-		Status: "รอพิจารณา",
+		Status: "approved",
 	}
 	db.Model(&LeaveList{}).Create(&list1)
 	list2 := LeaveList{
@@ -134,7 +142,7 @@ func SutupDatabase() {
 		StartTime: time.Now(),
 		StopTime:  time.Now(),
 		Manager: man1,
-		Status: "รอพิจารณา",
+		Status: "approved",
 	}
 	db.Model(&LeaveList{}).Create(&list2)
 

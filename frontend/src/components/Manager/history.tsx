@@ -3,24 +3,18 @@ import { Link as RouterLink } from "react-router-dom";
 
 import { Box, Button, Container, IconButton, Paper, Typography } from '@mui/material';
 import { DataGrid, GridColDef, GridRenderCellParams, GridRowParams } from '@mui/x-data-grid';
-import { GridToolbarContainer,GridToolbarExport } from '@mui/x-data-grid-premium';
+
 import { EmployeeInterface } from '../../models/IEmployee';
 import { LeaveInterface } from '../../models/ILeave';
 import EditIcon from '@mui/icons-material/Edit';
 import { GetEmployeeID, ListLeaveListByManID, ListLeaveListByManIDnSNWait, ListLeaveListByManIDnSWait } from '../../services/HttpClientService';
-function CustomToolbar() {
-    return (
-      <GridToolbarContainer>
-        <GridToolbarExport />
-      </GridToolbarContainer>
-    );
-  }
-function ManagerShow(){
+
+function ManagerHistory(){
 
     const [leavelist, setLeavelist] = useState<LeaveInterface[]>([])
 
     const getLeaveList = async (id:any) => {
-        let res = await ListLeaveListByManIDnSWait(id);
+        let res = await ListLeaveListByManIDnSNWait(id);
         if (res.data) {
             setLeavelist(res.data);
         }
@@ -49,24 +43,7 @@ function ManagerShow(){
           { field: "Manager.FirstName", headerName: "ผู้จัดการ", width: 150, headerAlign: "center", align: "center", renderCell: (params: GridRenderCellParams<any>) => {
             return <>{params.row.Manager.FirstName+"    "+params.row.Manager.LastName}</>;
           }, },
-          {
-            field: "Status",
-            align: "center",
-            headerAlign: "center",
-            width: 85,
-            renderCell: ({ row }: Partial<GridRowParams>) =>
-              <IconButton  component={RouterLink}
-              to="/approve"
-                  size="small"
-                  color="primary"
-                  onClick={() => {
-                      console.log("ID", row.ID)
-                      localStorage.setItem("l_id", row.ID);
-                  }}
-              >
-                <EditIcon />
-              </IconButton >,
-          },  
+          { field: "Status", headerName: "สถานะ", width: 150, headerAlign: "center", align: "center" },  
     ];
 
 
@@ -95,17 +72,17 @@ function ManagerShow(){
                             ประวัติการลางาน
                         </Typography>
                     </Box>
-                    <Box>
+                    {/* <Box>
                         <Button
                             component={RouterLink}
-                            to="/history"
+                            to="/form"
                             variant="contained"
                             color="primary"
                             sx={{ borderRadius: 20, '&:hover': { color: '#065D95', backgroundColor: '#e3f2fd' } }}
                         >
-                            ประวัติอนุมัติ
+                            กรอกแบบฟอร์ม
                         </Button>
-                    </Box>
+                    </Box> */}
                 </Box>
                 <Box sx={{ borderRadius: 20 }}>
                     <DataGrid
@@ -114,7 +91,6 @@ function ManagerShow(){
                         columns={columns}
                         autoHeight={true}
                         density={'comfortable'}
-                        slots={{toolbar: CustomToolbar}}
                         sx={{ mt: 2, backgroundColor: '#fff' }}
                     />
                 </Box>
@@ -123,4 +99,4 @@ function ManagerShow(){
         </div>
     )
 }
-export default ManagerShow
+export default ManagerHistory

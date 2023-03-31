@@ -28,8 +28,8 @@ function Form() {
     const [emp, setEmp] = useState<EmployeeInterface>();
     const [man, setMan] = useState<ManagerInterface>();
     const [ltype, setLType] = useState<LeaveTypeInterface[]>([]);
-    const [start, setStart] = React.useState<Dayjs | null>(dayjs());
-    const [stop, setStop] = React.useState<Dayjs | null>(dayjs());
+    const [start, setStart] = React.useState<Dayjs | null>(dayjs('2023-03-31T15:30'));
+    const [stop, setStop] = React.useState<Dayjs | null>(dayjs('2023-03-31T15:30'));
     const [success, setSuccess] = useState(false);
     const [error, setError] = useState(false);
     const [message, setAlertMessage] = useState("");
@@ -90,7 +90,7 @@ function Form() {
             StartTime: start,
             StopTime: stop,
             ManagerID: convertType(man?.ID) ?? 0,
-            Status: "รอพิจารณา",
+            Status: "pending approval",
         }
         let res = await CreateLeavaList(data);
         if (res.status) {
@@ -184,8 +184,8 @@ function Form() {
                         
                     </Grid>
                     <Grid item xs={12}><Typography>เรียน:{man?.FirstName +" "+ man?.LastName}</Typography></Grid>
-                    <Grid item xs={2}><Typography>ชื่อ:{" "+emp?.FirstName}</Typography></Grid>
-                    <Grid item xs={6}><Typography>นามสกุล:{" "+ emp?.LastName}</Typography></Grid>
+                    <Grid item xs={6}><Typography>ข้าพเจ้าชื่อ:{" "+emp?.FirstName} นามสกุล:{" "+ emp?.LastName}</Typography></Grid>
+                    <Grid item xs={6}><Typography></Typography></Grid>
                     <Grid item xs={12}><Typography>Email:{" "+ emp?.Email}</Typography></Grid>
                     <LocalizationProvider dateAdapter={AdapterDayjs}>
                         <Grid item xs={1.8}><Typography>ขอลาตั้งแต่</Typography></Grid>

@@ -13,6 +13,8 @@ import Home from './components/Home';
 import Form from './components/Employee/form';
 import EmployeeShow from './components/Employee/show';
 import ManagerShow from './components/Manager/show';
+import Approve from './components/Manager/approve';
+import ManagerHistory from './components/Manager/history';
 const drawerWidth = 240;
 function App() {
   const theme = createTheme({
@@ -131,6 +133,17 @@ function App() {
                 <>
                   <Route path='/' element={<Home role={role}/>} />
                   <Route path="/managershow" element={<ManagerShow  />} />
+                  <Route path="/approve" element={<Approve  />} />
+                  <Route path="/history" element={<ManagerHistory  />} />
+
+                </>
+              )}{role === "payroll" && (
+                <>
+                  <Route path='/' element={<Home role={role}/>} />
+                  <Route path="/managershow" element={<ManagerShow  />} />
+                  <Route path="/approve" element={<Approve  />} />
+                  <Route path="/history" element={<ManagerHistory  />} />
+
                 </>
               )}
               </Routes>
