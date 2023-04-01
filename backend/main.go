@@ -46,14 +46,17 @@ func main() {
 
 
 	r.GET("/leavelists", controller.ListLeaveList)
+	r.GET("/leave", controller.ListLeave)
 	r.GET("/leavelist/:id", controller.GetLeaveList)
 	r.GET("/leavelistempid/:id", controller.ListLeaveListByEmpID)
-	r.GET("/leavelistmanid/:id", controller.ListLeaveListByManID)
-	r.GET("/leavelistmanwait/:id", controller.ListLeaveListByManIDnSwait)
-	r.GET("/leavelistmannwait/:id", controller.ListLeaveListByManIDnSNwait)
+	r.GET("/leavelist_depid/:id", controller.ListLeaveListByDepID)
+	r.GET("/leavelist_depwait/:id", controller.ListLeaveListByDepIDnSwait)
+	r.GET("/leavelist_depnwait/:id", controller.ListLeaveListByDepIDnSNwait)
 	r.PATCH("/leavelists", controller.UpdateLeaveList)
+
 	r.GET("/leavetypes", controller.ListLeaveType)
 	
+	r.GET("/department/:id", controller.GetDepartment)
 
 	r.GET("/manager/:id", controller.GetManager)
 

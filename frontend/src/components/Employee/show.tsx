@@ -25,7 +25,7 @@ function EmployeeShow(){
         let res = await GetEmployeeID(id);
         if (res){
             setEmp(res)
-            localStorage.setItem("mid", res.ManagerID)
+            localStorage.setItem("did", res.DepartmentID)
         }
     }
 

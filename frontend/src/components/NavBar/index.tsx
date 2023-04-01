@@ -47,7 +47,7 @@ export default function Navbar({ open, onClick}: any) {
         }
     }
     const getEmployee = () => {
-            fetch(`${apiUrl}/employeeId/${localStorage.getItem("uid")}`, reqOptGet)
+            fetch(`${apiUrl}/employeeId/${localStorage.getItem("pid")}`, reqOptGet)
             .then((res) => res.json())
             .then((res) => {
                 if (res.data){
@@ -58,11 +58,13 @@ export default function Navbar({ open, onClick}: any) {
             })
         }
         const getManager = () => {
-            fetch(`${apiUrl}/Manager/${localStorage.getItem("uid")}`, reqOptGet)
+            fetch(`${apiUrl}/manager/${localStorage.getItem("pid")}`, reqOptGet)
             .then((res) => res.json())
             .then((res) => {
                 if (res.data){
                     setManager(res.data)
+                    console.log(res.data.DepartmentID)
+                    localStorage.setItem("did", res.data.DepartmentID)
                 } else {
                     console.log("else")
                 }
@@ -72,6 +74,7 @@ export default function Navbar({ open, onClick}: any) {
         const r = localStorage.getItem("role")
         if (r == "employee"){
             getEmployee()
+            
         }else if (r == "manager"){
             getManager()
         }

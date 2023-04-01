@@ -15,7 +15,8 @@ import { LeaveInterface, LeaveTypeInterface } from "../../models/ILeave";
 import { EmployeeInterface } from "../../models/IEmployee";
 import { ManagerInterface } from "../../models/IManager";
 
-import { CreateLeavaList, GetEmployeeID, GetManagerID, ListLeaveType } from "../../services/HttpClientService";
+import { CreateLeavaList, GetDepartmentID, GetEmployeeID, GetManagerID, ListLeaveType } from "../../services/HttpClientService";
+import { DepartmentInterface } from "../../models/IDepartmemt";
 
 
 const Alert = forwardRef<HTMLDivElement, AlertProps>(function Alert(props,ref,) {
@@ -28,6 +29,7 @@ function Form() {
     const [emp, setEmp] = useState<EmployeeInterface>();
     const [man, setMan] = useState<ManagerInterface>();
     const [ltype, setLType] = useState<LeaveTypeInterface[]>([]);
+    const [depart, setDepart] = useState<DepartmentInterface>();
     const [start, setStart] = React.useState<Dayjs | null>(dayjs('2023-03-31T15:30'));
     const [stop, setStop] = React.useState<Dayjs | null>(dayjs('2023-03-31T15:30'));
     const [success, setSuccess] = useState(false);
@@ -45,6 +47,13 @@ function Form() {
         let res = await GetManagerID(id);
         if (res){
             setMan(res)
+        }
+    }
+    const getDepartmentID = async (id:any) => {
+        let res = await GetDepartmentID(id);
+        if (res){
+            setDepart(res)
+            console.log(res)
         }
     }
 
@@ -80,7 +89,8 @@ function Form() {
     useEffect(()=>{
         getLeaveType();
         getEmployeeID(JSON.parse(localStorage.getItem("uid") || ""));
-        getManagerID(JSON.parse(localStorage.getItem("mid") || ""))
+        getManagerID(JSON.parse(localStorage.getItem("did") || ""));
+        getDepartmentID(JSON.parse(localStorage.getItem("did") || ""))
     }, []);
 
     async function submit(){
@@ -90,8 +100,10 @@ function Form() {
             StartTime: start,
             StopTime: stop,
             ManagerID: convertType(man?.ID) ?? 0,
+            DepartmentID: convertType(depart?.ID) ?? 0,
             Status: "pending approval",
         }
+        console.log(data)
         let res = await CreateLeavaList(data);
         if (res.status) {
             setAlertMessage("บันทึกข้อมูลสำเร็จ");

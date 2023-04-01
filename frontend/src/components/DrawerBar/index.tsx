@@ -32,7 +32,7 @@ export default function DrawerBar({ role, drawerWidth, handleDrawerClose, open, 
         } else if (role === "payroll") {
             menu = [
                 ...menu,
-                { "text": "manager", "icon": <InboxIcon />, "link": "/managershow"},
+                { "text": "payroll", "icon": <InboxIcon />, "link": "/payrollshow"},
             ]
         } 
         const navigator = useNavigate();

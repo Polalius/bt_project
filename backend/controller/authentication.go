@@ -96,6 +96,20 @@ func Signin(c *gin.Context) {
 			RoleName: role.Name,
 		}
 		c.JSON(http.StatusOK, gin.H{"data": tokenResponse})
+	}else if role.Name == "payroll"{
+		var pay entity.Manager
+		if tx := entity.DB().
+			Raw("SELECT * FROM managers WHERE user_id = ?", login.ID).Find(&pay); tx.RowsAffected == 0 {
+			c.JSON(http.StatusBadRequest, gin.H{"error": "payroll not found"})
+			return
+		}
+		tokenResponse := ManagerResponse{
+			Token:    signedToken,
+			UserID:   login.ID,
+			ManID: pay.ID,
+			RoleName: role.Name,
+		}
+		c.JSON(http.StatusOK, gin.H{"data": tokenResponse})
 	}
 	
 }

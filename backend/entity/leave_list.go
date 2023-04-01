@@ -23,5 +23,7 @@ type LeaveList struct {
 	StopTime    time.Time
 	ManagerID	*uint
 	Manager		Manager
+	DepartmentID *uint
+	Department	Department
 	Status       string
 }

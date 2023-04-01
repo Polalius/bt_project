@@ -89,12 +89,24 @@ func SutupDatabase() {
 	db.Model(&LeaveType{}).Create(&l_type1)
 	db.Model(&LeaveType{}).Create(&l_type2)
 
+	de1 := Department{
+		Name:   "IT",
+		
+	}
+
+	de2 := Department{
+		Name:   "Payroll",
+		
+	}
+	db.Model(&Department{}).Create(&de1)
+	db.Model(&Department{}).Create(&de2)
 	////////////////
 	man1 := Manager{
 		FirstName: "Tom",
 		LastName:  "Holland",
 		Email:     "tom@email.com",
 		User:      userMan,
+		Department: de1,
 		Role: man,
 	}
 	db.Model(&Manager{}).Create(&man1)
@@ -103,6 +115,7 @@ func SutupDatabase() {
 		LastName:  "Smith",
 		Email:     "will@email.com",
 		User:      userPay,
+		Department: de2,
 		Role: pay,
 	}
 	db.Model(&Manager{}).Create(&pay1)
@@ -112,7 +125,7 @@ func SutupDatabase() {
 		LastName:  "Evans",
 		Email:     "chris@email.com",
 		User:      userEmp1,
-		Manager: man1,
+		Department: de1,
 		Role: emp,
 	}
 	db.Model(&Employee{}).Create(&emp1)
@@ -122,7 +135,7 @@ func SutupDatabase() {
 		LastName:  "Downey",
 		Email:     "robert@email.com",
 		User:      userEmp2,
-		Manager:   man1,
+		Department: de1,
 		Role: emp,
 	}
 	db.Model(&Employee{}).Create(&emp2)
@@ -133,6 +146,7 @@ func SutupDatabase() {
 		StartTime: time.Now(),
 		StopTime:  time.Now(),
 		Manager: man1,
+		Department: de1,
 		Status: "approved",
 	}
 	db.Model(&LeaveList{}).Create(&list1)
@@ -142,8 +156,20 @@ func SutupDatabase() {
 		StartTime: time.Now(),
 		StopTime:  time.Now(),
 		Manager: man1,
+		Department: de1,
 		Status: "approved",
 	}
 	db.Model(&LeaveList{}).Create(&list2)
+	list3 := LeaveList{
+		Employee:   emp2,
+		LeaveType: l_type2,
+		StartTime: time.Now(),
+		StopTime:  time.Now(),
+		Manager: man1,
+		Department: de1,
+		Status: "pending approval",
+	}
+	db.Model(&LeaveList{}).Create(&list3)
+
 
 }

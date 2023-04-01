@@ -7,14 +7,14 @@ import { DataGrid, GridColDef, GridRenderCellParams, GridRowParams } from '@mui/
 import { EmployeeInterface } from '../../models/IEmployee';
 import { LeaveInterface } from '../../models/ILeave';
 import EditIcon from '@mui/icons-material/Edit';
-import { GetEmployeeID, ListLeaveListByManID, ListLeaveListByManIDnSNWait, ListLeaveListByManIDnSWait } from '../../services/HttpClientService';
+import { GetEmployeeID, ListLeaveListByDepID, ListLeaveListByDepIDnSNWait, ListLeaveListByDepIDnSWait } from '../../services/HttpClientService';
 
 function ManagerHistory(){
 
     const [leavelist, setLeavelist] = useState<LeaveInterface[]>([])
 
     const getLeaveList = async (id:any) => {
-        let res = await ListLeaveListByManIDnSNWait(id);
+        let res = await ListLeaveListByDepIDnSNWait(id);
         if (res.data) {
             setLeavelist(res.data);
         }
@@ -22,9 +22,9 @@ function ManagerHistory(){
 
 
     useEffect(() => {    
-        setLeavelist(JSON.parse(localStorage.getItem("pid") || ""));
+        setLeavelist(JSON.parse(localStorage.getItem("did") || ""));
         
-        getLeaveList(JSON.parse(localStorage.getItem("pid") || ""));
+        getLeaveList(JSON.parse(localStorage.getItem("did") || ""));
     }, []);
 
     const columns: GridColDef[] = [

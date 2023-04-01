@@ -8,13 +8,12 @@ type Employee struct {
 	LastName  string
 	Email     string
 
-	ManagerID *uint
-	Manager   Manager
-
 	UserID *uint
 	User   User
 	RoleID		*uint
 	Role		Role
+	DepartmentID *uint
+	Department	Department
 	
 	LeaveList []LeaveList `gorm:"foreignKey:EmployeeID"`
 }

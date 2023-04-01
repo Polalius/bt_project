@@ -10,7 +10,7 @@ import (
 
 func ListManager(c *gin.Context) {
 	var managers []entity.Manager
-	if err := entity.DB().Preload("User").Raw("SELECT * FROM managers").Find(&managers).Error; err != nil {
+	if err := entity.DB().Preload("Department").Preload("User").Preload("Role").Raw("SELECT * FROM managers").Find(&managers).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"error": err.Error(),
 		})
@@ -24,7 +24,7 @@ func ListManager(c *gin.Context) {
 func GetManager(c *gin.Context) {
 	var manager entity.Manager
 	id := c.Param("id")
-	if err := entity.DB().Preload("User").Raw("SELECT * FROM managers WHERE id = ?", id).Find(&manager).Error; err != nil {
+	if err := entity.DB().Preload("Department").Preload("User").Preload("Role").Raw("SELECT * FROM managers WHERE id = ?", id).Find(&manager).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"error": err.Error(),
 		})

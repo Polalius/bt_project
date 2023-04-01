@@ -77,7 +77,7 @@ async function ListLeaveList() {
   
     return res;
   }
-  async function ListLeaveListByManID(id:any) {
+  async function ListLeave() {
     const requestOptions = {
       method: "GET",
       headers: {
@@ -86,7 +86,26 @@ async function ListLeaveList() {
       },
     };
   
-    let res = await fetch(`${apiUrl}/leavelistmanid/${id}`, requestOptions)
+    let res = await fetch(`${apiUrl}/leave`, requestOptions)
+    .then((response) => response.json())
+    .then((res) => {
+      if (res) {
+        return res;
+      } 
+    });
+
+  return res;
+  }
+  async function ListLeaveListByDepID(id:any) {
+    const requestOptions = {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+        "Content-Type": "application/json",
+      },
+    };
+  
+    let res = await fetch(`${apiUrl}/leavelist_depid/${id}`, requestOptions)
       .then((response) => response.json())
       .then((res) => {
         if (res) {
@@ -96,7 +115,7 @@ async function ListLeaveList() {
   
     return res;
   }
-  async function ListLeaveListByManIDnSWait(id:any) {
+  async function ListLeaveListByDepIDnSWait(id:any) {
     const requestOptions = {
       method: "GET",
       headers: {
@@ -105,7 +124,7 @@ async function ListLeaveList() {
       },
     };
   
-    let res = await fetch(`${apiUrl}/leavelistmanwait/${id}`, requestOptions)
+    let res = await fetch(`${apiUrl}/leavelist_depwait/${id}`, requestOptions)
       .then((response) => response.json())
       .then((res) => {
         if (res) {
@@ -115,7 +134,7 @@ async function ListLeaveList() {
   
     return res;
   }
-  async function ListLeaveListByManIDnSNWait(id:any) {
+  async function ListLeaveListByDepIDnSNWait(id:any) {
     const requestOptions = {
       method: "GET",
       headers: {
@@ -124,7 +143,7 @@ async function ListLeaveList() {
       },
     };
   
-    let res = await fetch(`${apiUrl}/leavelistmannwait/${id}`, requestOptions)
+    let res = await fetch(`${apiUrl}/leavelist_depnwait/${id}`, requestOptions)
       .then((response) => response.json())
       .then((res) => {
         if (res) {
@@ -228,6 +247,25 @@ async function ListLeaveList() {
   
     return res;
   }
+  async function GetDepartmentID(id:any) {
+    const requestOptions = {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+        "Content-Type": "application/json",
+      },
+    };
+  
+    let res = await fetch(`${apiUrl}/department/${id}`, requestOptions)
+      .then((response) => response.json())
+      .then((res) => {
+        if (res.data) {
+          return res.data;
+        } 
+      });
+  
+    return res;
+  }
   async function GetLeaveListByID() {
     let l_id = localStorage.getItem("l_id");
     const requestOptions = {
@@ -252,16 +290,18 @@ async function ListLeaveList() {
   export{
     ListLeaveList,
     ListLeaveType,
+    ListLeave,
     ListLeaveListByEmpID,
-    ListLeaveListByManID,
-    ListLeaveListByManIDnSWait,
-    ListLeaveListByManIDnSNWait,
+    ListLeaveListByDepID,
+    ListLeaveListByDepIDnSWait,
+    ListLeaveListByDepIDnSNWait,
     GetLeaveListByID,
     UpdateLeaveList,
     GetEmployeeByUID,
     CreateLeavaList,
     ListEmployee,
     GetEmployeeID,
-    GetManagerID
+    GetManagerID,
+    GetDepartmentID
   }
   

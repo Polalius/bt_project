@@ -93,6 +93,11 @@ export default function Signin(){
                                 autoFocus
                                 value={signin.username || ""}
                                 onChange={handleInputChange}
+                                onKeyPress={(e) => {
+                                    if (e.key === "Enter") {
+                                       login();
+                                    }
+                                 }}
                             />
                             <TextField
                                 variant="outlined"
@@ -106,13 +111,19 @@ export default function Signin(){
                                 autoComplete="current-password"
                                 value={signin.password || ""}
                                 onChange={handleInputChange}
+                                onKeyPress={(e) => {
+                                    if (e.key === "Enter") {
+                                       login();
+                                    }
+                                 }}
                             />
                             <Button
                                 fullWidth
                                 variant="contained"
                                 style={{ backgroundColor: "#7484AD", color: "#F4F6F6" }}
                                 className='submit'
-                                onClick={login}>
+                                onClick={login}
+                                >
                                 Sign In
                             </Button>
 
