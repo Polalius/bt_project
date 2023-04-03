@@ -90,20 +90,19 @@ func SutupDatabase() {
 	db.Model(&LeaveType{}).Create(&l_type2)
 
 	de1 := Department{
-		Name:   "IT",
+		DepName:   "IT",
 		
 	}
 
 	de2 := Department{
-		Name:   "Payroll",
+		DepName:   "Payroll",
 		
 	}
 	db.Model(&Department{}).Create(&de1)
 	db.Model(&Department{}).Create(&de2)
 	////////////////
 	man1 := Manager{
-		FirstName: "Tom",
-		LastName:  "Holland",
+		ManName: "Tom Holland",
 		Email:     "tom@email.com",
 		User:      userMan,
 		Department: de1,
@@ -111,8 +110,7 @@ func SutupDatabase() {
 	}
 	db.Model(&Manager{}).Create(&man1)
 	pay1 := Manager{
-		FirstName: "Will",
-		LastName:  "Smith",
+		ManName: "Will Smith",
 		Email:     "will@email.com",
 		User:      userPay,
 		Department: de2,
@@ -121,8 +119,7 @@ func SutupDatabase() {
 	db.Model(&Manager{}).Create(&pay1)
 
 	emp1 := Employee{
-		FirstName: "Chris",
-		LastName:  "Evans",
+		EmpName: "Chris Evans",
 		Email:     "chris@email.com",
 		User:      userEmp1,
 		Department: de1,
@@ -131,8 +128,7 @@ func SutupDatabase() {
 	db.Model(&Employee{}).Create(&emp1)
 
 	emp2 := Employee{
-		FirstName: "Robert",
-		LastName:  "Downey",
+		EmpName: "Robert Downey",
 		Email:     "robert@email.com",
 		User:      userEmp2,
 		Department: de1,

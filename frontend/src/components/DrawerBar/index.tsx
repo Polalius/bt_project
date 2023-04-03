@@ -21,18 +21,17 @@ export default function DrawerBar({ role, drawerWidth, handleDrawerClose, open, 
         if (role === "employee") {
             menu = [
                 { "text": "A", "icon": <InboxIcon />, "link": "/"},
-                { "text": "B", "icon": <InboxIcon />, "link": "/show"},
                 { "text": "C", "icon": <InboxIcon />, "link": "/form"},
             ]
         } else if (role === "manager") {
             menu = [
                 ...menu,
-                { "text": "manager", "icon": <InboxIcon />, "link": "/managershow"},
+                { "text": "manager", "icon": <InboxIcon />, "link": "/"},
             ]
         } else if (role === "payroll") {
             menu = [
                 ...menu,
-                { "text": "payroll", "icon": <InboxIcon />, "link": "/payrollshow"},
+                { "text": "payroll", "icon": <InboxIcon />, "link": "/"},
             ]
         } 
         const navigator = useNavigate();

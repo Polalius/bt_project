@@ -4,8 +4,7 @@ import "gorm.io/gorm"
 
 type Manager struct {
 	gorm.Model
-	FirstName string
-	LastName  string
+	ManName string
 	Email     string
 	
 	UserID    *uint 

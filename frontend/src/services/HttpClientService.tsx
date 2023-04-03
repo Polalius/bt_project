@@ -96,6 +96,25 @@ async function ListLeaveList() {
 
   return res;
   }
+  async function ListLeaveWait(id:any) {
+    const requestOptions = {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+        "Content-Type": "application/json",
+      },
+    };
+  
+    let res = await fetch(`${apiUrl}/leavewait/${id}`, requestOptions)
+      .then((response) => response.json())
+      .then((res) => {
+        if (res) {
+          return res;
+        } 
+      });
+  
+    return res;
+  }
   async function ListLeaveListByDepID(id:any) {
     const requestOptions = {
       method: "GET",
@@ -291,6 +310,7 @@ async function ListLeaveList() {
     ListLeaveList,
     ListLeaveType,
     ListLeave,
+    ListLeaveWait,
     ListLeaveListByEmpID,
     ListLeaveListByDepID,
     ListLeaveListByDepIDnSWait,

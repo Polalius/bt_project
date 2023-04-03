@@ -195,8 +195,8 @@ function Form() {
                         </FormControl>
                         
                     </Grid>
-                    <Grid item xs={12}><Typography>เรียน:{man?.FirstName +" "+ man?.LastName}</Typography></Grid>
-                    <Grid item xs={6}><Typography>ข้าพเจ้าชื่อ:{" "+emp?.FirstName} นามสกุล:{" "+ emp?.LastName}</Typography></Grid>
+                    <Grid item xs={12}><Typography>เรียน:{man?.ManName}</Typography></Grid>
+                    <Grid item xs={6}><Typography>ข้าพเจ้าชื่อ-นามสกุล:{" "+emp?.EmpName}</Typography></Grid>
                     <Grid item xs={6}><Typography></Typography></Grid>
                     <Grid item xs={12}><Typography>Email:{" "+ emp?.Email}</Typography></Grid>
                     <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -237,7 +237,7 @@ function Form() {
                         variant="contained"
                         color="primary"
                         component={RouterLink}
-                        to="/show"
+                        to="/"
                         sx={{'&:hover': {color: '#1543EE', backgroundColor: '#e3f2fd'}}}
                     >
                         ถอยกลับ

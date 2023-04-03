@@ -5,7 +5,7 @@ import (
 )
 type Department struct {
 	gorm.Model
-	Name   string
+	DepName   string
 
 	Manager []Manager `gorm:"foreignKey:DepartmentID"`
 	Employee []Employee `gorm:"foreignKey:DepartmentID"`

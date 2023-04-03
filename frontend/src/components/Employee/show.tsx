@@ -38,7 +38,7 @@ function EmployeeShow(){
 
     const columns: GridColDef[] = [
         { field: "Employee.FirstName", headerName: "ชื่อ-นามสกุล", width: 120, headerAlign: "center", align: "center", renderCell: (params: GridRenderCellParams<any>) => {
-            return <>{params.row.Employee.FirstName +"  "+params.row.Employee.LastName}</>},
+            return <>{params.row.Employee.EmpName}</>},
         },
         { field: "LeaveType.TypeName", headerName: "ประเภทการลา", width: 150, headerAlign: "center", align: "center", renderCell: (params: GridRenderCellParams<any>) => {
             return <>{params.row.LeaveType.TypeName}</>;
@@ -50,7 +50,7 @@ function EmployeeShow(){
             return <>{params.row.StopTime}</>;
           }, },
           { field: "Manager.FirstName", headerName: "ผู้จัดการ", width: 150, headerAlign: "center", align: "center", renderCell: (params: GridRenderCellParams<any>) => {
-            return <>{params.row.Manager.FirstName+"    "+params.row.Manager.LastName}</>;
+            return <>{params.row.Manager.ManName}</>;
           }, },
         { field: "Status", headerName: "สถานะ", width: 150, headerAlign: "center", align: "center" },  
     ];

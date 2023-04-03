@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Link as RouterLink } from "react-router-dom";
 
-import { Box, Button, Container, IconButton, Paper, Typography } from '@mui/material';
+import { Box, Button, Container, IconButton, Paper, Stack, Typography } from '@mui/material';
 import { DataGrid, GridColDef, GridRenderCellParams, GridRowParams } from '@mui/x-data-grid';
 
 import { EmployeeInterface } from '../../models/IEmployee';
@@ -29,7 +29,7 @@ function ManagerHistory(){
 
     const columns: GridColDef[] = [
         { field: "Employee.FirstName", headerName: "ชื่อ-นามสกุล", width: 120, headerAlign: "center", align: "center", renderCell: (params: GridRenderCellParams<any>) => {
-            return <>{params.row.Employee.FirstName +"  "+params.row.Employee.LastName}</>},
+            return <>{params.row.Employee.EmpName }</>},
         },
         { field: "LeaveType.TypeName", headerName: "ประเภทการลา", width: 150, headerAlign: "center", align: "center", renderCell: (params: GridRenderCellParams<any>) => {
             return <>{params.row.LeaveType.TypeName}</>;
@@ -41,7 +41,7 @@ function ManagerHistory(){
             return <>{params.row.StopTime}</>;
           }, },
           { field: "Manager.FirstName", headerName: "ผู้จัดการ", width: 150, headerAlign: "center", align: "center", renderCell: (params: GridRenderCellParams<any>) => {
-            return <>{params.row.Manager.FirstName+"    "+params.row.Manager.LastName}</>;
+            return <>{params.row.Manager.ManName}</>;
           }, },
           { field: "Status", headerName: "สถานะ", width: 150, headerAlign: "center", align: "center" },  
     ];
@@ -94,6 +94,24 @@ function ManagerHistory(){
                         sx={{ mt: 2, backgroundColor: '#fff' }}
                     />
                 </Box>
+                <Stack
+                    spacing={2}
+                    direction="row"
+                    justifyContent="space-between"
+                    alignItems="flex-start"
+                    sx={{ mt: 3 }}
+                >
+                    <Button
+                        variant="contained"
+                        color="primary"
+                        component={RouterLink}
+                        to="/"
+                        sx={{'&:hover': {color: '#1543EE', backgroundColor: '#e3f2fd'}}}
+                    >
+                        ถอยกลับ
+                    </Button>
+
+            </Stack>
                 </Paper>
             </Container>
         </div>

@@ -39,7 +39,7 @@ export default function Approve(){
             setAlertMessage("ยืนยันสำเร็จ")
             setSuccess(true);
             setTimeout(() => {
-                navigator("/managershow")
+                navigator("/")
             }, 3000)
         } else {
             setAlertMessage(res.error)
@@ -140,7 +140,7 @@ export default function Approve(){
                         variant="contained"
                         color="error"
                         component={RouterLink}
-                        to="/managershow"
+                        to="/"
                         sx={{ borderRadius: 10, '&:hover': { color: '#FC0000', backgroundColor: '#F9EBEB' } }}
                     >
                         ถอยกลับ

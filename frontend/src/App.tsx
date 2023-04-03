@@ -124,24 +124,24 @@ function App() {
               <DrawerHeader />
               <Routes>{role === "employee" && (
                 <>
-                  <Route path='/' element={<Home role={role}/>} />
-                  <Route path="/show" element={<EmployeeShow  />} />
+                  
+                  <Route path="/" element={<EmployeeShow  />} />
                   <Route path="/form" element={<Form  />} />
                   <Route path="/managershow" element={<ManagerShow  />} />
                   
                 </>
               )}{role === "manager" && (
                 <>
-                  <Route path='/' element={<Home role={role}/>} />
-                  <Route path="/managershow" element={<ManagerShow  />} />
+                  
+                  <Route path="/" element={<ManagerShow  />} />
                   <Route path="/approve" element={<Approve  />} />
                   <Route path="/history" element={<ManagerHistory  />} />
 
                 </>
               )}{role === "payroll" && (
                 <>
-                  <Route path='/' element={<Home role={role}/>} />
-                  <Route path="/payrollshow" element={<PayrollShow  />} />
+                  
+                  <Route path="/" element={<PayrollShow  />} />
 
                 </>
               )}

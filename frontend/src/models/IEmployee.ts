@@ -4,8 +4,7 @@ import { SigninInterface } from "./ISignin";
 
 export interface EmployeeInterface {
     ID?: number;
-    FirstName?: string;
-    LastName?: string;
+    EmpName?: string;
     Email?: string;
 
     UserID?: number;

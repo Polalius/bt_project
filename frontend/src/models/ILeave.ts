@@ -22,3 +22,13 @@ export interface LeaveInterface{
     DepartmentID?: number;
     DepartmentInterface?: DepartmentInterface;
 }
+export interface Leave1Interface{
+    ID?: number;
+    EmpName?: number;
+    TypeName?: string;
+    StartTime?:  Dayjs | null;
+	StopTime?:    Dayjs | null;
+    ManName?: string;
+    Status?: string;
+    DepName?: number;
+}

@@ -5,9 +5,10 @@ import { Box, Button, Container, IconButton, Paper, Typography } from '@mui/mate
 import { DataGrid, GridColDef, GridRenderCellParams, GridRowParams } from '@mui/x-data-grid';
 import { DataGridPremium, GridToolbarContainer,GridToolbarExport } from '@mui/x-data-grid-premium';
 import { EmployeeInterface } from '../../models/IEmployee';
-import { LeaveInterface } from '../../models/ILeave';
+import { Leave1Interface, LeaveInterface } from '../../models/ILeave';
 import EditIcon from '@mui/icons-material/Edit';
-import { GetEmployeeID, ListLeave, ListLeaveListByDepID, ListLeaveListByDepIDnSNWait, ListLeaveListByDepIDnSWait } from '../../services/HttpClientService';
+import { GetEmployeeID, ListLeave, ListLeaveListByDepID, ListLeaveListByDepIDnSNWait, ListLeaveListByDepIDnSWait, ListLeaveWait } from '../../services/HttpClientService';
+import Approv from './approv';
 function CustomToolbar() {
     return (
       <GridToolbarContainer>
@@ -18,7 +19,7 @@ function CustomToolbar() {
 function ManagerShow(){
 
     const [leavelist, setLeavelist] = useState<LeaveInterface[]>([])
-    const [leavelist1, setLeavelist1] = useState<LeaveInterface[]>([])
+    const [leavelist1, setLeavelist1] = useState<Leave1Interface[]>([])
 
     const getLeaveList = async (id:any) => {
         let res = await ListLeaveListByDepIDnSWait(id);
@@ -26,10 +27,10 @@ function ManagerShow(){
             setLeavelist(res.data);
         }
     };
-    const getLeaveList1 = async () => {
-        let res = await ListLeave();
-        if (res) {
-            setLeavelist1(res);
+    const getLeaveList1 = async (id:any) => {
+        let res = await ListLeaveWait(id);
+        if (res.data) {
+            setLeavelist1(res.data);
             console.log(res.data)
         }
     };
@@ -40,15 +41,15 @@ function ManagerShow(){
         setLeavelist(JSON.parse(localStorage.getItem("did") || ""));
         
         getLeaveList(JSON.parse(localStorage.getItem("did") || ""));
-        getLeaveList1()
+        getLeaveList1(JSON.parse(localStorage.getItem("did") || ""))
     }, []);
 
     const columns: GridColDef[] = [
-        { field: "Employee.FirstName", headerName: "ชื่อ-นามสกุล", width: 120, headerAlign: "center", align: "center", renderCell: (params: GridRenderCellParams<any>) => {
-            return <>{params.row.Employee.FirstName +"  "+params.row.Employee.LastName}</>},
+        { field: "EmpName", headerName: "ชื่อ-นามสกุล", width: 120, headerAlign: "center", align: "center", renderCell: (params: GridRenderCellParams<any>) => {
+            return <>{params.row.EmpName}</>},
         },
-        { field: "LeaveType.TypeName", headerName: "ประเภทการลา", width: 150, headerAlign: "center", align: "center", renderCell: (params: GridRenderCellParams<any>) => {
-            return <>{params.row.LeaveType.ID}</>;
+        { field: "TypeName", headerName: "ประเภทการลา", width: 150, headerAlign: "center", align: "center", renderCell: (params: GridRenderCellParams<any>) => {
+            return <>{params.row.TypeName}</>;
           },},
         { field: "StartTime", headerName: "ลาวันที่เวลา", width: 250, headerAlign: "center", align: "center", renderCell: (params: GridRenderCellParams<any>) => {
             return <>{params.row.StartTime}</>;
@@ -56,27 +57,39 @@ function ManagerShow(){
         { field: "StopTime", headerName: "ถึงวันที่เวลา", width: 250, headerAlign: "center", align: "center", renderCell: (params: GridRenderCellParams<any>) => {
             return <>{params.row.StopTime}</>;
           }, },
-          { field: "Manager.FirstName", headerName: "ผู้จัดการ", width: 150, headerAlign: "center", align: "center", renderCell: (params: GridRenderCellParams<any>) => {
-            return <>{params.row.Manager.FirstName+"    "+params.row.Manager.LastName}</>;
+          { field: "ManName", headerName: "ผู้จัดการ", width: 150, headerAlign: "center", align: "center", renderCell: (params: GridRenderCellParams<any>) => {
+            return <>{params.row.ManName}</>;
           }, },
           {
             field: "Status",
             align: "center",
             headerAlign: "center",
             width: 85,
-            renderCell: ({ row }: Partial<GridRowParams>) =>
-              <IconButton  component={RouterLink}
-              to="/approve"
-                  size="small"
-                  color="primary"
-                  onClick={() => {
-                      console.log("ID", row.ID)
-                      localStorage.setItem("l_id", row.ID);
-                  }}
-              >
+            renderCell: (params: GridRenderCellParams<any>) => {
                 <EditIcon />
-              </IconButton >,
-          },  
+              return <Approv params={params.row.ID} />;
+            },
+            sortable: false,
+            description: "Status",
+          },
+        //   {
+        //     field: "Status",
+        //     align: "center",
+        //     headerAlign: "center",
+        //     width: 85,
+        //     renderCell: ({ row }: Partial<GridRowParams>) =>
+        //       <IconButton  component={RouterLink}
+        //       to="/approve"
+        //           size="small"
+        //           color="primary"
+        //           onClick={() => {
+        //               console.log("ID", row.ID)
+        //               localStorage.setItem("l_id", row.ID);
+        //           }}
+        //       >
+        //         <EditIcon />
+        //       </IconButton >,
+        //   },  
     ];
 
 
@@ -117,9 +130,10 @@ function ManagerShow(){
                         </Button>
                     </Box>
                 </Box>
+                
                 <Box sx={{ borderRadius: 20 }}>
                     <DataGridPremium
-                        rows={leavelist}
+                        rows={leavelist1}
                         getRowId={(row) => row.ID}
                         columns={columns}
                         autoHeight={true}

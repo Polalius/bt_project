@@ -3,6 +3,7 @@ package controller
 import (
 	"fmt"
 	"net/http"
+	"time"
 
 	"github.com/Polalius/bt_project/entity"
 	"github.com/asaskevich/govalidator"
@@ -196,18 +197,40 @@ func ListLeaveListByDepIDnSwait(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"data": leavelists})
 }
 type results struct{
-	Type_Name string
-	
+	ID int
+	Id int
+	TypeName string
+	EmpName string
+	ManName string
+	StartTime   time.Time
+	StopTime    time.Time
+	DepName		string
 	Status string
-	FirstName string
-	
 }
 func ListLeave(c *gin.Context){
 	var results []results
 	
-	if err := entity.DB().Table("leave_lists").Select("leave_lists.status, leave_types.type_name, employees.first_name").
+	if err := entity.DB().Table("leave_lists").
+	Select("leave_types.type_name, employees.emp_name, managers.man_name, leave_lists.start_time, leave_lists.stop_time, leave_lists.status,departments.dep_name,departments.id").
 	Joins("inner join leave_types on leave_types.id = leave_lists.leave_type_id").
-	Joins("inner join employees on employees.id = leave_lists.employee_id").Scan(&results).Error; err != nil {
+	Joins("inner join employees on employees.id = leave_lists.employee_id").
+	Joins("inner join managers on managers.id = leave_lists.manager_id").
+	Joins("inner join departments on departments.id = leave_lists.department_id").Scan(&results).Error; err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{"data": results})
+}
+func ListLeaveWait(c *gin.Context){
+	var results []results
+	dep_id := c.Param("id")
+	if err := entity.DB().Table("leave_lists").
+	Select("leave_lists.id, departments.id,  leave_types.type_name, employees.emp_name, managers.man_name, leave_lists.start_time, leave_lists.stop_time, leave_lists.status,departments.dep_name").
+	Joins("inner join leave_types on leave_types.id = leave_lists.leave_type_id").
+	Joins("inner join employees on employees.id = leave_lists.employee_id").
+	Joins("inner join managers on managers.id = leave_lists.manager_id").
+	Joins("inner join departments on departments.id = leave_lists.department_id").
+	Where("departments.id = ? AND leave_lists.status = 'pending approval'", dep_id).Scan(&results).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
