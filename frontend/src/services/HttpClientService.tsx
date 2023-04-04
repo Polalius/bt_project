@@ -285,8 +285,8 @@ async function ListLeaveList() {
   
     return res;
   }
-  async function GetLeaveListByID() {
-    let l_id = localStorage.getItem("l_id");
+  async function GetLeaveListByID(l_id:any) {
+    
     const requestOptions = {
       method: "GET",
       headers: {

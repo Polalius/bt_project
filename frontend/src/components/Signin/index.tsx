@@ -47,6 +47,7 @@ export default function Signin(){
                     localStorage.setItem("uid", res.data.user_id)
                     localStorage.setItem("pid", res.data.p_id)
                     localStorage.setItem("role", res.data.role_name)
+                    localStorage.setItem("did", res.data.did)
                     window.location.reload()
                 } else {
                     setError(true)

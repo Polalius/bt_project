@@ -5,9 +5,10 @@ import (
 )
 type Department struct {
 	gorm.Model
-	DepName   string
+	DepName   	string
 
-	Manager []Manager `gorm:"foreignKey:DepartmentID"`
-	Employee []Employee `gorm:"foreignKey:DepartmentID"`
-	LeaveList []LeaveList `gorm:"foreignKey:DepartmentID"`
+	Manager 	[]Manager 	`gorm:"foreignKey:DepartmentID"`
+	Employee 	[]Employee 	`gorm:"foreignKey:DepartmentID"`
+	LeaveList 	[]LeaveList `gorm:"foreignKey:DepartmentID"`
+	User 		[]User 		`gorm:"foreignKey:DepartmentID"`
 }

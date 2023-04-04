@@ -4,15 +4,15 @@ import "gorm.io/gorm"
 
 type Employee struct {
 	gorm.Model
-	EmpName string
-	Email     string
+	EmpName 		string
+	Email     		string
 
-	UserID *uint
-	User   User
-	RoleID		*uint
-	Role		Role
-	DepartmentID *uint
-	Department	Department
+	UserID 			*uint
+	User   			User			`gorm:"references:id" valid:"-"`
+	RoleID			*uint
+	Role			Role			`gorm:"references:id" valid:"-"`
+	DepartmentID 	*uint
+	Department		Department		`gorm:"references:id" valid:"-"`
 	
-	LeaveList []LeaveList `gorm:"foreignKey:EmployeeID"`
+	LeaveList 		[]LeaveList 	`gorm:"foreignKey:EmployeeID"`
 }

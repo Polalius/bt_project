@@ -211,7 +211,7 @@ func ListLeave(c *gin.Context){
 	var results []results
 	
 	if err := entity.DB().Table("leave_lists").
-	Select("leave_types.type_name, employees.emp_name, managers.man_name, leave_lists.start_time, leave_lists.stop_time, leave_lists.status,departments.dep_name,departments.id").
+	Select("leave_lists.id, departments.id, leave_types.type_name, employees.emp_name, managers.man_name, leave_lists.start_time, leave_lists.stop_time, leave_lists.status,departments.dep_name").
 	Joins("inner join leave_types on leave_types.id = leave_lists.leave_type_id").
 	Joins("inner join employees on employees.id = leave_lists.employee_id").
 	Joins("inner join managers on managers.id = leave_lists.manager_id").
@@ -225,12 +225,12 @@ func ListLeaveWait(c *gin.Context){
 	var results []results
 	dep_id := c.Param("id")
 	if err := entity.DB().Table("leave_lists").
-	Select("leave_lists.id, departments.id,  leave_types.type_name, employees.emp_name, managers.man_name, leave_lists.start_time, leave_lists.stop_time, leave_lists.status,departments.dep_name").
+	Select("leave_lists.id, departments.id, leave_types.type_name, employees.emp_name, managers.man_name, leave_lists.start_time, leave_lists.stop_time, leave_lists.status,departments.dep_name").
 	Joins("inner join leave_types on leave_types.id = leave_lists.leave_type_id").
 	Joins("inner join employees on employees.id = leave_lists.employee_id").
 	Joins("inner join managers on managers.id = leave_lists.manager_id").
 	Joins("inner join departments on departments.id = leave_lists.department_id").
-	Where("departments.id = ? AND leave_lists.status = 'pending approval'", dep_id).Scan(&results).Error; err != nil {
+	Where("departments.id = ? AND leave_lists.status = 'pending approval'", dep_id).Find(&results).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}

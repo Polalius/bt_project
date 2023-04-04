@@ -63,8 +63,6 @@ export default function Navbar({ open, onClick}: any) {
             .then((res) => {
                 if (res.data){
                     setManager(res.data)
-                    console.log(res.data.DepartmentID)
-                    localStorage.setItem("did", res.data.DepartmentID)
                 } else {
                     console.log("else")
                 }

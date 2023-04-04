@@ -45,6 +45,17 @@ func SutupDatabase() {
 	db.Model(&Role{}).Create(&man)
 	db.Model(&Role{}).Create(&pay)
 
+	de1 := Department{
+		DepName:   "IT",
+		
+	}
+
+	de2 := Department{
+		DepName:   "Payroll",
+		
+	}
+	db.Model(&Department{}).Create(&de1)
+	db.Model(&Department{}).Create(&de2)
 	/////////////
 	pw, err := bcrypt.GenerateFromPassword([]byte("123456"), bcrypt.DefaultCost)
 	if err != nil {
@@ -55,21 +66,25 @@ func SutupDatabase() {
 		UserName: "Employee1",
 		Password: string(pw),
 		Role: emp,
+		Department: de1,
 	}
 	userEmp2 := User{
 		UserName: "Employee2",
 		Password: string(pw),
 		Role: emp,
+		Department: de1,
 	}
 	userMan := User{
 		UserName: "Manager",
 		Password: string(pw),
 		Role: man,
+		Department: de1,
 	}
 	userPay := User{
 		UserName: "Payroll",
 		Password: string(pw),
 		Role: pay,
+		Department: de2,
 	}
 	db.Model(&User{}).Create(&userEmp1)
 	db.Model(&User{}).Create(&userEmp2)
@@ -89,17 +104,7 @@ func SutupDatabase() {
 	db.Model(&LeaveType{}).Create(&l_type1)
 	db.Model(&LeaveType{}).Create(&l_type2)
 
-	de1 := Department{
-		DepName:   "IT",
-		
-	}
-
-	de2 := Department{
-		DepName:   "Payroll",
-		
-	}
-	db.Model(&Department{}).Create(&de1)
-	db.Model(&Department{}).Create(&de2)
+	
 	////////////////
 	man1 := Manager{
 		ManName: "Tom Holland",

@@ -1,5 +1,5 @@
 export interface DepartmentInterface{
     ID?: number;
-    Name?: string;
+    DepName?: string;
 
 }

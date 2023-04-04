@@ -19,12 +19,14 @@ type EmployeeResponse struct {
 	UserID   uint   `json:"user_id"`
 	EmpID    uint   `json:"p_id"`
 	RoleName string `json:"role_name"`
+	DepID  	uint	`json:"did"`
 }
 type ManagerResponse struct {
 	Token    string
 	UserID   uint   `json:"user_id"`
 	ManID    uint   `json:"p_id"`
 	RoleName string `json:"role_name"`
+	DepID  	uint	`json:"did"`
 }
 
 // POST /signin
@@ -32,6 +34,7 @@ func Signin(c *gin.Context) {
 	var payload LoginPayload
 	var login entity.User
 	var role entity.Role
+	var dep entity.Department
 
 	if err := c.ShouldBindJSON(&payload); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
@@ -53,6 +56,11 @@ func Signin(c *gin.Context) {
 
 	//ค้นหา Role ด้วย role_id
 	if err := entity.DB().Raw("SELECT * FROM roles WHERE id = ?", login.RoleID).Scan(&role).Error; err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+	//ค้นหา Department ด้วย did
+	if err := entity.DB().Raw("SELECT * FROM departments WHERE id = ?", login.DepartmentID).Scan(&dep).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
@@ -80,6 +88,7 @@ func Signin(c *gin.Context) {
 			UserID:   login.ID,
 			EmpID: emp.ID,
 			RoleName: role.Name,
+			DepID: dep.ID,
 		}
 		c.JSON(http.StatusOK, gin.H{"data": tokenResponse})
 	}else if role.Name == "manager"{
@@ -94,6 +103,7 @@ func Signin(c *gin.Context) {
 			UserID:   login.ID,
 			ManID: man.ID,
 			RoleName: role.Name,
+			DepID: dep.ID,
 		}
 		c.JSON(http.StatusOK, gin.H{"data": tokenResponse})
 	}else if role.Name == "payroll"{
@@ -108,6 +118,7 @@ func Signin(c *gin.Context) {
 			UserID:   login.ID,
 			ManID: pay.ID,
 			RoleName: role.Name,
+			DepID: dep.ID,
 		}
 		c.JSON(http.StatusOK, gin.H{"data": tokenResponse})
 	}

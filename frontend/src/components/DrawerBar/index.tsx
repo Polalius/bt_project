@@ -32,6 +32,7 @@ export default function DrawerBar({ role, drawerWidth, handleDrawerClose, open, 
             menu = [
                 ...menu,
                 { "text": "payroll", "icon": <InboxIcon />, "link": "/"},
+                { "text": "pay", "icon": <InboxIcon />, "link": "/pay"},
             ]
         } 
         const navigator = useNavigate();

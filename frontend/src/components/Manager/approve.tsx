@@ -1,9 +1,12 @@
-import { Alert, Button, Container, CssBaseline, Snackbar, Stack, Typography } from "@mui/material";
+import { Alert, Button, Container, CssBaseline, Dialog, DialogActions, DialogTitle, IconButton, Snackbar, Stack, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import { LeaveInterface } from "../../models/ILeave";
 import { GetLeaveListByID, UpdateLeaveList } from "../../services/HttpClientService";
 import { Link as RouterLink, useNavigate } from "react-router-dom";
-export default function Approve(){
+import PendingActionsIcon from '@mui/icons-material/PendingActions';
+export default function Approve(props: any){
+    const { params } = props;
+    const [open, setOpen] = useState(false);
     const [alertmessage, setAlertMessage] = useState("");
     const [success, setSuccess] = useState(false);
     const [error, setError] = useState(false);
@@ -14,9 +17,18 @@ export default function Approve(){
         setSuccess(false);
         setError(false);
     };
+    const handleClickOpen = () => {
+        setOpen(true);
+      };
+     
+      const handleClose1 = () => {
+        setOpen(false);
+        setSuccess(false);
+        setError(false)
+      };
     const [leavelist, setLeavelist] = useState<LeaveInterface>();
-    const getLeaveListByID = async () => {
-        let res = await GetLeaveListByID();
+    const getLeaveListByID = async (id:any) => {
+        let res = await GetLeaveListByID(id);
         if (res) {
             setLeavelist(res);
             console.log(res)
@@ -24,8 +36,8 @@ export default function Approve(){
     }
     const navigator = useNavigate();
     async function approve() {
-        let data = {
-            ID: leavelist?.ID,
+        try {let data = {
+            ID: params,
             EmployeeID: leavelist?.EmployeeID,
             LeaveTypeID: leavelist?.LeaveTypeID,
             ManagerID: leavelist?.ManagerID,
@@ -35,21 +47,17 @@ export default function Approve(){
         };
         console.log(data)
         let res = await UpdateLeaveList(data);
-        if (res.data) {
-            setAlertMessage("ยืนยันสำเร็จ")
-            setSuccess(true);
-            setTimeout(() => {
-                navigator("/")
-            }, 3000)
-        } else {
-            setAlertMessage(res.error)
-            setError(true);
-        }
-        
+        setSuccess(true);
+      
+    } catch (err) {
+      setError(true);
+      console.log(err);
+    }
     }
     async function notapprove() {
+        try {
         let data = {
-            ID: leavelist?.ID,
+            ID: params,
             EmployeeID: leavelist?.EmployeeID,
             LeaveTypeID: leavelist?.LeaveTypeID,
             ManagerID: leavelist?.ManagerID,
@@ -59,113 +67,66 @@ export default function Approve(){
         };
         console.log(data)
         let res = await UpdateLeaveList(data);
-        if (res.data) {
-            setAlertMessage("ยืนยันสำเร็จ")
-            setSuccess(true);
-            setTimeout(() => {
-                navigator("/managershow")
-            }, 3000)
-        } else {
-            setAlertMessage(res.error)
-            setError(true);
-        }   
+        setSuccess(true);
+      
+    } catch (err) {
+      setError(true);
+      console.log(err);
+    }   
     }
     useEffect(() => {
-            getLeaveListByID();
+            getLeaveListByID(params);
         }, []);
     return (
         <div>
-            <Snackbar
-                open={success}
-                autoHideDuration={3000}
-                onClose={handleClose}
-                anchorOrigin={{ vertical: "top", horizontal: "center" }}
-                sx={{ mt: 10 }}
-            >
-                <Alert
-                    onClose={handleClose}
-                    severity="success"
-                    sx={{ width: '100%', borderRadius: 3 }}
-                >
-                    {alertmessage}
-                </Alert>
-            </Snackbar>
-            <Snackbar
-                open={error}
-                autoHideDuration={3000}
-                onClose={handleClose}
-                anchorOrigin={{ vertical: "top", horizontal: "center" }}
-                sx={{ mt: 10 }}
-            >
-                <Alert
-                    onClose={handleClose}
-                    severity="error"
-                    sx={{ width: '100%', borderRadius: 3 }}
-                >
-                    {alertmessage}
-                </Alert>
-            </Snackbar>
-            <Container
-                component="main"
-                maxWidth="sm"
-                sx={{
-                    mt: 5,
-                    mb: 2,
-                    p: 2,
-                    boxShadow: 3,
-                    bgcolor: '#F1F6F5',
-                    borderRadius: 3
-                }}
-            >
-                <CssBaseline />
-                <Stack
-                    sx={{ p: 0, m: 0, mb: 3 }}
-                >
-                    <Typography
-                        variant="h5"
-                        color="primary"
-                        sx={{ fontWeight: 'bold' }}
-                    >
-                        รายการขออนุมัติ
-                    </Typography>
-                </Stack>
-                <Stack
-                    spacing={2}
-                    direction="row"
-                    justifyContent="space-between"
-                    alignItems="flex-start"
-                    sx={{ mt: 3 }}
-                >
-                    <Button
-                        variant="contained"
-                        color="error"
-                        component={RouterLink}
-                        to="/"
-                        sx={{ borderRadius: 10, '&:hover': { color: '#FC0000', backgroundColor: '#F9EBEB' } }}
-                    >
-                        ถอยกลับ
-                    </Button>
-                    <Button
-                        variant="contained"
-                        color="primary"
-                        onClick={approve}
-                        sx={{ borderRadius: 10, '&:hover': { color: '#065D95', backgroundColor: '#e3f2fd' } }}
-                    >
-                        อนุมัติ
-                    </Button>
-                    <Button
-                        variant="contained"
-                        color="primary"
-                        onClick={notapprove}
-                        sx={{ borderRadius: 10, '&:hover': { color: '#065D95', backgroundColor: '#e3f2fd' } }}
-                    >
-                        ไม่อนุมัติ
-                    </Button>
-
-                </Stack>
-
-            </Container>
-
-        </div>
-    )
+      <IconButton
+        color="inherit"
+        size="small"
+        aria-label="delete"
+        onClick={handleClickOpen}
+      >
+        <PendingActionsIcon/>
+      </IconButton>
+      <Dialog
+        open={open}
+        onClose={handleClose1}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">
+          ต้องการอนุมัติรายการนี้ ?
+        </DialogTitle>
+        <DialogActions>
+          <Button color="inherit" onClick={handleClose1}>ยกเลิก</Button>
+          <Button color="success" onClick={approve} autoFocus>
+            อนุมัติ
+          </Button>
+          <Button color="error" onClick={notapprove} autoFocus>
+          ไม่อนุมัติ
+          </Button>
+        </DialogActions>
+        <Snackbar
+        open={success}
+        autoHideDuration={2000}
+        onClose={handleClose}
+        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+      >
+        <Alert onClose={handleClose} severity="success">
+          ยืนยันสำเร็จ
+        </Alert>
+      </Snackbar>
+      <Snackbar
+        open={error}
+        autoHideDuration={2000}
+        onClose={handleClose}
+        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+      >
+        <Alert onClose={handleClose} severity="error">
+          ยืนยันไม่สำเร็จ
+        </Alert>
+      </Snackbar>
+      </Dialog>
+      
+    </div>
+  );
 }

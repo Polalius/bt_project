@@ -30,8 +30,8 @@ function Form() {
     const [man, setMan] = useState<ManagerInterface>();
     const [ltype, setLType] = useState<LeaveTypeInterface[]>([]);
     const [depart, setDepart] = useState<DepartmentInterface>();
-    const [start, setStart] = React.useState<Dayjs | null>(dayjs('2023-03-31T15:30'));
-    const [stop, setStop] = React.useState<Dayjs | null>(dayjs('2023-03-31T15:30'));
+    const [start, setStart] = React.useState<Dayjs | null>(dayjs());
+    const [stop, setStop] = React.useState<Dayjs | null>(dayjs());
     const [success, setSuccess] = useState(false);
     const [error, setError] = useState(false);
     const [message, setAlertMessage] = useState("");
@@ -174,6 +174,7 @@ function Form() {
                     <Grid item xs={8} sx={{ mt: 1 }}>
                         <FormControl variant="outlined"  >
                             <Select
+                                required
                                 size='small'
                                 sx={{ borderRadius: 3, bgcolor: '#fff', width: 200}}
                                 value={leavelist.LeaveTypeID}
@@ -196,8 +197,8 @@ function Form() {
                         
                     </Grid>
                     <Grid item xs={12}><Typography>เรียน:{man?.ManName}</Typography></Grid>
-                    <Grid item xs={6}><Typography>ข้าพเจ้าชื่อ-นามสกุล:{" "+emp?.EmpName}</Typography></Grid>
-                    <Grid item xs={6}><Typography></Typography></Grid>
+                    <Grid item xs={6}><Typography>ข้าพเจ้า:{" "+emp?.EmpName}</Typography></Grid>
+                    <Grid item xs={6}><Typography>แผนก:{" "+depart?.DepName}</Typography></Grid>
                     <Grid item xs={12}><Typography>Email:{" "+ emp?.Email}</Typography></Grid>
                     <LocalizationProvider dateAdapter={AdapterDayjs}>
                         <Grid item xs={1.8}><Typography>ขอลาตั้งแต่</Typography></Grid>

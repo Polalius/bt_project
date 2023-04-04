@@ -16,6 +16,7 @@ import ManagerShow from './components/Manager/show';
 import Approve from './components/Manager/approve';
 import ManagerHistory from './components/Manager/history';
 import PayrollShow from './components/Payroll/payroll';
+import Payroll1 from './components/Payroll/payroll1';
 const drawerWidth = 240;
 function App() {
   const theme = createTheme({
@@ -142,6 +143,7 @@ function App() {
                 <>
                   
                   <Route path="/" element={<PayrollShow  />} />
+                  <Route path="/pay" element={<Payroll1 />} />
 
                 </>
               )}
