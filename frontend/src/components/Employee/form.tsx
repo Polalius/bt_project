@@ -3,11 +3,12 @@ import { forwardRef, useEffect, useState } from "react";
 import { Link as RouterLink } from "react-router-dom";
 
 import dayjs, { Dayjs } from 'dayjs';
-
+import momentTimeZone from 'moment-timezone'
+import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import MuiAlert from "@mui/material/Alert";
 import { AlertProps, Box, Button, Container, 
     CssBaseline, Divider, FormControl, Grid, 
-    Paper, Select, SelectChangeEvent, Snackbar, Stack, Typography } from "@mui/material";
+    Paper, Select, SelectChangeEvent, Snackbar, Stack, TextField, Typography } from "@mui/material";
 import { DateTimePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 
@@ -17,8 +18,8 @@ import { ManagerInterface } from "../../models/IManager";
 
 import { CreateLeavaList, GetDepartmentID, GetEmployeeID, GetManagerID, ListLeaveType } from "../../services/HttpClientService";
 import { DepartmentInterface } from "../../models/IDepartmemt";
-
-
+import utc from 'dayjs/plugin/utc';
+dayjs.extend(utc);
 const Alert = forwardRef<HTMLDivElement, AlertProps>(function Alert(props,ref,) {
     return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
 });
@@ -30,8 +31,8 @@ function Form() {
     const [man, setMan] = useState<ManagerInterface>();
     const [ltype, setLType] = useState<LeaveTypeInterface[]>([]);
     const [depart, setDepart] = useState<DepartmentInterface>();
-    const [start, setStart] = React.useState<Dayjs | null>(dayjs());
-    const [stop, setStop] = React.useState<Dayjs | null>(dayjs());
+    const [start, setStart] = React.useState<Date | null>(new Date());
+    const [stop, setStop] = React.useState<Date | null>(new Date());
     const [success, setSuccess] = useState(false);
     const [error, setError] = useState(false);
     const [message, setAlertMessage] = useState("");
@@ -200,20 +201,24 @@ function Form() {
                     <Grid item xs={6}><Typography>ข้าพเจ้า:{" "+emp?.EmpName}</Typography></Grid>
                     <Grid item xs={6}><Typography>แผนก:{" "+depart?.DepName}</Typography></Grid>
                     <Grid item xs={12}><Typography>Email:{" "+ emp?.Email}</Typography></Grid>
-                    <LocalizationProvider dateAdapter={AdapterDayjs}>
+                    <LocalizationProvider dateAdapter={AdapterDateFns}>
                         <Grid item xs={1.8}><Typography>ขอลาตั้งแต่</Typography></Grid>
                         <Grid item xs={4}>
+                        <FormControl fullWidth variant="outlined">
                             <DateTimePicker
                                 label="วันที่และเวลา"
                                 value={start}
                                 onChange={(newValue) => {
                                     setStart(newValue);
                                   }}
+                                  renderInput={(params) => <TextField {...params} />}
                                   
                             />
+                        </FormControl>
                         </Grid>
                         <Grid item xs={1}><Typography>ถึง</Typography></Grid>
                         <Grid item xs={4}>
+                        <FormControl fullWidth variant="outlined">
                             <DateTimePicker
                                 label="วันที่และเวลา"
                                 value={stop}
@@ -221,7 +226,9 @@ function Form() {
                                     setStop(newValue);
                                   
                                 }}
+                                renderInput={(params) => <TextField {...params} />}
                             />
+                        </FormControl>
                         </Grid>
                     </LocalizationProvider>
                 </Grid>

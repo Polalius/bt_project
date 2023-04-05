@@ -238,14 +238,19 @@ func ListLeaveWait(c *gin.Context){
 }
 // LIST /leave_list status wait
 func ListLeaveListByDepIDnSNwait(c *gin.Context) {
-	var leavelists []entity.LeaveList
-	man_id := c.Param("id")
-	if err := entity.DB().Preload("Employee").Preload("Manager").Preload("LeaveType").Preload("Department").Raw("SELECT * FROM leave_lists WHERE department_id = ? and status !='pending approval'", man_id).Find(&leavelists).Error; err != nil {
+	var results []results
+	d_id := c.Param("id")
+	if err := entity.DB().Table("leave_lists").
+	Select("leave_lists.id, departments.id, leave_types.type_name, employees.emp_name, managers.man_name, leave_lists.start_time, leave_lists.stop_time, leave_lists.status,departments.dep_name").
+	Joins("inner join leave_types on leave_types.id = leave_lists.leave_type_id").
+	Joins("inner join employees on employees.id = leave_lists.employee_id").
+	Joins("inner join managers on managers.id = leave_lists.manager_id").
+	Joins("inner join departments on departments.id = leave_lists.department_id").
+	Where("departments.id = ? and leave_lists.status != 'pending approval'", d_id).Scan(&results).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
-
-	c.JSON(http.StatusOK, gin.H{"data": leavelists})
+	c.JSON(http.StatusOK, gin.H{"data": results})
 }
 // DELETE /leave_list/:id
 func DeleteLeaveListByID(c *gin.Context) {
@@ -257,9 +262,10 @@ func DeleteLeaveListByID(c *gin.Context) {
 
 	c.JSON(http.StatusOK, gin.H{"data": id})
 }
+
 func UpdateLeaveList(c *gin.Context){
 	var leavelist entity.LeaveList
-	var newleavelist entity.LeaveList
+	var newleavelist entity.LeaveList1
 	var employees entity.Employee
 	var ltype entity.LeaveType
 	var manager entity.Manager
@@ -322,8 +328,6 @@ func UpdateLeaveList(c *gin.Context){
 		}
 		newleavelist.Manager = manager
 	}
-	leavelist.StartTime = newleavelist.StartTime
-	leavelist.StopTime = newleavelist.StopTime
 	leavelist.Status = newleavelist.Status
 
 	// ขั้นตอนการ validate

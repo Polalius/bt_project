@@ -2,20 +2,13 @@ import { useEffect, useState } from 'react';
 import { Link as RouterLink } from "react-router-dom";
 
 import { Box, Button, Container, IconButton, Paper, Typography } from '@mui/material';
-import { GridColDef, GridRenderCellParams} from '@mui/x-data-grid';
-import { DataGridPremium, GridToolbarContainer,GridToolbarExport } from '@mui/x-data-grid-premium';
+import { DataGrid, GridColDef, GridRenderCellParams} from '@mui/x-data-grid';
+import EditIcon from '@mui/icons-material/Edit';
 
 import { Leave1Interface, LeaveInterface } from '../../models/ILeave';
-import EditIcon from '@mui/icons-material/Edit';
-import {  ListLeaveListByDepIDnSWait, ListLeaveWait } from '../../services/HttpClientService';
+import { ListLeaveWait } from '../../services/HttpClientService';
 import Approve from './approve';
-function CustomToolbar() {
-    return (
-      <GridToolbarContainer>
-        <GridToolbarExport />
-      </GridToolbarContainer>
-    );
-  }
+
 function ManagerShow(){
     
     const [leavelist, setLeavelist] = useState<Leave1Interface[]>([])
@@ -27,12 +20,8 @@ function ManagerShow(){
         }
     };
 
-
-
     useEffect(() => {    
-        setLeavelist(JSON.parse(localStorage.getItem("did") || ""))
         getLeaveList(JSON.parse(localStorage.getItem("did") || ""))
-        
     }, []);
 
     const columns: GridColDef[] = [
@@ -89,7 +78,7 @@ function ManagerShow(){
                             sx={{ fontWeight: 'bold' }}
                             gutterBottom
                         >
-                            ประวัติการลางาน
+                            รายการคำร้องขอลา
                         </Typography>
                     </Box>
                     <Box>
@@ -106,13 +95,12 @@ function ManagerShow(){
                 </Box>
                 
                 <Box sx={{ borderRadius: 20 }}>
-                    <DataGridPremium
+                    <DataGrid
                         rows={leavelist}
                         getRowId={(row) => row.ID}
                         columns={columns}
                         autoHeight={true}
                         density={'comfortable'}
-                        slots={{toolbar: CustomToolbar}}
                         sx={{ mt: 2, backgroundColor: '#fff' }}
                     />
                 </Box>

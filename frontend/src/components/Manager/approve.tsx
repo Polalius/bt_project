@@ -1,9 +1,12 @@
-import { Alert, Button, Container, CssBaseline, Dialog, DialogActions, DialogTitle, IconButton, Snackbar, Stack, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+
+import { Alert, Button, Dialog, DialogActions, DialogTitle, IconButton, Snackbar } from "@mui/material";
+import PendingActionsIcon from '@mui/icons-material/PendingActions';
+
 import { LeaveInterface } from "../../models/ILeave";
 import { GetLeaveListByID, UpdateLeaveList } from "../../services/HttpClientService";
-import { Link as RouterLink, useNavigate } from "react-router-dom";
-import PendingActionsIcon from '@mui/icons-material/PendingActions';
+
 export default function Approve(props: any){
     const { params } = props;
     const [open, setOpen] = useState(false);
@@ -48,7 +51,9 @@ export default function Approve(props: any){
         console.log(data)
         let res = await UpdateLeaveList(data);
         setSuccess(true);
-      
+        setTimeout(() => {
+          window.location.reload();
+        }, 800);
     } catch (err) {
       setError(true);
       console.log(err);
@@ -68,7 +73,9 @@ export default function Approve(props: any){
         console.log(data)
         let res = await UpdateLeaveList(data);
         setSuccess(true);
-      
+        setTimeout(() => {
+          window.location.reload();
+        }, 800);
     } catch (err) {
       setError(true);
       console.log(err);

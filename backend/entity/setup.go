@@ -144,8 +144,8 @@ func SutupDatabase() {
 	list1 := LeaveList{
 		Employee:   emp1,
 		LeaveType: l_type1,
-		StartTime: time.Now(),
-		StopTime:  time.Now(),
+		StartTime: time.Date(2023, 4, 8, 0, 0, 0, 0, time.Now().Location()),
+		StopTime:  time.Date(2023, 4, 8, 0, 0, 0, 0, time.Now().Location()),
 		Manager: man1,
 		Department: de1,
 		Status: "approved",
@@ -154,8 +154,8 @@ func SutupDatabase() {
 	list2 := LeaveList{
 		Employee:   emp2,
 		LeaveType: l_type2,
-		StartTime: time.Now(),
-		StopTime:  time.Now(),
+		StartTime: time.Date(2023, 4, 8, 8, 0, 0, 0, time.Now().Location()),
+		StopTime:  time.Date(2023, 4, 8, 10, 0, 0, 0, time.Now().Location()),
 		Manager: man1,
 		Department: de1,
 		Status: "approved",
@@ -164,8 +164,8 @@ func SutupDatabase() {
 	list3 := LeaveList{
 		Employee:   emp2,
 		LeaveType: l_type2,
-		StartTime: time.Now(),
-		StopTime:  time.Now(),
+		StartTime: time.Date(2023, 4, 8, 0, 0, 0, 0, time.Now().Location()),
+		StopTime:  time.Date(2023, 4, 8, 0, 0, 0, 0, time.Now().Location()),
 		Manager: man1,
 		Department: de1,
 		Status: "pending approval",

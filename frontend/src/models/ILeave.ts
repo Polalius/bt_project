@@ -14,20 +14,29 @@ export interface LeaveInterface{
     EmployeeInterface?: EmployeeInterface;
     LeaveTypeID?: number;
     LeaveTypeInterface?: LeaveTypeInterface;
-    StartTime?:  Dayjs | null;
-	StopTime?:    Dayjs | null;
+    StartTime?:  Date | null;
+	StopTime?:    Date | null;
     ManagerID?: number;
     ManagerInterface?: ManagerInterface;
     Status?: string;
     DepartmentID?: number;
     DepartmentInterface?: DepartmentInterface;
 }
+
 export interface Leave1Interface{
     ID?: number;
     EmpName?: number;
     TypeName?: string;
-    StartTime?:  Dayjs | null;
-	StopTime?:    Dayjs | null;
+    StartTime?:  Date | null;
+	StopTime?:    Date | null;
+    ManName?: string;
+    Status?: string;
+    DepName?: number;
+}
+export interface Leave2Interface{
+    ID?: number;
+    EmpName?: number;
+    TypeName?: string;
     ManName?: string;
     Status?: string;
     DepName?: number;
