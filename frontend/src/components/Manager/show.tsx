@@ -8,6 +8,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import { Leave1Interface, LeaveInterface } from '../../models/ILeave';
 import { ListLeaveWait } from '../../services/HttpClientService';
 import Approve from './approve';
+import moment from 'moment';
 
 function ManagerShow(){
     
@@ -21,6 +22,7 @@ function ManagerShow(){
     };
 
     useEffect(() => {    
+        
         getLeaveList(JSON.parse(localStorage.getItem("did") || ""))
     }, []);
 
@@ -31,12 +33,8 @@ function ManagerShow(){
         { field: "TypeName", headerName: "ประเภทการลา", width: 150, headerAlign: "center", align: "center", renderCell: (params: GridRenderCellParams<any>) => {
             return <>{params.row.TypeName}</>;
           },},
-        { field: "StartTime", headerName: "ลาวันที่เวลา", width: 250, headerAlign: "center", align: "center", renderCell: (params: GridRenderCellParams<any>) => {
-            return <>{params.row.StartTime}</>;
-          }, },
-        { field: "StopTime", headerName: "ถึงวันที่เวลา", width: 250, headerAlign: "center", align: "center", renderCell: (params: GridRenderCellParams<any>) => {
-            return <>{params.row.StopTime}</>;
-          }, },
+        { field: "StartTime", headerName: "ลาวันที่เวลา", width: 250, headerAlign: "center", align: "center", valueFormatter: (params) => moment(params?.value).format("DD/MM/YYYY hh:mm A")},
+        { field: "StopTime", headerName: "ถึงวันที่เวลา", width: 250, headerAlign: "center", align: "center", valueFormatter: (params) => moment(params?.value).format("DD/MM/YYYY hh:mm A")},
           { field: "ManName", headerName: "ผู้จัดการ", width: 150, headerAlign: "center", align: "center", renderCell: (params: GridRenderCellParams<any>) => {
             return <>{params.row.ManName}</>;
           }, },

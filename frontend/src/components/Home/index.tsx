@@ -9,10 +9,13 @@ export default function Home({role} : any) {
             <Grid item xs={12} textAlign="center">
                 <h1>
                     ยินดีต้อนรับเข้าสู่ระบบในฐานะ {role}
+
                 </h1>
+
                 
             </Grid>
         </Grid>
     </Container>
+    
   )
 }

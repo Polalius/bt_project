@@ -80,6 +80,7 @@ const theme = createTheme({
     ...theme.mixins.toolbar,
     justifyContent: 'flex-end',
   }));
+  
 export default function Navbar() {
     const themep = useTheme();
   const [open, setOpen] = React.useState(false);
@@ -100,14 +101,17 @@ export default function Navbar() {
 
   const menuemployee = [
     { name: "หน้าแรก", icon: <HomeIcon />, path: "/" },
+    { name: "รายการคำขอลา", icon: <EventNoteIcon />, path: "/show", },
     { name: "แบบฟอร์มการลา", icon: <EventNoteIcon />, path: "/form", },
   ]
   const menumanager = [
     { name: "หน้าแรก", icon: <HomeIcon />, path: "/" },
+    { name: "รายการคำขอลา", icon: <EventNoteIcon />, path: "/show", },
     { name: "ประวัติการอนุมัติ", icon: <EventNoteIcon />, path: "/history", },
   ]
   const menupayroll = [
-    { name: "หน้าแรก", icon: <HomeIcon />, path: "/login" },
+    { name: "หน้าแรก", icon: <HomeIcon />, path: "/" },
+    { name: "ประวัติการอนุมัติ", icon: <EventNoteIcon />, path: "/show", },
     
   ]
 

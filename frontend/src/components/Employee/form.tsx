@@ -71,6 +71,8 @@ function Form() {
         return val;
     };
 
+    
+
     const handleClose = (event?: React.SyntheticEvent | Event,reason?: string) => {
         if (reason === "clickaway") {
             return;
@@ -207,9 +209,11 @@ function Form() {
                         <FormControl fullWidth variant="outlined">
                             <DateTimePicker
                                 label="วันที่และเวลา"
+                                
                                 value={start}
                                 onChange={(newValue) => {
                                     setStart(newValue);
+                                    console.log(newValue)
                                   }}
                                   renderInput={(params) => <TextField {...params} />}
                                   
@@ -220,6 +224,7 @@ function Form() {
                         <Grid item xs={4}>
                         <FormControl fullWidth variant="outlined">
                             <DateTimePicker
+                                
                                 label="วันที่และเวลา"
                                 value={stop}
                                 onChange={(newValue) => {

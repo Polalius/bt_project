@@ -1,12 +1,18 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-
-import { Alert, Button, Dialog, DialogActions, DialogTitle, IconButton, Snackbar } from "@mui/material";
+import MuiAlert, { AlertProps } from "@mui/material/Alert";
+import { Button, Dialog, DialogActions, DialogTitle, IconButton, Snackbar } from "@mui/material";
 import PendingActionsIcon from '@mui/icons-material/PendingActions';
 
 import { LeaveInterface } from "../../models/ILeave";
 import { GetLeaveListByID, UpdateLeaveList } from "../../services/HttpClientService";
-
+import React from "react";
+const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(
+  props,
+  ref
+) {
+  return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+});
 export default function Approve(props: any){
     const { params } = props;
     const [open, setOpen] = useState(false);

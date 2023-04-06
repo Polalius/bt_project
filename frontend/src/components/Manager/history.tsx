@@ -3,10 +3,12 @@ import { Link as RouterLink } from "react-router-dom";
 
 import { Box, Button, Container, Paper, Stack, Typography } from '@mui/material';
 import { ExcelExport } from '@progress/kendo-react-excel-export';
-import { Grid, GridColumn, GridToolbar } from '@progress/kendo-react-grid';
+import { Grid, GridColumn, GridRowProps, GridToolbar } from '@progress/kendo-react-grid';
 
-import { LeaveInterface } from '../../models/ILeave';
+import { Leave1Interface, LeaveInterface } from '../../models/ILeave';
 import { ListLeaveListByDepIDnSNWait } from '../../services/HttpClientService';
+import React from 'react';
+import moment from 'moment-timezone';
 
 
 function ManagerHistory(){
@@ -17,18 +19,31 @@ function ManagerHistory(){
         }
     }
 
-    const [leavelist, setLeavelist] = useState<LeaveInterface[]>([])
+    const [leavelist, setLeavelist] = useState<Leave1Interface[]>([])
+    const [leavelist1, setLeavelist1] = useState<LeaveInterface[]>([])
     const getLeaveList = async (id:any) => {
         let res = await ListLeaveListByDepIDnSNWait(id);
         if (res.data) {
             setLeavelist(res.data);
+            console.log(Array(res))
         }
     };
-
+    const convertTime = (i: Date) => {
+        moment(i).format("DD/MM/YYYY hh:mm A")
+        return i
+    }
+    
+    const stt = leavelist
+    console.log(stt)
     useEffect(() => {
         getLeaveList(JSON.parse(localStorage.getItem("did") || ""));
     }, []);
-  
+    const bor = "2px solid red"
+    const rowRender = (trElement: React.ReactElement<HTMLTableRowElement>, props: GridRowProps) => {
+        const red = { backgroundColor: "rgb(250, 219, 216)" };
+        const trProps: any = { style: red };
+        return React.cloneElement(trElement, { ...trProps });
+    }
     return (
         <div>
             <Container className="container" maxWidth="lg">
@@ -56,19 +71,18 @@ function ManagerHistory(){
                     </Box>
                 </Box>
                 <Box sx={{ borderRadius: 20 }}>
-                    <ExcelExport data={leavelist} ref={_export}>
-                    <Grid data={leavelist} style={{ height: "auto", borderBlockColor:'border-top-color'}}  >
-                        <GridToolbar>
-                            <Button 
+                    <Button 
                             color="secondary" onClick={excelExport} variant="contained"
                             sx={{ borderRadius: 20, '&:hover': { color: '#065D95', backgroundColor: '#e3f2fd' } }}
                             >
                                 Export to Excel
-                            </Button>
-                        </GridToolbar>
+                        </Button>
+                    <ExcelExport data={leavelist} ref={_export}>
+
+                    <Grid data={leavelist} style={{ height: "auto"}} rowRender={rowRender} >
                         <GridColumn field="EmpName" title="ชื่อ-นามสกุล"  width="120px" />
                         <GridColumn field="TypeName" title="ประเภทการลา" width="150px" />
-                        <GridColumn field="StartTime" title="ลาวันที่เวลา" width="250px"/>
+                        <GridColumn field="StartTime" title="ลาวันที่เวลา" width="250px" />
                         <GridColumn field="StopTime" title="ถึงวันที่เวลา" width="250px"/>
                         <GridColumn field="ManName" title="ผู้จัดการ" width="150px"/>
                         <GridColumn field="Status" title="สถานะ" width="150px"/>
@@ -86,7 +100,7 @@ function ManagerHistory(){
                             variant="contained"
                             color="primary"
                             component={RouterLink}
-                            to="/"
+                            to="/show"
                             sx={{'&:hover': {color: '#1543EE', backgroundColor: '#e3f2fd'}}}
                         >
                             ถอยกลับ

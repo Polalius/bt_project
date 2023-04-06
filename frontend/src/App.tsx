@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { Fragment, useEffect } from 'react';
 import { BrowserRouter as Router, NavLink, Route, Routes } from 'react-router-dom';
 
 import './App.css';
@@ -8,7 +8,6 @@ import { Box } from '@mui/system';
 
 import Signin from './components/Signin';
 import Navbar from './components/NavBar';
-import DrawerBar from './components/DrawerBar';
 import Home from './components/Home';
 import Form from './components/Employee/form';
 import EmployeeShow from './components/Employee/show';
@@ -43,47 +42,49 @@ function App() {
 
   const [token, setToken] = React.useState<String>("");
   const [statustoken, setStatustoken] = React.useState<boolean>(false);
-
+  const [login, setLogin] = React.useState<String>("");
   const [role, setRole] = React.useState<String>("")
   const [open, setOpen] = React.useState<boolean>(false)
 
   useEffect(() => {
-    const validToken = () => {
-      fetch("http://localhost:8080/valid", {
-        method: "GET",
-        headers: {
-          'Content-Type': 'application/json',
-          "Authorization": `Bearer ${token}`
-        }
-      })
-        .then((res) => res.json())
-        .then((data) => {
-          console.log(data)
-          if (!data.error) {
-            setStatustoken(true)
-          } else {
-            setStatustoken(false)
-            localStorage.clear();
-          }
-        })
-        .catch((err) => {
-          console.log(err)
-          setStatustoken(false)
-        })
-    }
-
-    const token: any = localStorage.getItem("token")
-    const role: any = localStorage.getItem("role")
+    // const validToken = () => {
+    //   fetch("http://localhost:8080/valid", {
+    //     method: "GET",
+    //     headers: {
+    //       'Content-Type': 'application/json',
+    //       "Authorization": `Bearer ${token}`
+    //     }
+    //   })
+    //     .then((res) => res.json())
+    //     .then((data) => {
+    //       console.log(data)
+    //       if (!data.error) {
+    //         setStatustoken(true)
+    //       } else {
+    //         setStatustoken(false)
+    //         localStorage.clear();
+    //       }
+    //     })
+    //     .catch((err) => {
+    //       console.log(err)
+    //       setStatustoken(false)
+    //     })
+    // }
+    setLogin(localStorage.getItem("login") || "");
+  
+    const token = localStorage.getItem("token")
+    
     if (token) {
       setToken(token)
-      setRole(role)
-      validToken()
+      setRole(localStorage.getItem("role") || "")
+      // validToken()
     }
 
   }, [])
 
-  if (!token || !statustoken) {
-    console.log(statustoken)
+  if ((!token) && login) {
+    
+    localStorage.clear();
     return <Signin />
   }
 
@@ -91,28 +92,29 @@ function App() {
     <div>
       <Router>
         <ThemeProvider theme={theme}>
-      
+          { token && (
+            <>
             <Navbar  />
             <div className='container-router'>
               <Routes>{role === "employee" && (
                 <>
-                  
-                  <Route path="/" element={<EmployeeShow  />} />
+                  <Route path="/" element={<Home role={role} />} />
+                  <Route path="/show" element={<EmployeeShow  />} />
                   <Route path="/form" element={<Form  />} />
                   
                 </>
               )}{role === "manager" && (
                 <>
-                  
-                  <Route path="/" element={<ManagerShow  />} />
+                  <Route path="/" element={<Home role={role} />} />
+                  <Route path="/show" element={<ManagerShow  />} />
                   <Route path="/approve" element={<Approve  />} />
                   <Route path="/history" element={<ManagerHistory  />} />
 
                 </>
               )}{role === "payroll" && (
                 <>
-                  
-                  <Route path="/" element={<PayrollShow  />} />
+                  <Route path="/" element={<Home role={role} />} />
+                  <Route path="/show" element={<PayrollShow  />} />
                   <Route path="/pay" element={<Payroll1 />} />
 
                 </>
@@ -120,7 +122,15 @@ function App() {
               </Routes>
             
             </div>  
-      
+          </>
+      )}
+      {!token && (
+        <Fragment>
+          <Routes>
+            <Route path='/' element={<Signin/>}/>
+          </Routes>
+        </Fragment>
+      )}
     </ThemeProvider>
     </Router>
     </div>

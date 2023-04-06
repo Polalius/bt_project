@@ -41,3 +41,13 @@ export interface Leave2Interface{
     Status?: string;
     DepName?: number;
 }
+export interface Leave3Interface{
+    ID?: number;
+    EmpName?: number;
+    TypeName?: string;
+    StartTime?:  Date;
+	StopTime?:    Date;
+    ManName?: string;
+    Status?: string;
+    DepName?: number;
+}
