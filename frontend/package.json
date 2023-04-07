@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@date-io/date-fns": "^2.16.0",
     "@emotion/react": "^11.10.6",
     "@emotion/styled": "^11.10.6",
     "@mui/icons-material": "^5.11.11",
@@ -37,6 +38,7 @@
     "@types/react-dom": "^18.0.11",
     "ag-grid-community": "^29.2.0",
     "ag-grid-react": "^29.2.0",
+    "date-fns": "^2.29.3",
     "dayjs": "^1.11.7",
     "moment-timezone": "^0.5.43",
     "progress": "^2.0.3",

@@ -100,8 +100,7 @@ export default function Navbar() {
   }
 
   const menuemployee = [
-    { name: "หน้าแรก", icon: <HomeIcon />, path: "/" },
-    { name: "รายการคำขอลา", icon: <EventNoteIcon />, path: "/show", },
+    { name: "รายการคำขอลา", icon: <EventNoteIcon />, path: "/", },
     { name: "แบบฟอร์มการลา", icon: <EventNoteIcon />, path: "/form", },
   ]
   const menumanager = [

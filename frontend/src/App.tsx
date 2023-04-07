@@ -98,8 +98,8 @@ function App() {
             <div className='container-router'>
               <Routes>{role === "employee" && (
                 <>
-                  <Route path="/" element={<Home role={role} />} />
-                  <Route path="/show" element={<EmployeeShow  />} />
+                  
+                  <Route path="/" element={<EmployeeShow  />} />
                   <Route path="/form" element={<Form  />} />
                   
                 </>

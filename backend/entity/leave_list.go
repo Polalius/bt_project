@@ -20,8 +20,8 @@ type LeaveList struct {
 	Employee     	Employee	`gorm:"references:id" valid:"-"`
 	LeaveTypeID 	*uint
 	LeaveType   	LeaveType	`gorm:"references:id" valid:"-"`
-	StartTime   	time.Time	`valid:"required~กรุณากรอกวันที่และเวลา, Current~ไม่สามารถลาย้อนหลัง"`
-	StopTime    	time.Time	`valid:"required~กรุณากรอกวันที่และเวลา, Current~ไม่สามารถลาย้อนหลัง"`
+	StartTime   	time.Time	
+	StopTime    	time.Time	
 	ManagerID		*uint
 	Manager			Manager		`gorm:"references:id" valid:"-"`
 	DepartmentID 	*uint

@@ -265,7 +265,8 @@ function Form() {
                     </Button>
 
             </Stack>
-            </Paper></Container>
+            </Paper>
+            </Container>
         </div>
     )
 }
