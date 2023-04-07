@@ -121,8 +121,8 @@ func CreateLeaveList(c *gin.Context) {
 	l_list := entity.LeaveList{
 		Employee:   employees,             // โยงความสัมพันธ์กับ Entity Employee
 		LeaveType: l_type,                // โยงความสัมพันธ์กับ Entity Leave type
-		StartTime: leavelists.StartTime, // ตั้งค่าฟิลด์ Start_time
-		StopTime:  leavelists.StopTime,  // ตั้งค่าฟิลด์ Stop_time
+		StartTime: leavelists.StartTime.Local(), // ตั้งค่าฟิลด์ Start_time
+		StopTime:  leavelists.StopTime.Local(),  // ตั้งค่าฟิลด์ Stop_time
 		Manager: manager,
 		Department: depart,
 		Status:     leavelists.Status,     // ตั้งค่าฟิลด์ Status

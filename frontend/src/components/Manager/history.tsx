@@ -3,14 +3,18 @@ import { Link as RouterLink } from "react-router-dom";
 
 import { Box, Button, Container, Paper, Stack, Typography } from '@mui/material';
 import { ExcelExport } from '@progress/kendo-react-excel-export';
-import { Grid, GridColumn, GridRowProps, GridToolbar } from '@progress/kendo-react-grid';
+import { Grid, GridColumn, GridFilterChangeEvent, GridRowProps, GridToolbar } from '@progress/kendo-react-grid';
 
 import { Leave1Interface, LeaveInterface } from '../../models/ILeave';
 import { ListLeaveListByDepIDnSNWait } from '../../services/HttpClientService';
 import React from 'react';
 import moment from 'moment-timezone';
+import { CompositeFilterDescriptor } from '@progress/kendo-data-query';
 
-
+const initialFilter: CompositeFilterDescriptor = {
+    logic: "and",
+    filters: [{ field: "EmpName", operator: "contains", value: "" }],
+  };
 function ManagerHistory(){
     const _export = useRef<ExcelExport | null>(null);
     const excelExport = () => {
@@ -18,7 +22,7 @@ function ManagerHistory(){
             _export.current.save();
         }
     }
-
+    
     const [leavelist, setLeavelist] = useState<Leave1Interface[]>([])
     const [leavelist1, setLeavelist1] = useState<LeaveInterface[]>([])
     const getLeaveList = async (id:any) => {
@@ -44,6 +48,7 @@ function ManagerHistory(){
         const trProps: any = { style: red };
         return React.cloneElement(trElement, { ...trProps });
     }
+    const [filter, setFilter] = React.useState(initialFilter);
     return (
         <div>
             <Container className="container" maxWidth="lg">
@@ -79,10 +84,10 @@ function ManagerHistory(){
                         </Button>
                     <ExcelExport data={leavelist} ref={_export}>
 
-                    <Grid data={leavelist} style={{ height: "auto"}} rowRender={rowRender} >
+                    <Grid data={leavelist} style={{ height: "auto"}} rowRender={rowRender} filterable={true} filter={filter} onFilterChange={(e: GridFilterChangeEvent) => setFilter(e.filter)}>
                         <GridColumn field="EmpName" title="ชื่อ-นามสกุล"  width="120px" />
                         <GridColumn field="TypeName" title="ประเภทการลา" width="150px" />
-                        <GridColumn field="StartTime" title="ลาวันที่เวลา" width="250px" />
+                        <GridColumn field="StartTime" title="ลาวันที่เวลา" width="250px" filter='date' format='{0:d}'/>
                         <GridColumn field="StopTime" title="ถึงวันที่เวลา" width="250px"/>
                         <GridColumn field="ManName" title="ผู้จัดการ" width="150px"/>
                         <GridColumn field="Status" title="สถานะ" width="150px"/>
