@@ -1,7 +1,7 @@
 import React from "react";
 import { forwardRef, useEffect, useState } from "react";
 import { Link as RouterLink } from "react-router-dom";
-
+import nodemailer from 'nodemailer'
 import dayjs, { Dayjs } from 'dayjs';
 import momentTimeZone from 'moment-timezone'
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
@@ -108,7 +108,11 @@ function Form() {
         }
         console.log(data)
         let res = await CreateLeavaList(data);
+        
         if (res.status) {
+            // setTimeout(() => {
+            //     window.location.href = `mailto:${man?.Email}?subject=คำร้องขอลา&body=${emp?.EmpName}`;
+            //   }, 800);
             setAlertMessage("บันทึกข้อมูลสำเร็จ");
             setSuccess(true);
         } else {
@@ -116,7 +120,27 @@ function Form() {
             setError(true);
         }
     }
-
+    
+    // async function mail() {
+    //     // สร้างออปเจ็ค transporter เพื่อกำหนดการเชื่อมต่อ SMTP และใช้ตอนส่งเมล
+    //     let transporter = nodemailer.createTransport({
+    //       host: 'smtp.gmail.com',
+    //       port: 587,
+    //       secure: false, // true for 465, false for other ports
+    //       auth: {
+    //         user: 'b6217112@g.sut.ac.th',
+    //         pass: '1301601167887',
+    //       },
+    //     });
+      
+    //     let info = await transporter.sendMail({
+    //       from: 'b6217112@g.sut.ac.th',
+    //       to: 'napakant1235@gmail.com',
+    //       subject: 'hello world',
+    //       html: "emailHtml",
+    //     });
+    //     console.log('Message sent: %s', info.messageId);
+    //   }
 
     return (
         <div>
@@ -259,6 +283,7 @@ function Form() {
                         variant="contained"
                         color="primary"
                         onClick={submit}
+                        // onSubmit={mail}
                         sx={{'&:hover': {color: '#1543EE', backgroundColor: '#e3f2fd'}}}
                     >
                         บันทึกข้อมูล

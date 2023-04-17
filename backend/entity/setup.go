@@ -108,7 +108,7 @@ func SutupDatabase() {
 	////////////////
 	man1 := Manager{
 		ManName: "Tom Holland",
-		Email:     "tom@email.com",
+		Email:     "tomholland@email.com",
 		User:      userMan,
 		Department: de1,
 		Role: man,
