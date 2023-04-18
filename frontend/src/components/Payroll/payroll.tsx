@@ -3,18 +3,10 @@ import { Link as RouterLink } from "react-router-dom";
 
 import { Box, Button, Container, IconButton, Paper, Typography } from '@mui/material';
 import { DataGrid, GridColDef, GridRenderCellParams, GridRowParams } from '@mui/x-data-grid';
-import { DataGridPremium, GridToolbarContainer,GridToolbarExport } from '@mui/x-data-grid-premium';
 import { EmployeeInterface } from '../../models/IEmployee';
 import { LeaveInterface } from '../../models/ILeave';
 import EditIcon from '@mui/icons-material/Edit';
 import { GetEmployeeID, ListLeave, ListLeaveList, ListLeaveListByDepID, ListLeaveListByDepIDnSNWait, ListLeaveListByDepIDnSWait, ListLeaveWait } from '../../services/HttpClientService';
-function CustomToolbar() {
-    return (
-      <GridToolbarContainer>
-        <GridToolbarExport />
-      </GridToolbarContainer>
-    );
-  }
 function PayrollShow(){
 
     const [leavelist, setLeavelist] = useState<LeaveInterface[]>([])
@@ -80,13 +72,13 @@ function PayrollShow(){
                     </Box>
                 </Box>
                 <Box sx={{ borderRadius: 20 }}>
-                    <DataGridPremium
+                    <DataGrid
                         rows={leavelist}
                         getRowId={(row) => row.ID}
                         columns={columns}
                         autoHeight={true}
                         density={'comfortable'}
-                        slots={{toolbar: CustomToolbar}}
+                        
                         sx={{ mt: 2, backgroundColor: '#fff' }}
                     />
                 </Box>

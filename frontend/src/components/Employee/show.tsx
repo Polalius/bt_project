@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { Link as RouterLink } from "react-router-dom";
 import moment from 'moment';
 import { Box, Button, Container, Paper, Typography } from '@mui/material';
-import { DataGrid, GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
+import { DataGrid, GridColDef, GridRenderCellParams, GridToolbar, GridToolbarContainer, GridToolbarFilterButton } from '@mui/x-data-grid';
 
 import { EmployeeInterface } from '../../models/IEmployee';
 import { LeaveInterface } from '../../models/ILeave';
@@ -43,8 +43,8 @@ function EmployeeShow(){
         { field: "LeaveType.TypeName", headerName: "ประเภทการลา", width: 150, headerAlign: "center", align: "center", renderCell: (params: GridRenderCellParams<any>) => {
             return <>{params.row.LeaveType.TypeName}</>;
           },},
-        { field: "StartTime", headerName: "ลาวันที่เวลา", width: 250, headerAlign: "center", align: "center", valueFormatter: (params) => moment(params?.value).format("DD/MM/YYYY hh:mm A")},
-        { field: "StopTime", headerName: "ถึงวันที่เวลา", width: 250, headerAlign: "center", align: "center", valueFormatter: (params) => moment(params?.value).format("DD/MM/YYYY hh:mm A") },
+        { field: "StartTime", headerName: "ลาวันที่เวลา",type:"date", width: 250, headerAlign: "center", align: "center", valueFormatter: (params) => moment(params?.value).format("DD/MM/YYYY hh:mm A")},
+        { field: "StopTime", headerName: "ถึงวันที่เวลา",type:"date", width: 250, headerAlign: "center", align: "center", valueFormatter: (params) => moment(params?.value).format("DD/MM/YYYY hh:mm A") },
         { field: "Manager.FirstName", headerName: "ผู้จัดการ", width: 150, headerAlign: "center", align: "center", renderCell: (params: GridRenderCellParams<any>) => {
             return <>{params.row.Manager.ManName}</>;
           }, },
@@ -96,6 +96,7 @@ function EmployeeShow(){
                         columns={columns}
                         autoHeight={true}
                         density={'comfortable'}
+                        slots={{toolbar: GridToolbarFilterButton}}
                         sx={{ mt: 2, backgroundColor: '#fff' }}
                     />
                 </Box>

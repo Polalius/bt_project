@@ -66,7 +66,7 @@ function ManagerHistory(){
                             sx={{ borderRadius: 20, '&:hover': { color: '#065D95', backgroundColor: '#e3f2fd' } }}
                             >
                                 Export to Excel
-                        </Button>
+                    </Button>
                     <ExcelExport data={leavelist} ref={_export}>
 
                     <Grid data={leavelist} style={{ height: "auto"}} rowRender={rowRender}>
