@@ -117,6 +117,10 @@ func CreateLeaveList(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "department not found"})
 		return
 	}
+	if tx := entity.DB().Where("employee_id = ? AND start_time BETWEEN ? AND ?", leavelists.EmployeeID, leavelists.StartTime, leavelists.StopTime).First(&leavelists); tx.RowsAffected != 0 {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "มีการลาเวลานี้ไปแล้ว"})
+		return
+	}
 	// 12: สร้าง leave_list
 	l_list := entity.LeaveList{
 		Employee:   employees,             // โยงความสัมพันธ์กับ Entity Employee
