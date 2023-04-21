@@ -16,6 +16,8 @@ import Approve from './components/Manager/approve';
 import ManagerHistory from './components/Manager/history';
 import PayrollShow from './components/Payroll/payroll';
 import Payroll1 from './components/Payroll/payroll1';
+import Form2 from './components/Employee/form2';
+import EmployeeShow2 from './components/Employee/show2';
 const drawerWidth = 240;
 function App() {
   const theme = createTheme({
@@ -101,6 +103,8 @@ function App() {
                   
                   <Route path="/" element={<EmployeeShow  />} />
                   <Route path="/form" element={<Form  />} />
+                  <Route path="/show2" element={<EmployeeShow2  />} />
+                  <Route path="/switch" element={<Form2/>} />
                   
                 </>
               )}{role === "manager" && (
@@ -113,9 +117,9 @@ function App() {
                 </>
               )}{role === "payroll" && (
                 <>
-                  <Route path="/" element={<Home role={role} />} />
+                  
                   <Route path="/show" element={<PayrollShow  />} />
-                  <Route path="/pay" element={<Payroll1 />} />
+                  <Route path="/" element={<Payroll1 />} />
 
                 </>
               )}

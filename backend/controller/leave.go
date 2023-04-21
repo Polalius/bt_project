@@ -117,10 +117,18 @@ func CreateLeaveList(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "department not found"})
 		return
 	}
-	if tx := entity.DB().Where("employee_id = ? AND start_time BETWEEN ? AND ?", leavelists.EmployeeID, leavelists.StartTime, leavelists.StopTime).First(&leavelists); tx.RowsAffected != 0 {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "มีการลาเวลานี้ไปแล้ว"})
+	if tx := entity.DB().Where("employee_id = ? AND ((start_time BETWEEN ? AND ?) OR (stop_time BETWEEN ? AND ?))", leavelists.EmployeeID, leavelists.StartTime.Local(), leavelists.StopTime.Local().Add(10 *time.Minute), leavelists.StartTime.Local(), leavelists.StopTime.Local().Add(10 *time.Minute)).First(&leavelists); tx.RowsAffected != 0 {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "มีการลาเวลานี้ไปแล้ว1"})
 		return
 	}
+	// if tx := entity.DB().Where("employee_id = ? AND (start_time BETWEEN ? AND ?) AND (stop_time BETWEEN ? AND ?)", leavelists.EmployeeID, leavelists.StartTime.Local(), leavelists.StopTime.Local(), leavelists.StartTime.Local(), leavelists.StopTime.Local()).First(&leavelists); tx.RowsAffected != 0 {
+	// 	c.JSON(http.StatusBadRequest, gin.H{"error": "มีการลาเวลานี้ไปแล้ว1"})
+	// 	return
+	// }
+	// if tx := entity.DB().Where("employee_id = ? AND ", leavelists.EmployeeID).First(&leavelists); tx.RowsAffected != 0 {
+	// 	c.JSON(http.StatusBadRequest, gin.H{"error": "มีการลาเวลานี้ไปแล้ว2"})
+	// 	return
+	// }
 	// 12: สร้าง leave_list
 	l_list := entity.LeaveList{
 		Employee:   employees,             // โยงความสัมพันธ์กับ Entity Employee
@@ -220,6 +228,37 @@ func ListLeave(c *gin.Context){
 	Joins("inner join employees on employees.id = leave_lists.employee_id").
 	Joins("inner join managers on managers.id = leave_lists.manager_id").
 	Joins("inner join departments on departments.id = leave_lists.department_id").Scan(&results).Error; err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{"data": results})
+}
+func ListLeaveStatus(c *gin.Context){
+	var results []results
+	
+	if err := entity.DB().Table("leave_lists").
+	Select("leave_lists.id, departments.id, leave_types.type_name, employees.emp_name, managers.man_name, leave_lists.start_time, leave_lists.stop_time, leave_lists.status,departments.dep_name").
+	Joins("inner join leave_types on leave_types.id = leave_lists.leave_type_id").
+	Joins("inner join employees on employees.id = leave_lists.employee_id").
+	Joins("inner join managers on managers.id = leave_lists.manager_id").
+	Joins("inner join departments on departments.id = leave_lists.department_id").
+	Where("leave_lists.status = 'approved'").Scan(&results).Error; err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{"data": results})
+}
+func ListLeaveStatusDate(c *gin.Context){
+	var results []results
+	start := c.Param("start")
+	stop := c.Param("stop")
+	if err := entity.DB().Table("leave_lists").
+	Select("leave_lists.id, departments.id, leave_types.type_name, employees.emp_name, managers.man_name, leave_lists.start_time, leave_lists.stop_time, leave_lists.status,departments.dep_name").
+	Joins("inner join leave_types on leave_types.id = leave_lists.leave_type_id").
+	Joins("inner join employees on employees.id = leave_lists.employee_id").
+	Joins("inner join managers on managers.id = leave_lists.manager_id").
+	Joins("inner join departments on departments.id = leave_lists.department_id").
+	Where("leave_lists.status = 'approved' AND (start_time BETWEEN ? AND ?)",start,stop).Scan(&results).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}

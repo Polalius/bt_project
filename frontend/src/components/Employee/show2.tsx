@@ -7,15 +7,16 @@ import { DataGrid, GridColDef, GridRenderCellParams,  GridToolbarFilterButton } 
 import { EmployeeInterface } from '../../models/IEmployee';
 import { LeaveInterface } from '../../models/ILeave';
 
-import { GetEmployeeID, ListLeaveListByEmpID } from '../../services/HttpClientService';
+import { GetEmployeeID, ListLeaveListByEmpID, ListSwitchByEmpID } from '../../services/HttpClientService';
+import { SwitchInterface } from '../../models/ISwitch';
 
-function EmployeeShow(){
+function EmployeeShow2(){
 
-    const [leavelist, setLeavelist] = useState<LeaveInterface[]>([])
+    const [leavelist, setLeavelist] = useState<SwitchInterface[]>([])
     const [emp, setEmp] = useState<EmployeeInterface>();
 
     const getLeaveList = async (id:any) => {
-        let res = await ListLeaveListByEmpID(id);
+        let res = await ListSwitchByEmpID(id);
         if (res.data) {
             setLeavelist(res.data);
         }
@@ -40,11 +41,8 @@ function EmployeeShow(){
         { field: "Employee.FirstName", headerName: "ชื่อ-นามสกุล",type:"string", width: 120, headerAlign: "center", align: "center", renderCell: (params: GridRenderCellParams<any>) => {
             return <>{params.row.Employee.EmpName}</>},
         },
-        { field: "LeaveType.TypeName", headerName: "ประเภทการลา",type:"string", width: 150, headerAlign: "center", align: "center", renderCell: (params: GridRenderCellParams<any>) => {
-            return <>{params.row.LeaveType.TypeName}</>;
-          },},
-        { field: "StartTime", headerName: "ลาวันที่เวลา",type:"date", width: 250, headerAlign: "center", align: "center", valueFormatter: (params) => moment(params?.value).format("MM/DD/YYYY hh:mm A")},
-        { field: "StopTime", headerName: "ถึงวันที่เวลา",type:"date", width: 250, headerAlign: "center", align: "center", valueFormatter: (params) => moment(params?.value).format("MM/DD/YYYY hh:mm A") },
+        { field: "WorkTime", headerName: "วันที่สลับ",type:"date", width: 250, headerAlign: "center", align: "center", valueFormatter: (params) => moment(params?.value).format("MM/DD/YYYY hh:mm A")},
+        { field: "LeaveTime", headerName: "วันที่มาทำงาน",type:"date", width: 250, headerAlign: "center", align: "center", valueFormatter: (params) => moment(params?.value).format("MM/DD/YYYY ") },
         { field: "Manager.FirstName", headerName: "ผู้จัดการ",type:"string", width: 150, headerAlign: "center", align: "center", renderCell: (params: GridRenderCellParams<any>) => {
             return <>{params.row.Manager.ManName}</>;
           }, },
@@ -74,13 +72,13 @@ function EmployeeShow(){
                             sx={{ fontWeight: 'bold' }}
                             gutterBottom
                         >
-                            ประวัติการลางาน
+                            ประวัติสลับวันลา
                         </Typography>
                     </Box>
                     <Box>
                         <Button
                             component={RouterLink}
-                            to="/form"
+                            to="/switch"
                             variant="contained"
                             color="primary"
                             sx={{ borderRadius: 20, '&:hover': { color: '#065D95', backgroundColor: '#e3f2fd' } }}
@@ -105,4 +103,4 @@ function EmployeeShow(){
         </div>
     )
 }
-export default EmployeeShow
+export default EmployeeShow2

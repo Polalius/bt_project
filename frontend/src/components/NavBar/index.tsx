@@ -17,6 +17,8 @@ import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import ListItem from "@mui/material/ListItem";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
+import { GetUserID } from "../../services/HttpClientService";
+import { SigninInterface, UserInterface } from "../../models/ISignin";
 const theme = createTheme({
     palette: {
       primary: {
@@ -85,6 +87,7 @@ export default function Navbar() {
     const themep = useTheme();
   const [open, setOpen] = React.useState(false);
   const [role, setRole] = React.useState("");
+  const [user, setUser] = React.useState<UserInterface>();
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -94,6 +97,7 @@ export default function Navbar() {
     setOpen(false);
   };
 
+
   const SignOut = () => {
     localStorage.clear();
     window.location.href = "/";
@@ -102,6 +106,8 @@ export default function Navbar() {
   const menuemployee = [
     { name: "รายการคำขอลา", icon: <EventNoteIcon />, path: "/", },
     { name: "แบบฟอร์มการลา", icon: <EventNoteIcon />, path: "/form", },
+    { name: "รายการคำขอสลับวันลา", icon: <EventNoteIcon />, path: "/show2", },
+    { name: "แบบฟอร์มสลับวันลา", icon: <EventNoteIcon />, path: "/switch", },
   ]
   const menumanager = [
     { name: "หน้าแรก", icon: <HomeIcon />, path: "/" },
@@ -111,6 +117,7 @@ export default function Navbar() {
   const menupayroll = [
     { name: "หน้าแรก", icon: <HomeIcon />, path: "/" },
     { name: "ประวัติการอนุมัติ", icon: <EventNoteIcon />, path: "/show", },
+    { name: "ประวัติการอนุมัติ", icon: <EventNoteIcon />, path: "/pay", },
     
   ]
 
@@ -130,11 +137,19 @@ export default function Navbar() {
       menu = [];
       break;
   }
+  const getUserID = async (id:any) => {
+    let res = await GetUserID(id);
+    if (res) {
+        setUser(res);
+        console.log(res)
+    }
+}
 
     useEffect(() => {
         const getToken = localStorage.getItem("token");
     if (getToken) {
       setRole(localStorage.getItem("role") || "");
+      getUserID(localStorage.getItem("uid"))
     }
     }, [])
     return (
@@ -156,6 +171,7 @@ export default function Navbar() {
               <Typography variant="h6" color="secondary" noWrap component="div" fontFamily= 'Gloock'>
                 โปรแกรมการลางาน
               </Typography>
+              <Typography>User:{user?.UserName}</Typography>
               <MenuItem onClick={SignOut}><LogoutIcon style={{ marginRight: ".5rem" }} />Log out</MenuItem>
             </Box>
 

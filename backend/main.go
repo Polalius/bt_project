@@ -38,6 +38,7 @@ func main() {
 	r.Use(CORSMiddleware())
 
 	r.GET("/users", controller.ListUser)
+	r.GET("/user/:id", controller.GetUser)
 
 
 	r.GET("/employeeId/:id", controller.GetEmployeeByUserID)
@@ -47,6 +48,8 @@ func main() {
 
 	r.GET("/leavelists", controller.ListLeaveList)
 	r.GET("/leave", controller.ListLeave)
+	r.GET("/leavestatus", controller.ListLeaveStatus)
+	r.GET("/leavedate/start&stop", controller.ListLeaveStatusDate)
 	r.GET("/leavewait/:id", controller.ListLeaveWait)
 	r.GET("/leavelist/:id", controller.GetLeaveList)
 	r.GET("/leavelistempid/:id", controller.ListLeaveListByEmpID)
@@ -54,6 +57,10 @@ func main() {
 	r.GET("/leavelist_depwait/:id", controller.ListLeaveListByDepIDnSwait)
 	r.GET("/leavelist_depnwait/:id", controller.ListLeaveListByDepIDnSNwait)
 	r.PATCH("/leavelists", controller.UpdateLeaveList)
+
+	r.GET("/switch_leaves", controller.ListSwitch)
+	r.GET("/switch_leaveid/:id", controller.ListSwitchByEmpID)
+	r.POST("/switch_leaves", controller.CreateSwitchLeave)
 
 	r.GET("/leavetypes", controller.ListLeaveType)
 	

@@ -9,7 +9,7 @@ import MuiAlert from "@mui/material/Alert";
 import { AlertProps, Box, Button, Container, 
     CssBaseline, Divider, FormControl, Grid, 
     Paper, Select, SelectChangeEvent, Snackbar, Stack, TextField, Typography } from "@mui/material";
-import { DateTimePicker, LocalizationProvider } from '@mui/x-date-pickers';
+import { DatePicker, DateTimePicker, LocalizationProvider } from '@mui/x-date-pickers';
 
 
 import { LeaveInterface, LeaveTypeInterface } from "../../models/ILeave";
@@ -17,7 +17,8 @@ import { EmployeeInterface } from "../../models/IEmployee";
 import { ManagerInterface } from "../../models/IManager";
 import { DepartmentInterface } from "../../models/IDepartmemt";
 
-import { CreateLeavaList, GetDepartmentID, GetEmployeeID, GetManagerID, ListLeaveType } from "../../services/HttpClientService";
+import { CreateLeavaList, CreateSwitchLeave, GetDepartmentID, GetEmployeeID, GetManagerID, ListLeaveType } from "../../services/HttpClientService";
+import { SwitchInterface } from "../../models/ISwitch";
 
 
 dayjs.extend(utc);
@@ -25,12 +26,11 @@ const Alert = forwardRef<HTMLDivElement, AlertProps>(function Alert(props,ref,) 
     return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
 });
 
-function Form() {
+function Form2() {
 
-    const [leavelist, setLeavelist] = useState<Partial<LeaveInterface>>({});
+    const [leavelist, setLeavelist] = useState<Partial<SwitchInterface>>({});
     const [emp, setEmp] = useState<EmployeeInterface>();
     const [man, setMan] = useState<ManagerInterface>();
-    const [ltype, setLType] = useState<LeaveTypeInterface[]>([]);
     const [depart, setDepart] = useState<DepartmentInterface>();
     const [start, setStart] = React.useState<Date | null>(new Date());
     const [stop, setStop] = React.useState<Date | null>(new Date());
@@ -59,13 +59,6 @@ function Form() {
         }
     }
 
-    const getLeaveType = async () => {
-        let res = await ListLeaveType();
-        if (res.data) {
-          setLType(res.data);
-        }
-    };
-
 
     const convertType = (data: string | number | undefined | null) => {
         let val = typeof data === "string" ? parseInt(data) : data;
@@ -91,7 +84,6 @@ function Form() {
     };
 
     useEffect(()=>{
-        getLeaveType();
         getEmployeeID(JSON.parse(localStorage.getItem("uid") || ""));
         getManagerID(JSON.parse(localStorage.getItem("did") || ""));
         getDepartmentID(JSON.parse(localStorage.getItem("did") || ""))
@@ -100,15 +92,14 @@ function Form() {
     async function submit(){
         let data = {
             EmployeeID: convertType(emp?.ID) ?? 0,
-            LeaveTypeID: convertType(leavelist?.LeaveTypeID) ?? 0,
-            StartTime: start,
-            StopTime: stop,
+            WorkTime: start,
+            LeaveTime: stop,
             ManagerID: convertType(man?.ID) ?? 0,
             DepartmentID: convertType(depart?.ID) ?? 0,
             Status: "pending approval",
         }
         console.log(data)
-        let res = await CreateLeavaList(data);
+        let res = await CreateSwitchLeave(data);
         
         if (res.status) {
             // setTimeout(() => {
@@ -189,7 +180,7 @@ function Form() {
                             color="primary"
                             sx={{ padding: 2, fontWeight: "bold", marginTop: 1 }}
                         >
-                            แบบฟอร์มลางาน
+                            แบบฟอร์มสลับวันลา
                         </Typography>
                     </Box>
                     <Divider />
@@ -198,38 +189,12 @@ function Form() {
                     <Grid item xs={3}></Grid>
                     <Grid item xs={2.5}></Grid>
                 <Grid container spacing={{ xs: 12, md: 5 }}>
-                    <Grid item xs={0.5}><Typography>เรื่อง:</Typography></Grid>
-                    <Grid item xs={8} sx={{ mt: 1 }}>
-                        <FormControl variant="outlined"  >
-                            <Select
-                                required
-                                size='small'
-                                sx={{ borderRadius: 3, bgcolor: '#fff', width: 200}}
-                                value={leavelist.LeaveTypeID}
-                                onChange={handleChange}
-                                inputProps={{
-                                    name: "LeaveTypeID",
-                                }}
-                                native
-                            >
-                                <option aria-label="None" value="">
-                                        หัวข้อการลา
-                                </option>
-                                {ltype.map((item: LeaveTypeInterface) => (
-                                    <option value={Number(item.ID)} key={item.ID}>
-                                        {item.TypeName}
-                                    </option>
-                                ))}
-                            </Select>
-                        </FormControl>
-                        
-                    </Grid>
                     <Grid item xs={12}><Typography>เรียน:{man?.ManName}</Typography></Grid>
                     <Grid item xs={6}><Typography>ข้าพเจ้า:{" "+emp?.EmpName}</Typography></Grid>
                     <Grid item xs={6}><Typography>แผนก:{" "+depart?.DepName}</Typography></Grid>
                     <Grid item xs={12}><Typography>Email:{" "+ emp?.Email}</Typography></Grid>
                     <LocalizationProvider dateAdapter={AdapterDateFns}>
-                        <Grid item xs={1.8}><Typography>ขอลาตั้งแต่</Typography></Grid>
+                        <Grid item xs={1.8}><Typography>วันที่สลับ</Typography></Grid>
                         <Grid item xs={4}>
                         <FormControl fullWidth variant="outlined">
                             <DateTimePicker
@@ -245,12 +210,12 @@ function Form() {
                             />
                         </FormControl>
                         </Grid>
-                        <Grid item xs={1}><Typography>ถึง</Typography></Grid>
+                        <Grid item xs={1}><Typography>วันที่มาทำงาน</Typography></Grid>
                         <Grid item xs={4}>
                         <FormControl fullWidth variant="outlined">
-                            <DateTimePicker
+                            <DatePicker
                                 
-                                label="วันที่และเวลา"
+                                label="วันที่"
                                 value={stop}
                                 onChange={(newValue) => {
                                     setStop(newValue);
@@ -275,7 +240,7 @@ function Form() {
                         variant="contained"
                         color="primary"
                         component={RouterLink}
-                        to="/"
+                        to="/show2"
                         sx={{'&:hover': {color: '#1543EE', backgroundColor: '#e3f2fd'}}}
                     >
                         ถอยกลับ
@@ -296,4 +261,4 @@ function Form() {
         </div>
     )
 }
-export default Form
+export default Form2

@@ -10,7 +10,7 @@ import { ListLeaveWait } from '../../services/HttpClientService';
 import Approve from './approve';
 import moment from 'moment';
 
-function ManagerShow(){
+function ManagerSwitchShow(){
     
     const [leavelist, setLeavelist] = useState<Leave1Interface[]>([])
     const getLeaveList = async (id:any) => {
@@ -108,4 +108,4 @@ function ManagerShow(){
         </div>
     )
 }
-export default ManagerShow
+export default ManagerSwitchShow

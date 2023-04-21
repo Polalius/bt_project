@@ -29,6 +29,7 @@ func SutupDatabase() {
 		&LeaveType{},
 		&Manager{},
 		&Employee{},
+		&SwitchLeave{},
 	)
 	db = database
 
@@ -171,6 +172,24 @@ func SutupDatabase() {
 		Status: "pending approval",
 	}
 	db.Model(&LeaveList{}).Create(&list3)
+	sw_leave1 := SwitchLeave{
+		Employee: emp1,
+		WorkTime: time.Date(2023, 4, 8, 8, 0, 0, 0, time.Now().Location()),
+		LeaveTime:  time.Date(2023, 4, 21, 10, 0, 0, 0, time.Now().Location()),
+		Manager: man1,
+		Department: de1,
+		Status: "approved",
+	}
+	db.Model(&SwitchLeave{}).Create(&sw_leave1)
+	sw_leave2 := SwitchLeave{
+		Employee: emp2,
+		WorkTime: time.Date(2023, 4, 8, 8, 0, 0, 0, time.Now().Location()),
+		LeaveTime:  time.Date(2023, 4, 21, 10, 0, 0, 0, time.Now().Location()),
+		Manager: man1,
+		Department: de1,
+		Status: "approved",
+	}
+	db.Model(&SwitchLeave{}).Create(&sw_leave2)
 
 
 }
