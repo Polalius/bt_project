@@ -1,4 +1,5 @@
 import { LeaveInterface } from "../models/ILeave";
+import { SwitchInterface } from "../models/ISwitch";
 
 const apiUrl = "http://localhost:8080";
 async function ListLeaveList() {
@@ -373,12 +374,33 @@ async function ListLeaveList() {
       },
     };
   
-    let res = await fetch(`${apiUrl}/switch_leaveid/${id}`, requestOptions)
+    let res = await fetch(`${apiUrl}/switch_id/${id}`, requestOptions)
       .then((response) => response.json())
       .then((res) => {
         if (res) {
           return res;
         } 
+      });
+  
+    return res;
+  }
+  async function GetSwitchByID(l_id:any) {
+    
+    const requestOptions = {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+        "Content-Type": "application/json",
+      },
+    };
+    let res = await fetch(`${apiUrl}/switch/${l_id}`, requestOptions)
+      .then((response) => response.json())
+      .then((res) => {
+        if (res.data) {
+          return res.data;
+        } else {
+          return false;
+        }
       });
   
     return res;
@@ -392,7 +414,7 @@ async function ListLeaveList() {
       },
     };
   
-    let res = await fetch(`${apiUrl}/switch_leaves`, requestOptions)
+    let res = await fetch(`${apiUrl}/switchs`, requestOptions)
     .then((response) => response.json())
     .then((res) => {
       if (res) {
@@ -402,7 +424,26 @@ async function ListLeaveList() {
 
   return res;
   }
-  async function CreateSwitchLeave(data: LeaveInterface) {
+  async function ListSwitchWait(id:any) {
+    const requestOptions = {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+        "Content-Type": "application/json",
+      },
+    };
+  
+    let res = await fetch(`${apiUrl}/switch_wait/${id}`, requestOptions)
+      .then((response) => response.json())
+      .then((res) => {
+        if (res) {
+          return res;
+        } 
+      });
+  
+    return res;
+  }
+  async function CreateSwitchLeave(data: SwitchInterface) {
     const requestOptions = {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -417,6 +458,43 @@ async function ListLeaveList() {
         } else {
           return { status: false, message: res.error };
         }
+      });
+  
+    return res;
+  }
+  async function UpdateSwitch(data: Partial<SwitchInterface>) {
+   
+    const requestOptions = {
+        method: "PATCH",
+        headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data)
+    }
+  
+    let res = await fetch(`${apiUrl}/switch_leaves`, requestOptions)
+        .then((response) => response.json())
+        .then((res) => {
+          return res
+        })
+    return res
+  }
+  async function ListSwitchByDepIDnSNWait(id:any) {
+    const requestOptions = {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+        "Content-Type": "application/json",
+      },
+    };
+  
+    let res = await fetch(`${apiUrl}/switch_depnwaitid/${id}`, requestOptions)
+      .then((response) => response.json())
+      .then((res) => {
+        if (res) {
+          return res;
+        } 
       });
   
     return res;
@@ -441,8 +519,13 @@ async function ListLeaveList() {
     GetManagerID,
     GetUserID,
     GetDepartmentID,
+
+    GetSwitchByID,
     ListSwitch,
+    ListSwitchWait,
     ListSwitchByEmpID,
-    CreateSwitchLeave
+    ListSwitchByDepIDnSNWait,
+    CreateSwitchLeave,
+    UpdateSwitch
   }
   

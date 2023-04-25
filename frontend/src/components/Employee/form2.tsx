@@ -9,7 +9,7 @@ import MuiAlert from "@mui/material/Alert";
 import { AlertProps, Box, Button, Container, 
     CssBaseline, Divider, FormControl, Grid, 
     Paper, Select, SelectChangeEvent, Snackbar, Stack, TextField, Typography } from "@mui/material";
-import { DatePicker, DateTimePicker, LocalizationProvider } from '@mui/x-date-pickers';
+import { DatePicker, DateTimePicker, LocalizationProvider, TimePicker } from '@mui/x-date-pickers';
 
 
 import { LeaveInterface, LeaveTypeInterface } from "../../models/ILeave";
@@ -32,8 +32,10 @@ function Form2() {
     const [emp, setEmp] = useState<EmployeeInterface>();
     const [man, setMan] = useState<ManagerInterface>();
     const [depart, setDepart] = useState<DepartmentInterface>();
-    const [start, setStart] = React.useState<Date | null>(new Date());
-    const [stop, setStop] = React.useState<Date | null>(new Date());
+    const [leave, setLeave] = React.useState<Date | null>(new Date());
+    const [work, setWork] = React.useState<Date | null>(new Date());
+    const [ftime, setFTime] = React.useState(null);
+    const [ttime, setTtime] = React.useState(null);
     const [success, setSuccess] = useState(false);
     const [error, setError] = useState(false);
     const [message, setAlertMessage] = useState("");
@@ -92,8 +94,10 @@ function Form2() {
     async function submit(){
         let data = {
             EmployeeID: convertType(emp?.ID) ?? 0,
-            WorkTime: start,
-            LeaveTime: stop,
+            LeaveDay: leave,
+            FromTime: ftime,
+            ToTime: ttime,
+            WorkDay: work,
             ManagerID: convertType(man?.ID) ?? 0,
             DepartmentID: convertType(depart?.ID) ?? 0,
             Status: "pending approval",
@@ -197,12 +201,12 @@ function Form2() {
                         <Grid item xs={1.8}><Typography>วันที่สลับ</Typography></Grid>
                         <Grid item xs={4}>
                         <FormControl fullWidth variant="outlined">
-                            <DateTimePicker
+                            <DatePicker
                                 label="วันที่และเวลา"
                                 
-                                value={start}
+                                value={leave}
                                 onChange={(newValue) => {
-                                    setStart(newValue);
+                                    setLeave(newValue);
                                     console.log(newValue)
                                   }}
                                   renderInput={(params) => <TextField {...params} />}
@@ -210,15 +214,45 @@ function Form2() {
                             />
                         </FormControl>
                         </Grid>
-                        <Grid item xs={1}><Typography>วันที่มาทำงาน</Typography></Grid>
+                        <Grid item xs={2.5}>
+                        <FormControl fullWidth variant="outlined">
+                            <TimePicker
+                                label="จากเวลา"
+                                ampm={true}
+                                value={ftime}
+                                onChange={(newValue) => {
+                                    setFTime(newValue);
+                                    console.log(newValue)
+                                  }}
+                                  renderInput={(params) => <TextField {...params} />}
+                                  
+                            />
+                        </FormControl>
+                        </Grid>
+                        <Grid item xs={2.5}>
+                        <FormControl fullWidth variant="outlined">
+                            <TimePicker
+                                label="ถึงเวลา"
+                                ampm={true}
+                                value={ttime}
+                                onChange={(newValue) => {
+                                    setTtime(newValue);
+                                    console.log(newValue)
+                                  }}
+                                  renderInput={(params) => <TextField {...params} />}
+                                  
+                            />
+                        </FormControl>
+                        </Grid>
+                        <Grid item xs={1.8}><Typography>วันที่มาทำงาน</Typography></Grid>
                         <Grid item xs={4}>
                         <FormControl fullWidth variant="outlined">
                             <DatePicker
                                 
                                 label="วันที่"
-                                value={stop}
+                                value={work}
                                 onChange={(newValue) => {
-                                    setStop(newValue);
+                                    setWork(newValue);
                                   
                                 }}
                                 renderInput={(params) => <TextField {...params} />}

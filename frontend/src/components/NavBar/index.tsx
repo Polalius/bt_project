@@ -113,6 +113,8 @@ export default function Navbar() {
     { name: "หน้าแรก", icon: <HomeIcon />, path: "/" },
     { name: "รายการคำขอลา", icon: <EventNoteIcon />, path: "/show", },
     { name: "ประวัติการอนุมัติ", icon: <EventNoteIcon />, path: "/history", },
+    { name: "รายการคำขอสลับวันลา", icon: <EventNoteIcon />, path: "/switchshow", },
+    { name: "test", icob: <EventNoteIcon/>, path: "/test",},
   ]
   const menupayroll = [
     { name: "หน้าแรก", icon: <HomeIcon />, path: "/" },

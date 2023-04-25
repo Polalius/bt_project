@@ -6,35 +6,36 @@ import { DataGrid, GridColDef, GridRenderCellParams, GridToolbarFilterButton} fr
 import EditIcon from '@mui/icons-material/Edit';
 
 import { Leave1Interface, LeaveInterface } from '../../models/ILeave';
-import { ListLeaveWait } from '../../services/HttpClientService';
+import { ListLeaveWait, ListSwitchWait } from '../../services/HttpClientService';
 import Approve from './approve';
 import moment from 'moment';
+import { Switch1Interface } from '../../models/ISwitch';
+import SwitchApprove from './switchaprove';
 
 function ManagerSwitchShow(){
     
-    const [leavelist, setLeavelist] = useState<Leave1Interface[]>([])
-    const getLeaveList = async (id:any) => {
-        let res = await ListLeaveWait(id);
+    const [switchs, setSwitch] = useState<Switch1Interface[]>([])
+    const getSwitch = async (id:any) => {
+        let res = await ListSwitchWait(id);
         if (res.data) {
-            setLeavelist(res.data);
+            setSwitch(res.data);
             console.log(res.data)
         }
     };
 
     useEffect(() => {    
         
-        getLeaveList(JSON.parse(localStorage.getItem("did") || ""))
+        getSwitch(JSON.parse(localStorage.getItem("did") || ""))
     }, []);
 
     const columns: GridColDef[] = [
         { field: "EmpName", headerName: "ชื่อ-นามสกุล",type:"string", width: 120, headerAlign: "center", align: "center", renderCell: (params: GridRenderCellParams<any>) => {
             return <>{params.row.EmpName}</>},
         },
-        { field: "TypeName", headerName: "ประเภทการลา",type:"string", width: 150, headerAlign: "center", align: "center", renderCell: (params: GridRenderCellParams<any>) => {
-            return <>{params.row.TypeName}</>;
-          },},
-        { field: "StartTime", headerName: "ลาวันที่เวลา",type:"date", width: 250, headerAlign: "center", align: "center", valueFormatter: (params) => moment(params?.value).format("MM/DD/YYYY hh:mm A")},
-        { field: "StopTime", headerName: "ถึงวันที่เวลา",type:"date", width: 250, headerAlign: "center", align: "center", valueFormatter: (params) => moment(params?.value).format("MM/DD/YYYY hh:mm A")},
+        { field: "LeaveDay", headerName: "วันที่สลับ",type:"date", width: 250, headerAlign: "center", align: "center", valueFormatter: (params) => moment(params?.value).format("MM/DD/YYYY")},
+        { field: "FromTime", headerName: "จากเวลา",type:"date", width: 100, headerAlign: "center", align: "center", valueFormatter: (params) => moment(params?.value).format("hh:mm A")},
+        { field: "ToTime", headerName: "ถึงเวลา",type:"date", width: 100, headerAlign: "center", align: "center", valueFormatter: (params) => moment(params?.value).format("hh:mm A")},
+        { field: "WorkDay", headerName: "วันที่มาทำงาน",type:"date", width: 250, headerAlign: "center", align: "center", valueFormatter: (params) => moment(params?.value).format("MM/DD/YYYY ") },
           { field: "ManName", headerName: "ผู้จัดการ",type:"string", width: 150, headerAlign: "center", align: "center", renderCell: (params: GridRenderCellParams<any>) => {
             return <>{params.row.ManName}</>;
           }, },
@@ -45,7 +46,7 @@ function ManagerSwitchShow(){
             width: 85,
             renderCell: (params: GridRenderCellParams<any>) => {
                 <EditIcon />
-              return <Approve params={params.row.ID} />;
+              return <SwitchApprove params={params.row.ID} />;
             },
             sortable: false,
             description: "Status",
@@ -76,13 +77,13 @@ function ManagerSwitchShow(){
                             sx={{ fontWeight: 'bold' }}
                             gutterBottom
                         >
-                            รายการคำร้องขอลา
+                            รายการคำร้องขอสลับวันลา
                         </Typography>
                     </Box>
                     <Box>
                         <Button
                             component={RouterLink}
-                            to="/history"
+                            to="/switchhistory"
                             variant="contained"
                             color="primary"
                             sx={{ borderRadius: 20, '&:hover': { color: '#065D95', backgroundColor: '#e3f2fd' } }}
@@ -94,7 +95,7 @@ function ManagerSwitchShow(){
                 
                 <Box sx={{ borderRadius: 20 }}>
                     <DataGrid
-                        rows={leavelist}
+                        rows={switchs}
                         getRowId={(row) => row.ID}
                         columns={columns}
                         autoHeight={true}
