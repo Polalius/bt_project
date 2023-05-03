@@ -56,7 +56,8 @@
     "smtp-connection": "^4.0.2",
     "styled-components": "^5.3.9",
     "typescript": "^4.9.5",
-    "web-vitals": "^2.1.4"
+    "web-vitals": "^2.1.4",
+    "xlsx": "^0.18.5"
   },
   "scripts": {
     "start": "react-scripts start",

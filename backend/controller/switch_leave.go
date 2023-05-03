@@ -53,13 +53,24 @@ func ListSwitchByDepID(c *gin.Context) {
 
 	c.JSON(http.StatusOK, gin.H{"data": leavelists})
 }
+func ListSwitchByDate(c *gin.Context) {
+	var leavelists []entity.SwitchLeave
+	man_id := c.Param("id")
+	from := c.Query("from")
+	to := c.Query("to")
+	if err := entity.DB().Preload("Employee").Preload("Manager").Preload("Department").Where("department_id = ? AND (leave_day BETWEEN ? AND ?)", man_id, from, to).Find(&leavelists).Error; err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"data": leavelists})
+}
 type swresults struct{
 	ID int
 	Id int
 	EmpName string
 	ManName string
 	LeaveDay    time.Time
-	FromTime	time.Time
 	ToTime 		time.Time
 	WorkDay   time.Time
 	DepName		string
@@ -69,7 +80,7 @@ func ListSwitchWait(c *gin.Context){
 	var results []swresults
 	dep_id := c.Param("id")
 	if err := entity.DB().Table("switch_leaves").
-	Select("switch_leaves.id, departments.id, employees.emp_name, managers.man_name, switch_leaves.work_day, switch_leaves.from_time, switch_leaves.to_time, switch_leaves.leave_day, switch_leaves.status,departments.dep_name").
+	Select("switch_leaves.id, departments.id, employees.emp_name, managers.man_name, switch_leaves.work_day, switch_leaves.to_time, switch_leaves.leave_day, switch_leaves.status,departments.dep_name").
 	Joins("inner join employees on employees.id = switch_leaves.employee_id").
 	Joins("inner join managers on managers.id = switch_leaves.manager_id").
 	Joins("inner join departments on departments.id = switch_leaves.department_id").
@@ -84,7 +95,7 @@ func ListSwitchByDepIDnSNwait(c *gin.Context) {
 	var results []swresults
 	d_id := c.Param("id")
 	if err := entity.DB().Table("switch_leaves").
-	Select("switch_leaves.id, departments.id, employees.emp_name, managers.man_name, switch_leaves.work_day, switch_leaves.from_time, switch_leaves.to_time, switch_leaves.leave_day, switch_leaves.status,departments.dep_name").
+	Select("switch_leaves.id, departments.id, employees.emp_name, managers.man_name, switch_leaves.work_day, switch_leaves.to_time, switch_leaves.leave_day, switch_leaves.status,departments.dep_name").
 	Joins("inner join employees on employees.id = switch_leaves.employee_id").
 	Joins("inner join managers on managers.id = switch_leaves.manager_id").
 	Joins("inner join departments on departments.id = switch_leaves.department_id").
@@ -129,7 +140,6 @@ func CreateSwitchLeave(c *gin.Context){
 	sw_l := entity.SwitchLeave{
 		Employee:   employees,             // โยงความสัมพันธ์กับ Entity Employee
 		LeaveDay:  switchleaves.LeaveDay.Local(), // ตั้งค่าฟิลด์ Start_time
-		FromTime: switchleaves.FromTime.Local(),
 		ToTime: switchleaves.ToTime.Local(),
 		WorkDay: switchleaves.WorkDay.Local(),  // ตั้งค่าฟิลด์ Stop_time
 		Manager: manager,

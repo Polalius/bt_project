@@ -19,18 +19,7 @@ import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import { GetUserID } from "../../services/HttpClientService";
 import { SigninInterface, UserInterface } from "../../models/ISignin";
-const theme = createTheme({
-    palette: {
-      primary: {
-        // Purple and green play nicely together.
-        main: blueGrey[400],
-      },
-      secondary: {
-        // This is green.A700 as hex.
-        main: '#F4F6F6',
-      },
-    },
-  });
+let theme = createTheme();
   
   const drawerWidth = 320; //ความยาวของ แถบเมนู
   
@@ -104,17 +93,18 @@ export default function Navbar() {
   }
 
   const menuemployee = [
-    { name: "รายการคำขอลา", icon: <EventNoteIcon />, path: "/", },
+    { name: "หน้าแรก", icon: <HomeIcon />, path: "/" },
+    { name: "รายการคำขอลา", icon: <EventNoteIcon />, path: "/show", },
     { name: "แบบฟอร์มการลา", icon: <EventNoteIcon />, path: "/form", },
-    { name: "รายการคำขอสลับวันลา", icon: <EventNoteIcon />, path: "/show2", },
+    { name: "รายการคำขอสลับวันลา", icon: <EventNoteIcon />, path: "/switchshow", },
     { name: "แบบฟอร์มสลับวันลา", icon: <EventNoteIcon />, path: "/switch", },
   ]
   const menumanager = [
     { name: "หน้าแรก", icon: <HomeIcon />, path: "/" },
-    { name: "รายการคำขอลา", icon: <EventNoteIcon />, path: "/show", },
-    { name: "ประวัติการอนุมัติ", icon: <EventNoteIcon />, path: "/history", },
-    { name: "รายการคำขอสลับวันลา", icon: <EventNoteIcon />, path: "/switchshow", },
-    { name: "test", icob: <EventNoteIcon/>, path: "/test",},
+    { name: "รายการคำร้องขอลา", icon: <EventNoteIcon />, path: "/show", },
+    { name: "ประวัติการอนุมัติการลา", icon: <EventNoteIcon />, path: "/history", },
+    { name: "รายการคำร้องขอสลับวันลา", icon: <EventNoteIcon />, path: "/switchshow", },
+    { name: "ประวัติการอนุมัติสลับวันลา", icob: <EventNoteIcon/>, path: "/switchhistory",},
   ]
   const menupayroll = [
     { name: "หน้าแรก", icon: <HomeIcon />, path: "/" },
@@ -127,9 +117,30 @@ export default function Navbar() {
   switch (role) {
     case "employee":
       menu = menuemployee;
+      theme = createTheme({
+        palette: {
+          primary: {
+            main: '#A46C42',
+          },
+          secondary: {
+            main: '#F4F6F6',
+          },
+        },
+      });
       break;
-      case "manager":
+    case "manager":
       menu = menumanager;
+      theme = createTheme({
+        palette: {
+          primary: {
+            main: blueGrey[400],
+          },
+          secondary: {
+            main: '#F4F6F6',
+          },
+          
+        },
+      });
       break;
     case "payroll":
       menu = menupayroll;
@@ -155,7 +166,7 @@ export default function Navbar() {
     }
     }, [])
     return (
-        <ThemeProvider theme={theme}>
+      <ThemeProvider theme={theme}>
       <Box sx={{ display: 'flex' }} >
         <CssBaseline />
         <AppBar position="fixed" open={open}>
@@ -173,8 +184,8 @@ export default function Navbar() {
               <Typography variant="h6" color="secondary" noWrap component="div" fontFamily= 'Gloock'>
                 โปรแกรมการลางาน
               </Typography>
-              <Typography>User:{user?.UserName}</Typography>
-              <MenuItem onClick={SignOut}><LogoutIcon style={{ marginRight: ".5rem" }} />Log out</MenuItem>
+              <Typography color="secondary" >User:{user?.UserName}</Typography>
+              <MenuItem  onClick={SignOut}><LogoutIcon style={{ marginRight: ".5rem" }} />Log out</MenuItem>
             </Box>
 
           </Toolbar>

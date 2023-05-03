@@ -51,7 +51,6 @@ export default function SwitchApprove(props: any){
             EmployeeID: leavelist?.EmployeeID,
             ManagerID: leavelist?.ManagerID,
             LeaveDay: leavelist?.LeaveDay,
-            FromTime: leavelist?.FromTime,
             ToTime: leavelist?.ToTime,
             WorkDay: leavelist?.WorkDay,
             Status: "approved"
@@ -74,7 +73,6 @@ export default function SwitchApprove(props: any){
             EmployeeID: leavelist?.EmployeeID,
             ManagerID: leavelist?.ManagerID,
             LeaveDay: leavelist?.LeaveDay,
-            FromTime: leavelist?.FromTime,
             ToTime: leavelist?.ToTime,
             WorkDay: leavelist?.WorkDay,
             Status: "not approved"

@@ -405,6 +405,29 @@ async function ListLeaveList() {
   
     return res;
   }
+  async function ListSwitchByDate(id:any, from:Date, to:Date) {
+    const fromDate = from.toISOString().slice(0, 10);
+    const toDate = to.toISOString().slice(0, 10);
+    const queryParams = `?from=${encodeURIComponent(fromDate)}&to=${encodeURIComponent(toDate)}`;
+    const requestOptions = {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+        "Content-Type": "application/json",
+      },
+    };
+  
+    const res = await fetch(`${apiUrl}/switch_date/${id}${queryParams}`, requestOptions)
+      .then((response) => response.json())
+      .then((res) => {
+        if (res) {
+          return res;
+        } 
+      });
+  
+    return res;
+  }
+  
   async function ListSwitch() {
     const requestOptions = {
       method: "GET",

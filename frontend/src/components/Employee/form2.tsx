@@ -34,8 +34,7 @@ function Form2() {
     const [depart, setDepart] = useState<DepartmentInterface>();
     const [leave, setLeave] = React.useState<Date | null>(new Date());
     const [work, setWork] = React.useState<Date | null>(new Date());
-    const [ftime, setFTime] = React.useState(null);
-    const [ttime, setTtime] = React.useState(null);
+    const [ttime, setTtime] = React.useState<Date | null>(new Date());
     const [success, setSuccess] = useState(false);
     const [error, setError] = useState(false);
     const [message, setAlertMessage] = useState("");
@@ -95,7 +94,6 @@ function Form2() {
         let data = {
             EmployeeID: convertType(emp?.ID) ?? 0,
             LeaveDay: leave,
-            FromTime: ftime,
             ToTime: ttime,
             WorkDay: work,
             ManagerID: convertType(man?.ID) ?? 0,
@@ -201,7 +199,7 @@ function Form2() {
                         <Grid item xs={1.8}><Typography>วันที่สลับ</Typography></Grid>
                         <Grid item xs={4}>
                         <FormControl fullWidth variant="outlined">
-                            <DatePicker
+                            <DateTimePicker
                                 label="วันที่และเวลา"
                                 
                                 value={leave}
@@ -216,24 +214,8 @@ function Form2() {
                         </Grid>
                         <Grid item xs={2.5}>
                         <FormControl fullWidth variant="outlined">
-                            <TimePicker
-                                label="จากเวลา"
-                                ampm={true}
-                                value={ftime}
-                                onChange={(newValue) => {
-                                    setFTime(newValue);
-                                    console.log(newValue)
-                                  }}
-                                  renderInput={(params) => <TextField {...params} />}
-                                  
-                            />
-                        </FormControl>
-                        </Grid>
-                        <Grid item xs={2.5}>
-                        <FormControl fullWidth variant="outlined">
-                            <TimePicker
+                            <DateTimePicker
                                 label="ถึงเวลา"
-                                ampm={true}
                                 value={ttime}
                                 onChange={(newValue) => {
                                     setTtime(newValue);
@@ -247,8 +229,7 @@ function Form2() {
                         <Grid item xs={1.8}><Typography>วันที่มาทำงาน</Typography></Grid>
                         <Grid item xs={4}>
                         <FormControl fullWidth variant="outlined">
-                            <DatePicker
-                                
+                            <DatePicker  
                                 label="วันที่"
                                 value={work}
                                 onChange={(newValue) => {

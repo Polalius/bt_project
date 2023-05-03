@@ -6,8 +6,8 @@ async function mail() {
       port: 587,
       secure: false, // true for 465, false for other ports
       auth: {
-        user: 'b6217112@g.sut.ac.th',
-        pass: '1301601167887',
+        user: '',
+        pass: '',
       },
     });
   

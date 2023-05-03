@@ -174,9 +174,8 @@ func SutupDatabase() {
 	db.Model(&LeaveList{}).Create(&list3)
 	sw_leave1 := SwitchLeave{
 		Employee: emp1,
-		LeaveDay:  time.Date(2023, 4, 21, 10, 0, 0, 0, time.Now().Location()),
-		FromTime: time.Now(),
-		ToTime: time.Now().Add(2 *time.Hour),
+		LeaveDay:  time.Date(2023, 4, 21, 8, 0, 0, 0, time.Now().Location()),
+		ToTime: time.Date(2023, 4, 21, 10, 0, 0, 0, time.Now().Location()),
 		WorkDay: time.Date(2023, 4, 8, 8, 0, 0, 0, time.Now().Location()),
 		Manager: man1,
 		Department: de1,
@@ -185,9 +184,8 @@ func SutupDatabase() {
 	db.Model(&SwitchLeave{}).Create(&sw_leave1)
 	sw_leave2 := SwitchLeave{
 		Employee: emp2,
-		LeaveDay:  time.Date(2023, 4, 22, 10, 0, 0, 0, time.Now().Location()),
-		FromTime: time.Now(),
-		ToTime: time.Now().Add(3 *time.Hour),
+		LeaveDay:  time.Date(2023, 4, 22, 8, 0, 0, 0, time.Now().Location()),
+		ToTime: time.Date(2023, 4, 22, 10, 0, 0, 0, time.Now().Location()),
 		WorkDay: time.Date(2023, 4, 19, 8, 0, 0, 0, time.Now().Location()),
 		Manager: man1,
 		Department: de1,

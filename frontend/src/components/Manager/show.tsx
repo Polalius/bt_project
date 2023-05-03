@@ -87,7 +87,7 @@ function ManagerShow(){
                             color="primary"
                             sx={{ borderRadius: 20, '&:hover': { color: '#065D95', backgroundColor: '#e3f2fd' } }}
                         >
-                            ประวัติอนุมัติ
+                            ประวัติอนุมัติการลา
                         </Button>
                     </Box>
                 </Box>
