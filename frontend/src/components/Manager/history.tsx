@@ -12,7 +12,14 @@ import moment from 'moment';
 function ManagerHistory(){
     const ToTimeFormat1 = 'DD/MM/YYYY HH:mm';
     const ToTimeFormat2 = 'DD/MM/YYYY';
-    
+    const TimeFilter = 'YYYY-MM';
+  const [filterDate, setFilterDate] = useState("");
+  const handleFilterDateChange = (event:any) => {
+    const selectedDate = event.target.value;
+    const formattedDate = moment(selectedDate).format('YYYY-MM');
+  console.log(formattedDate);
+  setFilterDate(formattedDate);
+  };
     const [leavelist, setLeavelist] = useState<Leave1Interface[]>([])
     const getLeaveList = async (id:any) => {
         let res = await ListLeaveListByDepIDnSNWait(id);
@@ -29,7 +36,14 @@ function ManagerHistory(){
     // สร้าง workbook ใหม่
     const workbook = new ExcelJS.Workbook();
     const worksheet = workbook.addWorksheet('My Worksheet');
-
+      const filteredSwitchs = leavelist.filter((row) => {
+      if (filterDate) {
+        return (
+          moment(row.StartTime).format(TimeFilter) === filterDate
+        );
+      }
+      return true;
+    });
     // เพิ่มหัวข้อตาราง
     worksheet.columns = [
       { header: 'พนักงาน', key: 'EmpName', width: 15 },
@@ -41,7 +55,7 @@ function ManagerHistory(){
     ];
 
     // เพิ่มข้อมูลลงในตาราง
-    leavelist.forEach(row => {
+    filteredSwitchs.forEach(row => {
       console.log(row);
       const { EmpName, TypeName, StartTime,StopTime, ManName, Status } = row;
       worksheet.addRow({
@@ -71,6 +85,8 @@ function ManagerHistory(){
   };
     return (
         <div className='div'>
+        <input type="month" value={filterDate} onChange={handleFilterDateChange}/>
+      <button onClick={handleExportExcel}>Export to Excel</button>
       <table>
         <thead>
           <tr>
@@ -83,7 +99,15 @@ function ManagerHistory(){
           </tr>
         </thead>
         <tbody>
-          {leavelist.map((row, index) => (
+          {leavelist.filter((row) => {
+        // กรองข้อมูลด้วยวันที่ LeaveDay ถ้า filterDate ไม่เป็น null
+        if (filterDate) {
+          return (
+            moment(row.StartTime).format(TimeFilter) === filterDate
+          );
+        }
+        return true;
+      }).map((row, index) => (
             <tr key={index}>
               <td>{row.EmpName}</td>
               <td>{row.TypeName}</td>
@@ -95,7 +119,6 @@ function ManagerHistory(){
           ))}
         </tbody>
       </table>
-      <button onClick={handleExportExcel}>Export to Excel</button>
     </div>
     )
 }

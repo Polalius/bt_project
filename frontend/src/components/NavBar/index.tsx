@@ -73,7 +73,7 @@ let theme = createTheme();
   }));
   
 export default function Navbar() {
-    const themep = useTheme();
+  const themep = useTheme();
   const [open, setOpen] = React.useState(false);
   const [role, setRole] = React.useState("");
   const [user, setUser] = React.useState<UserInterface>();
@@ -104,7 +104,7 @@ export default function Navbar() {
     { name: "รายการคำร้องขอลา", icon: <EventNoteIcon />, path: "/show", },
     { name: "ประวัติการอนุมัติการลา", icon: <EventNoteIcon />, path: "/history", },
     { name: "รายการคำร้องขอสลับวันลา", icon: <EventNoteIcon />, path: "/switchshow", },
-    { name: "ประวัติการอนุมัติสลับวันลา", icob: <EventNoteIcon/>, path: "/switchhistory",},
+    { name: "ประวัติการอนุมัติสลับวันลา", icon: <EventNoteIcon />, path: "/switchhistory",},
   ]
   const menupayroll = [
     { name: "หน้าแรก", icon: <HomeIcon />, path: "/" },
@@ -156,17 +156,17 @@ export default function Navbar() {
         setUser(res);
         console.log(res)
     }
-}
+  }
 
-    useEffect(() => {
-        const getToken = localStorage.getItem("token");
+  useEffect(() => {
+    const getToken = localStorage.getItem("token");
     if (getToken) {
       setRole(localStorage.getItem("role") || "");
       getUserID(localStorage.getItem("uid"))
     }
-    }, [])
-    return (
-      <ThemeProvider theme={theme}>
+  }, [])
+  return (
+    <ThemeProvider theme={theme}>
       <Box sx={{ display: 'flex' }} >
         <CssBaseline />
         <AppBar position="fixed" open={open}>

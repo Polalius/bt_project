@@ -10,11 +10,12 @@ const MyTable = () => {
   const ToTimeFormat2 = 'DD/MM/YYYY';
   const TimeFilter = 'YYYY-MM';
   const [filterDate, setFilterDate] = useState("");
+  
   const handleFilterDateChange = (event:any) => {
     const selectedDate = event.target.value;
     const formattedDate = moment(selectedDate).format('YYYY-MM');
-  console.log(formattedDate);
-  setFilterDate(formattedDate);
+    console.log(formattedDate);
+    setFilterDate(formattedDate);
   };
   const [switchs, setSwitch] = useState<Switch1Interface[]>([])
     const getSwitch = async (id:any) => {

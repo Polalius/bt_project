@@ -1,12 +1,14 @@
-import { Box, Button, Card, CardActionArea, CardActions, CardMedia, Grid, Typography } from '@mui/material'
+import { Box, Button, Card, CardActionArea, CardActions, CardMedia, Grid, Paper, Typography } from '@mui/material'
 import { Container } from '@mui/system'
 import React from 'react'
 import { Link as RouterLink } from "react-router-dom";
 import logo from "./../image/logo.png"
+import './index.css'
 export default function Home({role} : any) {
   return (
-    <Container>
-        <Grid container spacing={3}>
+    <Container maxWidth='xl' sx={{bgcolor:'#FFF4F0', height: '88vh'}} >
+      {/* <Box sx={{ bgcolor: '#cfe8fc' }}> */}
+        <Grid container spacing={2}>
             <Grid item xs={12} textAlign="center">
                 <h1>
                     ยินดีต้อนรับเข้าสู่ระบบในฐานะ {role}
@@ -17,56 +19,35 @@ export default function Home({role} : any) {
             </Grid>
         </Grid>
         
-        <Grid container spacing={3}>
-        <Grid item xs={2} textAlign="center"></Grid>
+      <Grid container spacing={2}>
+        
+        {/* <Grid item xs={8} textAlign="center"> */}
+          <div id='left' className='left'>
+            <Button component={RouterLink}
+                to="/show"
+                variant="contained"
+                color="primary"
+                sx={{ borderRadius: 20, '&:hover': { color: '#065D95', backgroundColor: '#e3f2fd' } }}
+              >
+              ระบบลางาน
+              </Button>
+              <Button component={RouterLink}
+              to="/switchshow"
+              variant="contained"
+              color="primary"
+              sx={{ borderRadius: 20, '&:hover': { color: '#065D95', backgroundColor: '#e3f2fd' } }}
+            >
+            ระบบสลับวันลา
+              </Button>
+         </div>
+        
         <Grid item xs={4} textAlign="center">
-          <Card sx={{ maxWidth: 345 }}>
-          <CardActionArea>
-            <CardMedia
-            component="img"
-            height="140"
-            image={logo}
-            alt="green iguana"
-            >
-            </CardMedia>
-          </CardActionArea>
-          <CardActions>
-            <Button component={RouterLink}
-            to="/show"
-            variant="contained"
-            color="primary"
-            sx={{ borderRadius: 20, '&:hover': { color: '#065D95', backgroundColor: '#e3f2fd' } }}
-          >
-           ระบบลางาน
-            </Button>
-          </CardActions>
-        </Card>
-          </Grid>
-          <Grid item xs={4} textAlign="center">
-          <Card sx={{ maxWidth: 345 }}>
-          <CardActionArea>
-            <CardMedia
-            component="img"
-            height="140"
-            image={logo}
-            alt="green iguana"
-            >
-            </CardMedia>
-          </CardActionArea>
-          <CardActions>
-            <Button component={RouterLink}
-            to="/switchshow"
-            variant="contained"
-            color="primary"
-            sx={{ borderRadius: 20, '&:hover': { color: '#065D95', backgroundColor: '#e3f2fd' } }}
-          >
-           ระบบสลับวันลา
-            </Button>
-
-          </CardActions>
-        </Card>
-          </Grid>
-        </Grid>
+          <Paper elevation={3} sx={{bgcolor:'#F588', height: '70vh'}} >
+            dfsf
+          </Paper>
+        </Grid>    
+      </Grid>
+      {/* </Box> */}
     </Container>
     
   )
