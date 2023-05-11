@@ -1,4 +1,4 @@
-let nodemailer = require("nodemailer")
+const nodemailer = require("nodemailer")
 async function mail() {
     // สร้างออปเจ็ค transporter เพื่อกำหนดการเชื่อมต่อ SMTP และใช้ตอนส่งเมล
     let transporter = nodemailer.createTransport({
@@ -19,4 +19,4 @@ async function mail() {
     });
     console.log('Message sent: %s', info.messageId);
   }
-  mail().catch(console.error);
+module.exports = mail;

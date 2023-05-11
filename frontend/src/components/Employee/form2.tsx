@@ -207,7 +207,7 @@ function Form2() {
                                     setLeave(newValue);
                                     console.log(newValue)
                                   }}
-                                  renderInput={(params) => <TextField {...params} />}
+                                 
                                   
                             />
                         </FormControl>
@@ -221,7 +221,7 @@ function Form2() {
                                     setTtime(newValue);
                                     console.log(newValue)
                                   }}
-                                  renderInput={(params) => <TextField {...params} />}
+                                 
                                   
                             />
                         </FormControl>
@@ -236,7 +236,7 @@ function Form2() {
                                     setWork(newValue);
                                   
                                 }}
-                                renderInput={(params) => <TextField {...params} />}
+                                
                             />
                         </FormControl>
                         </Grid>
