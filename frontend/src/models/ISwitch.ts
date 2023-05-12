@@ -7,6 +7,7 @@ export interface SwitchInterface{
     EmployeeID?: number;
     EmployeeInterface?: EmployeeInterface;
     LeaveDay?:    Date | null;
+    FromTime?: string;
     ToTime?: Date | null;
     WorkDay?:  Date | null;
     ManagerID?: number;
@@ -19,6 +20,7 @@ export interface Switch1Interface{
     ID?: number;
     EmpName?: number;
     LeaveDay?:    Date | null;
+    FromTime?: Date | null;
     ToTime?: Date | null;
     WorkDay?:  Date | null;
     ManName?: string;

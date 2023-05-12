@@ -109,7 +109,7 @@ func SutupDatabase() {
 	////////////////
 	man1 := Manager{
 		ManName: "Tom Holland",
-		Email:     "tomholland@email.com",
+		Email:     "napakant1236@gmail.com",
 		User:      userMan,
 		Department: de1,
 		Role: man,
@@ -126,7 +126,7 @@ func SutupDatabase() {
 
 	emp1 := Employee{
 		EmpName: "Chris Evans",
-		Email:     "chris@email.com",
+		Email:     "napakant@hotmail.com",
 		User:      userEmp1,
 		Department: de1,
 		Role: emp,
@@ -175,6 +175,7 @@ func SutupDatabase() {
 	sw_leave1 := SwitchLeave{
 		Employee: emp1,
 		LeaveDay:  time.Date(2023, 4, 21, 8, 0, 0, 0, time.Now().Location()),
+		FromTime: time.Date(2023, 4, 21, 8, 0, 0, 0, time.Now().Location()),
 		ToTime: time.Date(2023, 4, 21, 10, 0, 0, 0, time.Now().Location()),
 		WorkDay: time.Date(2023, 4, 8, 8, 0, 0, 0, time.Now().Location()),
 		Manager: man1,
@@ -185,6 +186,7 @@ func SutupDatabase() {
 	sw_leave2 := SwitchLeave{
 		Employee: emp2,
 		LeaveDay:  time.Date(2023, 4, 22, 8, 0, 0, 0, time.Now().Location()),
+		FromTime: time.Date(2023, 4, 22, 8, 0, 0, 0, time.Now().Location()),
 		ToTime: time.Date(2023, 4, 22, 10, 0, 0, 0, time.Now().Location()),
 		WorkDay: time.Date(2023, 4, 19, 8, 0, 0, 0, time.Now().Location()),
 		Manager: man1,

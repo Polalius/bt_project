@@ -11,6 +11,7 @@ type SwitchLeave struct {
 	EmployeeID   	*uint
 	Employee     	Employee	`gorm:"references:id" valid:"-"`
 	LeaveDay    	time.Time
+	FromTime		time.Time
 	ToTime			time.Time	
 	WorkDay   		time.Time
 	ManagerID		*uint

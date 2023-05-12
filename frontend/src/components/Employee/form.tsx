@@ -3,7 +3,7 @@ import { forwardRef, useEffect, useState } from "react";
 import { Link as RouterLink } from "react-router-dom";
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
-
+import axios from 'axios';
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import MuiAlert from "@mui/material/Alert";
 import { AlertProps, Box, Button, Container, 
@@ -89,14 +89,31 @@ function Form() {
             [name]: event.target.value,
         });
     };
-
+    const uid = localStorage.getItem("uid") || "";
+    const did = localStorage.getItem("did") || "";
     useEffect(()=>{
         getLeaveType();
-        getEmployeeID(JSON.parse(localStorage.getItem("uid") || ""));
-        getManagerID(JSON.parse(localStorage.getItem("did") || ""));
-        getDepartmentID(JSON.parse(localStorage.getItem("did") || ""))
+        getEmployeeID(JSON.parse(uid));
+        getManagerID(JSON.parse(did));
+        getDepartmentID(JSON.parse(did))
     }, []);
-
+    async function mail() {
+        let data = {
+            email:  emp?.Email,
+            password: "946365Np",
+            manemail: man?.Email
+        };
+        console.log(data)
+        axios.post('http://localhost:8080/mail', data)
+      .then(response => {
+        console.log(response.data);
+        // ทำสิ่งที่คุณต้องการเมื่อส่งอีเมลสำเร็จ
+      })
+      .catch(error => {
+        console.error(error);
+        // ทำสิ่งที่คุณต้องการเมื่อเกิดข้อผิดพลาดในการส่งอีเมล
+      });
+    }
     async function submit(){
         let data = {
             EmployeeID: convertType(emp?.ID) ?? 0,
@@ -112,10 +129,11 @@ function Form() {
         
         if (res.status) {
             // setTimeout(() => {
-            //     window.location.href = `mailto:${man?.Email}?subject=คำร้องขอลา&body=ข้าพเจ้า${emp?.EmpName} ขอลาตั้งแต่ ${start} ถึง ${stop} `;
-            //   }, 800);
+            //     window.location.href = "/show";
+            //   }, 1200);
             setAlertMessage("บันทึกข้อมูลสำเร็จ");
             setSuccess(true);
+            mail();
         } else {
             setAlertMessage(res.message);
             setError(true);
@@ -263,7 +281,7 @@ function Form() {
                         variant="contained"
                         color="primary"
                         onClick={submit}
-                        // onSubmit={mail}
+                        
                         sx={{'&:hover': {color: '#1543EE', backgroundColor: '#e3f2fd'}}}
                     >
                         บันทึกข้อมูล

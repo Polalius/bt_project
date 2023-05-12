@@ -27,18 +27,26 @@ const Alert = forwardRef<HTMLDivElement, AlertProps>(function Alert(props,ref,) 
 });
 
 function Form2() {
-
+    interface FromTime {
+        fromtime: string;
+    }
     const [leavelist, setLeavelist] = useState<Partial<SwitchInterface>>({});
     const [emp, setEmp] = useState<EmployeeInterface>();
     const [man, setMan] = useState<ManagerInterface>();
     const [depart, setDepart] = useState<DepartmentInterface>();
     const [leave, setLeave] = React.useState<Date | null>(new Date());
     const [work, setWork] = React.useState<Date | null>(new Date());
+    const [ftime, setFtime] = React.useState<SwitchInterface>({FromTime: ''});
     const [ttime, setTtime] = React.useState<Date | null>(new Date());
     const [success, setSuccess] = useState(false);
     const [error, setError] = useState(false);
     const [message, setAlertMessage] = useState("");
-
+    const handleChange1 = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setFtime({
+          ...ftime,
+          [event.target.name]: event.target.value,
+        });
+      };
     const getEmployeeID = async (id:any) => {
         let res = await GetEmployeeID(id);
         if (res){
@@ -94,6 +102,7 @@ function Form2() {
         let data = {
             EmployeeID: convertType(emp?.ID) ?? 0,
             LeaveDay: leave,
+            FromTime: ftime.FromTime,
             ToTime: ttime,
             WorkDay: work,
             ManagerID: convertType(man?.ID) ?? 0,
@@ -105,8 +114,8 @@ function Form2() {
         
         if (res.status) {
             // setTimeout(() => {
-            //     window.location.href = `mailto:${man?.Email}?subject=คำร้องขอลา&body=ข้าพเจ้า${emp?.EmpName} ขอลาตั้งแต่ ${start} ถึง ${stop} `;
-            //   }, 800);
+            //     window.location.href = "/switchshow";
+            //   }, 1200);
             setAlertMessage("บันทึกข้อมูลสำเร็จ");
             setSuccess(true);
         } else {
@@ -114,27 +123,6 @@ function Form2() {
             setError(true);
         }
     }
-    
-    // async function mail() {
-    //     // สร้างออปเจ็ค transporter เพื่อกำหนดการเชื่อมต่อ SMTP และใช้ตอนส่งเมล
-    //     let transporter = nodemailer.createTransport({
-    //       host: 'smtp.gmail.com',
-    //       port: 587,
-    //       secure: false, // true for 465, false for other ports
-    //       auth: {
-    //         user: 'b6217112@g.sut.ac.th',
-    //         pass: '1301601167887',
-    //       },
-    //     });
-      
-    //     let info = await transporter.sendMail({
-    //       from: 'b6217112@g.sut.ac.th',
-    //       to: 'napakant1235@gmail.com',
-    //       subject: 'hello world',
-    //       html: "emailHtml",
-    //     });
-    //     console.log('Message sent: %s', info.messageId);
-    //   }
 
     return (
         <div>
@@ -199,8 +187,8 @@ function Form2() {
                         <Grid item xs={1.8}><Typography>วันที่สลับ</Typography></Grid>
                         <Grid item xs={4}>
                         <FormControl fullWidth variant="outlined">
-                            <DateTimePicker
-                                label="วันที่และเวลา"
+                            <DatePicker
+                                label="วันที่"
                                 
                                 value={leave}
                                 onChange={(newValue) => {
@@ -214,7 +202,17 @@ function Form2() {
                         </Grid>
                         <Grid item xs={2.5}>
                         <FormControl fullWidth variant="outlined">
-                            <DateTimePicker
+                        <input
+          type="time"
+          name="FromTime"
+          value={ftime.FromTime}
+          onChange={handleChange1}
+        />
+                        </FormControl>
+                        </Grid>
+                        <Grid item xs={2.5}>
+                        <FormControl fullWidth variant="outlined">
+                            <TimePicker
                                 label="ถึงเวลา"
                                 value={ttime}
                                 onChange={(newValue) => {
@@ -255,7 +253,7 @@ function Form2() {
                         variant="contained"
                         color="primary"
                         component={RouterLink}
-                        to="/show2"
+                        to="/switchshow"
                         sx={{'&:hover': {color: '#1543EE', backgroundColor: '#e3f2fd'}}}
                     >
                         ถอยกลับ

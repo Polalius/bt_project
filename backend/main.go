@@ -76,5 +76,6 @@ func main() {
 	r.POST("/leavelists", controller.CreateLeaveList)
 	r.POST("/signin", controller.Signin)
 	r.GET("/valid", controller.Validation)
+	r.POST("/mail", controller.SendEmailHandler)
 	r.Run()
 }
