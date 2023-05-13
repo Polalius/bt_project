@@ -3,7 +3,7 @@ package controller
 import (
 	"fmt"
 	"net/http"
-	"time"
+	
 
 	"github.com/Polalius/bt_project/entity"
 	"github.com/asaskevich/govalidator"
@@ -70,9 +70,10 @@ type swresults struct{
 	Id int
 	EmpName string
 	ManName string
-	LeaveDay    time.Time
-	ToTime 		time.Time
-	WorkDay   time.Time
+	LeaveDay    string
+	FromTime	int
+	ToTime 		int
+	WorkDay   string
 	DepName		string
 	Status string
 }
@@ -99,7 +100,7 @@ func ListSwitchByDepIDnSNwait(c *gin.Context) {
 	Joins("inner join employees on employees.id = switch_leaves.employee_id").
 	Joins("inner join managers on managers.id = switch_leaves.manager_id").
 	Joins("inner join departments on departments.id = switch_leaves.department_id").
-	Where("departments.id = ? and switch_leaves.status != 'pending approval'", d_id).Scan(&results).Error; err != nil {
+	Where("departments.id = ? and switch_leaves.status = 'approved'", d_id).Scan(&results).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
@@ -131,18 +132,18 @@ func CreateSwitchLeave(c *gin.Context){
 		c.JSON(http.StatusBadRequest, gin.H{"error": "department not found"})
 		return
 	}
-	// if tx := entity.DB().Where("employee_id = ? AND ((start_time BETWEEN ? AND ?) OR (stop_time BETWEEN ? AND ?))", leavelists.EmployeeID, leavelists.StartTime.Local(), leavelists.StopTime.Local().Add(10 *time.Minute), leavelists.StartTime.Local(), leavelists.StopTime.Local().Add(10 *time.Minute)).First(&leavelists); tx.RowsAffected != 0 {
-	// 	c.JSON(http.StatusBadRequest, gin.H{"error": "มีการลาเวลานี้ไปแล้ว1"})
-	// 	return
-	// }
+	if tx := entity.DB().Where("employee_id = ? AND (leave_day = ?) AND ((from_time BETWEEN ? AND ?) OR (to_time BETWEEN ? AND ?))", switchleaves.EmployeeID, switchleaves.LeaveDay, switchleaves.FromTime, switchleaves.ToTime, switchleaves.FromTime, switchleaves.ToTime).First(&switchleaves); tx.RowsAffected != 0 {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "มีการลาเวลานี้ไปแล้ว1"})
+		return
+	}
 	
 	// 12: สร้าง swith_leave
 	sw_l := entity.SwitchLeave{
 		Employee:   employees,             // โยงความสัมพันธ์กับ Entity Employee
-		LeaveDay:  switchleaves.LeaveDay.Local(), // ตั้งค่าฟิลด์ Start_time
-		FromTime: switchleaves.FromTime.Local(),
-		ToTime: switchleaves.ToTime.Local(),
-		WorkDay: switchleaves.WorkDay.Local(),  // ตั้งค่าฟิลด์ Stop_time
+		LeaveDay:  switchleaves.LeaveDay, // ตั้งค่าฟิลด์ Start_time
+		FromTime: switchleaves.FromTime,
+		ToTime: switchleaves.ToTime,
+		WorkDay: switchleaves.WorkDay,  // ตั้งค่าฟิลด์ Stop_time
 		Manager: manager,
 		Department: depart,
 		Status:     switchleaves.Status,     // ตั้งค่าฟิลด์ Status

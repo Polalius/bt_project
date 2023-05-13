@@ -44,6 +44,7 @@ func main() {
 	r.GET("/employeeId/:id", controller.GetEmployeeByUserID)
 	r.GET("/employees", controller.ListEmployee)
 	r.GET("/employeeID/:id", controller.GetEmployee)
+	r.GET("/employee1/:id", controller.GetEmployee1)
 
 
 	r.GET("/leavelists", controller.ListLeaveList)
@@ -72,6 +73,8 @@ func main() {
 	r.GET("/department/:id", controller.GetDepartment)
 
 	r.GET("/manager/:id", controller.GetManager)
+	r.GET("/manager1/:id", controller.GetManager1)
+
 
 	r.POST("/leavelists", controller.CreateLeaveList)
 	r.POST("/signin", controller.Signin)

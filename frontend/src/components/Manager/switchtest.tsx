@@ -6,7 +6,7 @@ import './test.css';
 import * as XLSX from 'xlsx';
 import moment from 'moment';
 const MyTable = () => {
-  const ToTimeFormat1 = 'DD/MM/YYYY HH:mm';
+  const ToTimeFormat1 = 'DD/MM/YYYY';
   const ToTimeFormat2 = 'DD/MM/YYYY';
   const TimeFilter = 'YYYY-MM';
   const [filterDate, setFilterDate] = useState("");
@@ -16,6 +16,15 @@ const MyTable = () => {
     const formattedDate = moment(selectedDate).format('YYYY-MM');
     console.log(formattedDate);
     setFilterDate(formattedDate);
+  };
+  const formatTime = (minutes: number) => {
+    const hours = Math.floor(minutes / 60); // หารเพื่อหาจำนวนชั่วโมง
+    const mins = minutes % 60; // หาเศษนาทีที่เหลือ
+  
+    const formattedHours = String(hours).padStart(2, '0'); // แปลงชั่วโมงให้มี 2 หลัก
+    const formattedMins = String(mins).padStart(2, '0'); // แปลงนาทีให้มี 2 หลัก
+  
+    return `${formattedHours}:${formattedMins}`; // ส่งค่าเวลาในรูปแบบ "HH:mm น."
   };
   const [switchs, setSwitch] = useState<Switch1Interface[]>([])
     const getSwitch = async (id:any) => {
@@ -46,6 +55,7 @@ const MyTable = () => {
     worksheet.columns = [
       { header: 'พนักงาน', key: 'EmpName', width: 15 },
       { header: 'วันที่สลับ', key: 'LeaveDay', width: 20 },
+      { header: 'จากเวลา', key: 'FromTime', width: 20 },
       { header: 'ถึงเวลา', key: 'ToTime', width: 20 },
       { header: 'วันที่มาทำงาน', key: 'WorkDay', width: 20 },
       { header: 'ผู้จัดการ', key: 'ManName', width: 15 },
@@ -55,11 +65,12 @@ const MyTable = () => {
     // เพิ่มข้อมูลลงในตาราง
     filteredSwitchs.forEach(row => {
       console.log(row);
-      const { EmpName, LeaveDay, ToTime, WorkDay, ManName, Status } = row;
+      const { EmpName, LeaveDay, FromTime, ToTime, WorkDay, ManName, Status } = row;
       worksheet.addRow({
         EmpName,
         LeaveDay: LeaveDay ? moment(LeaveDay).format(ToTimeFormat1): null,
-        ToTime: ToTime ? moment(ToTime).format(ToTimeFormat1) : null,
+        FromTime: FromTime ? formatTime(FromTime):null,
+        ToTime: ToTime ? formatTime(ToTime): null,
         WorkDay: WorkDay ? moment(WorkDay).format(ToTimeFormat2) : null,
         ManName,
         Status
@@ -113,6 +124,7 @@ const MyTable = () => {
           <tr>
             <th>พนักงาน</th>
             <th>วันที่สลับ</th>
+            <th>จากเวลา</th>
             <th>ถึงเวลา</th>
             <th>วันที่มาทำงาน</th>
             <th>ผู้จัดการ</th>
@@ -131,9 +143,10 @@ const MyTable = () => {
       }).map((row, index) => (
             <tr key={index}>
               <td>{row.EmpName}</td>
-              <td>{row.LeaveDay ? new Date(row.LeaveDay).toLocaleDateString('en-EN', { year: 'numeric', month: '2-digit', day: '2-digit',hour: '2-digit', minute: '2-digit' }) : ""}</td>
-              <td>{row.ToTime ? new Date(row.ToTime).toLocaleDateString('th-TH', {hour: '2-digit', minute: '2-digit' }) : ""}</td>
-              <td>{row.WorkDay ? new Date(row.WorkDay).toLocaleDateString('en-EN', { year: 'numeric', month: '2-digit', day: '2-digit' }) : ""}</td>
+              <td>{row.LeaveDay ? new Date(row.LeaveDay).toLocaleDateString('th-TH', { year: 'numeric', month: '2-digit', day: '2-digit'}) : ""}</td>
+              <td>{row.FromTime ? formatTime(row.FromTime) : ''}</td>
+              <td>{row.ToTime ? formatTime(row.ToTime) : ''}</td>
+              <td>{row.WorkDay ? new Date(row.WorkDay).toLocaleDateString('th-TH', { year: 'numeric', month: '2-digit', day: '2-digit' }) : ""}</td>
               <td>{row.ManName}</td>
               <td>{row.Status}</td>
             </tr>

@@ -6,10 +6,10 @@ export interface SwitchInterface{
     ID?: number;
     EmployeeID?: number;
     EmployeeInterface?: EmployeeInterface;
-    LeaveDay?:    Date | null;
-    FromTime?: string;
-    ToTime?: Date | null;
-    WorkDay?:  Date | null;
+    LeaveDay?:    string | null;
+    FromTime?: number | null;
+    ToTime?: number | null;
+    WorkDay?: string | null;
     ManagerID?: number;
     ManagerInterface?: ManagerInterface;
     Status?: string;
@@ -19,10 +19,10 @@ export interface SwitchInterface{
 export interface Switch1Interface{
     ID?: number;
     EmpName?: number;
-    LeaveDay?:    Date | null;
-    FromTime?: Date | null;
-    ToTime?: Date | null;
-    WorkDay?:  Date | null;
+    LeaveDay?:    string | null;
+    FromTime?:number | null;
+    ToTime?: number | null;
+    WorkDay?:  string | null;
     ManName?: string;
     Status?: string;
     DepName?: number;

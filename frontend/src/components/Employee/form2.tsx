@@ -34,19 +34,41 @@ function Form2() {
     const [emp, setEmp] = useState<EmployeeInterface>();
     const [man, setMan] = useState<ManagerInterface>();
     const [depart, setDepart] = useState<DepartmentInterface>();
-    const [leave, setLeave] = React.useState<Date | null>(new Date());
-    const [work, setWork] = React.useState<Date | null>(new Date());
-    const [ftime, setFtime] = React.useState<SwitchInterface>({FromTime: ''});
-    const [ttime, setTtime] = React.useState<Date | null>(new Date());
+    const [leave, setLeave] = useState<string>('');
+    const [work, setWork] = useState<string>('');
+    const [ftime, setFtime] = React.useState<number | null>(null);
+    const [ttime, setTtime] = React.useState<number | null>(null);
     const [success, setSuccess] = useState(false);
     const [error, setError] = useState(false);
     const [message, setAlertMessage] = useState("");
+    const [selectedDate, setSelectedDate] = useState<string>('');
+
+  const handleDateChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setLeave(event.target.value);
+  };
+  const handleDateChange1 = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setWork(event.target.value);
+  };
     const handleChange1 = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setFtime({
-          ...ftime,
-          [event.target.name]: event.target.value,
-        });
+        const timeString = event.target.value;
+        const [hours, minutes] = timeString.split(":").map(Number);
+        const time = hours * 60 + minutes;
+        setFtime(time);
       };
+      const handleChange2 = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const timeString = event.target.value;
+        const [hours, minutes] = timeString.split(":").map(Number);
+        const time = hours * 60 + minutes;
+        setTtime(time);
+      };
+    function formatTime(time: number): string {
+        const hours = Math.floor(time / 60);
+        const minutes = time % 60;
+        const hoursStr = hours.toString().padStart(2, "0");
+        const minutesStr = minutes.toString().padStart(2, "0");
+        return `${hoursStr}:${minutesStr}`;
+      }
+      
     const getEmployeeID = async (id:any) => {
         let res = await GetEmployeeID(id);
         if (res){
@@ -102,20 +124,21 @@ function Form2() {
         let data = {
             EmployeeID: convertType(emp?.ID) ?? 0,
             LeaveDay: leave,
-            FromTime: ftime.FromTime,
+            FromTime: ftime,
             ToTime: ttime,
             WorkDay: work,
             ManagerID: convertType(man?.ID) ?? 0,
             DepartmentID: convertType(depart?.ID) ?? 0,
             Status: "pending approval",
+            select: selectedDate
         }
         console.log(data)
         let res = await CreateSwitchLeave(data);
         
         if (res.status) {
-            // setTimeout(() => {
-            //     window.location.href = "/switchshow";
-            //   }, 1200);
+            setTimeout(() => {
+                window.location.href = "/switchshow";
+              }, 1200);
             setAlertMessage("บันทึกข้อมูลสำเร็จ");
             setSuccess(true);
         } else {
@@ -179,15 +202,19 @@ function Form2() {
                     <Grid item xs={3}></Grid>
                     <Grid item xs={2.5}></Grid>
                 <Grid container spacing={{ xs: 12, md: 5 }}>
-                    <Grid item xs={12}><Typography>เรียน:{man?.ManName}</Typography></Grid>
-                    <Grid item xs={6}><Typography>ข้าพเจ้า:{" "+emp?.EmpName}</Typography></Grid>
-                    <Grid item xs={6}><Typography>แผนก:{" "+depart?.DepName}</Typography></Grid>
+                    <Grid item xs={6}><Typography>ชื่อ-นามสกุล:{" "+emp?.EmpName}</Typography></Grid>
                     <Grid item xs={12}><Typography>Email:{" "+ emp?.Email}</Typography></Grid>
+                    <Grid item xs={6}><Typography>แผนก:{" "+depart?.DepName}</Typography></Grid>
+                    <Grid item xs={12}><Typography>ผู้จัดการแผนก:{man?.ManName}</Typography></Grid>
+                    
+                    
+                    
                     <LocalizationProvider dateAdapter={AdapterDateFns}>
-                        <Grid item xs={1.8}><Typography>วันที่สลับ</Typography></Grid>
+                    
+                        <Grid item xs={2}><Typography>วันที่สลับ</Typography></Grid>
                         <Grid item xs={4}>
                         <FormControl fullWidth variant="outlined">
-                            <DatePicker
+                            {/* <DatePicker
                                 label="วันที่"
                                 
                                 value={leave}
@@ -197,45 +224,45 @@ function Form2() {
                                   }}
                                  
                                   
-                            />
+                            /> */}
+                            <input
+                        type="date"
+                        id="datepicker"
+                        value={leave}
+                        onChange={handleDateChange}
+                    />
                         </FormControl>
                         </Grid>
                         <Grid item xs={2.5}>
                         <FormControl fullWidth variant="outlined">
                         <input
-          type="time"
-          name="FromTime"
-          value={ftime.FromTime}
-          onChange={handleChange1}
-        />
+                        type="time"
+                        id="timepicker"
+                        name="FromTime"
+                        value={ftime !== null ? formatTime(ftime) : ""}
+                        onChange={handleChange1}
+                        />
                         </FormControl>
                         </Grid>
                         <Grid item xs={2.5}>
                         <FormControl fullWidth variant="outlined">
-                            <TimePicker
-                                label="ถึงเวลา"
-                                value={ttime}
-                                onChange={(newValue) => {
-                                    setTtime(newValue);
-                                    console.log(newValue)
-                                  }}
-                                 
-                                  
-                            />
+                        <input
+                        type="time"
+                        name="ToTime"
+                        value={ttime !== null ? formatTime(ttime) : ""}
+                        onChange={handleChange2}
+                        />
                         </FormControl>
                         </Grid>
-                        <Grid item xs={1.8}><Typography>วันที่มาทำงาน</Typography></Grid>
+                        <Grid item xs={2}><Typography>วันที่มาทำงาน</Typography></Grid>
                         <Grid item xs={4}>
                         <FormControl fullWidth variant="outlined">
-                            <DatePicker  
-                                label="วันที่"
-                                value={work}
-                                onChange={(newValue) => {
-                                    setWork(newValue);
-                                  
-                                }}
-                                
-                            />
+                        <input
+                        type="date"
+                        id="datepicker"
+                        value={work}
+                        onChange={handleDateChange1}
+                        />
                         </FormControl>
                         </Grid>
                     </LocalizationProvider>

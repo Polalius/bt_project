@@ -128,12 +128,12 @@ function Form() {
         let res = await CreateLeavaList(data);
         
         if (res.status) {
-            // setTimeout(() => {
-            //     window.location.href = "/show";
-            //   }, 1200);
+            setTimeout(() => {
+                window.location.href = "/show";
+              }, 1200);
             setAlertMessage("บันทึกข้อมูลสำเร็จ");
             setSuccess(true);
-            mail();
+            // mail();
         } else {
             setAlertMessage(res.message);
             setError(true);

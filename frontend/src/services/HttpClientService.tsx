@@ -287,6 +287,25 @@ async function ListLeaveList() {
   
     return res;
   }
+  async function GetEmployeeID1(id:any) {
+    const requestOptions = {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+        "Content-Type": "application/json",
+      },
+    };
+  
+    let res = await fetch(`${apiUrl}/employee1/${id}`, requestOptions)
+      .then((response) => response.json())
+      .then((res) => {
+        if (res.data) {
+          return res.data;
+        } 
+      });
+  
+    return res;
+  }
   async function GetManagerID(id:any) {
     const requestOptions = {
       method: "GET",
@@ -297,6 +316,25 @@ async function ListLeaveList() {
     };
   
     let res = await fetch(`${apiUrl}/manager/${id}`, requestOptions)
+      .then((response) => response.json())
+      .then((res) => {
+        if (res.data) {
+          return res.data;
+        } 
+      });
+  
+    return res;
+  }
+  async function GetManagerID1(id:any) {
+    const requestOptions = {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+        "Content-Type": "application/json",
+      },
+    };
+  
+    let res = await fetch(`${apiUrl}/manager1/${id}`, requestOptions)
       .then((response) => response.json())
       .then((res) => {
         if (res.data) {
@@ -539,7 +577,9 @@ async function ListLeaveList() {
     CreateLeavaList,
     ListEmployee,
     GetEmployeeID,
+    GetEmployeeID1,
     GetManagerID,
+    GetManagerID1,
     GetUserID,
     GetDepartmentID,
 

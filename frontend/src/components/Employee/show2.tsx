@@ -20,6 +20,8 @@ function EmployeeShow2(){
         if (res.data) {
             setLeavelist(res.data);
         }
+        
+        console.log(res.data)
     };
 
     const getEmployeeID = async (id:any) => {
@@ -30,19 +32,28 @@ function EmployeeShow2(){
         }
     }
 
+    function formatMinutesToTime(minutes: number) {
+        const hours = Math.floor(minutes / 60);
+        const minutesPart = minutes % 60;
+        const hoursStr = String(hours).padStart(2, '0');
+        const minutesStr = String(minutesPart).padStart(2, '0');
+        return `${hoursStr}:${minutesStr} น.`;
+      }
     useEffect(() => {    
         setLeavelist(JSON.parse(localStorage.getItem("pid") || ""));
-        
         getLeaveList(JSON.parse(localStorage.getItem("pid") || ""));
+        
         getEmployeeID(JSON.parse(localStorage.getItem("pid") || ""))
     }, []);
 
+    
     const columns: GridColDef[] = [
         { field: "Employee.FirstName", headerName: "ชื่อ-นามสกุล",type:"string", width: 120, headerAlign: "center", align: "center", renderCell: (params: GridRenderCellParams<any>) => {
             return <>{params.row.Employee.EmpName}</>},
         },
-        { field: "LeaveDay", headerName: "วันที่สลับ",type:"date", width: 250, headerAlign: "center", align: "center", valueFormatter: (params) => moment(params?.value).format("MM/DD/YYYY hh:mm A")},
-        { field: "ToTime", headerName: "ถึงเวลา",type:"time", width: 100, headerAlign: "center", align: "center", valueFormatter: (params) => moment(params?.value).format("MM/DD/YYYY hh:mm A")},
+        { field: "LeaveDay", headerName: "วันที่สลับ",type:"date", width: 250, headerAlign: "center", align: "center", valueFormatter: (params) => moment(params?.value).format("MM/DD/YYYY")},
+        { field: "FromTime", headerName: "จากเวลา",type:"string", width: 100, headerAlign: "center", align: "center", valueFormatter: (params) => formatMinutesToTime(params?.value as number)},
+        { field: "ToTime", headerName: "ถึงเวลา",type:"time", width: 100, headerAlign: "center", align: "center", valueFormatter: (params) => formatMinutesToTime(params?.value as number)},
         { field: "WorkDay", headerName: "วันที่มาทำงาน",type:"date", width: 250, headerAlign: "center", align: "center", valueFormatter: (params) => moment(params?.value).format("MM/DD/YYYY ") },
         { field: "Manager.FirstName", headerName: "ผู้จัดการ",type:"string", width: 150, headerAlign: "center", align: "center", renderCell: (params: GridRenderCellParams<any>) => {
             return <>{params.row.Manager.ManName}</>;

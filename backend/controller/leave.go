@@ -105,7 +105,7 @@ func CreateLeaveList(c *gin.Context) {
 
 	// ค้นหา leave type ด้วย id
 	if tx := entity.DB().Where("id = ?", leavelists.LeaveTypeID).First(&l_type); tx.RowsAffected == 0 {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "leave type not found"})
+		c.JSON(http.StatusBadRequest, gin.H{"error": "กรุณากรอกการลา"})
 		return
 	}
 	// ค้นหา leave type ด้วย id
@@ -305,7 +305,7 @@ func ListLeaveListByDepIDnSNwait(c *gin.Context) {
 	Joins("inner join employees on employees.id = leave_lists.employee_id").
 	Joins("inner join managers on managers.id = leave_lists.manager_id").
 	Joins("inner join departments on departments.id = leave_lists.department_id").
-	Where("departments.id = ? and leave_lists.status != 'pending approval'", d_id).Scan(&results).Error; err != nil {
+	Where("departments.id = ? and leave_lists.status = 'approved'", d_id).Scan(&results).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}

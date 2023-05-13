@@ -43,3 +43,18 @@ func GetEmployeeByUserID(c *gin.Context) {
 	}
 	c.JSON(http.StatusOK, gin.H{"data": employee})
 }
+
+func GetEmployee1(c *gin.Context) {
+	var employee User1
+	id := c.Param("id")
+	if err := entity.DB().Table("employees").
+	Select("employees.emp_name as name, employees.email, users.user_name as user, roles.name as role, departments.dep_name as department").
+	Joins("inner join users on users.id = employees.user_id").
+	Joins("inner join roles on roles.id = employees.role_id").
+	Joins("inner join departments on departments.id = employees.department_id").
+	Where("users.id = ?", id).Find(&employee).Error; err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{"data": employee})
+}

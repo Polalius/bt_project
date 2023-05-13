@@ -1,7 +1,6 @@
 package entity
 
 import (
-	"time"
 
 	"gorm.io/gorm"
 )
@@ -10,10 +9,10 @@ type SwitchLeave struct {
 	gorm.Model
 	EmployeeID   	*uint
 	Employee     	Employee	`gorm:"references:id" valid:"-"`
-	LeaveDay    	time.Time
-	FromTime		time.Time
-	ToTime			time.Time	
-	WorkDay   		time.Time
+	LeaveDay    	string		`valid:"required~กรุณาเลือกวันที่สลับวันลา"`
+	FromTime		int			`valid:"required~กรุณาเลือกเวลา"`
+	ToTime			int			`valid:"required~กรุณาเลือกเวลา"`
+	WorkDay   		string		`valid:"required~กรุณาเลือกวันทำงาน"`
 	ManagerID		*uint
 	Manager			Manager		`gorm:"references:id" valid:"-"`
 	DepartmentID 	*uint
