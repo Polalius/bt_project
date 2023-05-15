@@ -5,8 +5,11 @@ import { Button, Dialog, DialogActions, DialogTitle, IconButton, Snackbar } from
 import PendingActionsIcon from '@mui/icons-material/PendingActions';
 
 import { LeaveInterface } from "../../models/ILeave";
-import { GetLeaveListByID, UpdateLeaveList } from "../../services/HttpClientService";
+import { GetEmployeeID, GetLeaveListByID, GetManagerID, UpdateLeaveList } from "../../services/HttpClientService";
 import React from "react";
+import { EmployeeInterface } from "../../models/IEmployee";
+import { ManagerInterface } from "../../models/IManager";
+import axios from "axios";
 const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(
   props,
   ref
@@ -14,7 +17,8 @@ const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
 });
 export default function Approve(props: any){
-    const { params } = props;
+    const { params, EmpEmail, ManEmail } = props;
+    
     const [open, setOpen] = useState(false);
     const [alertmessage, setAlertMessage] = useState("");
     const [success, setSuccess] = useState(false);
@@ -55,11 +59,14 @@ export default function Approve(props: any){
             Status: "approved"
         };
         console.log(data)
+        console.log(params)
+        console.log(EmpEmail)
         let res = await UpdateLeaveList(data);
         setSuccess(true);
         setTimeout(() => {
           window.location.reload();
         }, 800);
+        mail();
     } catch (err) {
       setError(true);
       console.log(err);
@@ -82,14 +89,35 @@ export default function Approve(props: any){
         setTimeout(() => {
           window.location.reload();
         }, 800);
+        mail();
     } catch (err) {
       setError(true);
       console.log(err);
     }   
     }
+    const uid = localStorage.getItem("uid") || "";
+    const did = localStorage.getItem("did") || "";
     useEffect(() => {
             getLeaveListByID(params);
         }, []);
+        async function mail() {
+          let data = {
+              email:  ManEmail,
+              password: "gplilgnlhvmsiedr",
+              empemail: EmpEmail
+          };
+          console.log(data)
+          axios.post('http://localhost:8080/mail2', data)
+        .then(response => {
+          console.log(response.data);
+          // ทำสิ่งที่คุณต้องการเมื่อส่งอีเมลสำเร็จ
+        })
+        .catch(error => {
+          console.error(error);
+          // ทำสิ่งที่คุณต้องการเมื่อเกิดข้อผิดพลาดในการส่งอีเมล
+        });
+      }
+
     return (
         <div>
       <IconButton

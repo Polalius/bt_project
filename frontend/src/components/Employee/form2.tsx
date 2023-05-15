@@ -19,6 +19,7 @@ import { DepartmentInterface } from "../../models/IDepartmemt";
 
 import { CreateLeavaList, CreateSwitchLeave, GetDepartmentID, GetEmployeeID, GetManagerID, ListLeaveType } from "../../services/HttpClientService";
 import { SwitchInterface } from "../../models/ISwitch";
+import axios from "axios";
 
 
 dayjs.extend(utc);
@@ -119,7 +120,23 @@ function Form2() {
         getManagerID(JSON.parse(localStorage.getItem("did") || ""));
         getDepartmentID(JSON.parse(localStorage.getItem("did") || ""))
     }, []);
-
+    async function mail() {
+        let data = {
+            email:  emp?.Email,
+            password: "utsbbxeslywlnzdn",
+            manemail: man?.Email
+        };
+        console.log(data)
+        axios.post('http://localhost:8080/mail', data)
+      .then(response => {
+        console.log(response.data);
+        // ทำสิ่งที่คุณต้องการเมื่อส่งอีเมลสำเร็จ
+      })
+      .catch(error => {
+        console.error(error);
+        // ทำสิ่งที่คุณต้องการเมื่อเกิดข้อผิดพลาดในการส่งอีเมล
+      });
+    }
     async function submit(){
         let data = {
             EmployeeID: convertType(emp?.ID) ?? 0,
@@ -141,6 +158,7 @@ function Form2() {
               }, 1200);
             setAlertMessage("บันทึกข้อมูลสำเร็จ");
             setSuccess(true);
+            mail();
         } else {
             setAlertMessage(res.message);
             setError(true);
@@ -202,16 +220,15 @@ function Form2() {
                     <Grid item xs={3}></Grid>
                     <Grid item xs={2.5}></Grid>
                 <Grid container spacing={{ xs: 12, md: 5 }}>
-                    <Grid item xs={6}><Typography>ชื่อ-นามสกุล:{" "+emp?.EmpName}</Typography></Grid>
-                    <Grid item xs={12}><Typography>Email:{" "+ emp?.Email}</Typography></Grid>
-                    <Grid item xs={6}><Typography>แผนก:{" "+depart?.DepName}</Typography></Grid>
-                    <Grid item xs={12}><Typography>ผู้จัดการแผนก:{man?.ManName}</Typography></Grid>
-                    
+                    <Grid item xs={12}><Typography align="left" textTransform="capitalize">ชื่อ-นามสกุล:{" "+emp?.EmpName}</Typography></Grid>
+                    <Grid item xs={12}><Typography align="left" textTransform="capitalize">Email:{" "+ emp?.Email}</Typography></Grid>
+                    <Grid item xs={12}><Typography align="left" textTransform="capitalize">แผนก:{" "+depart?.DepName}</Typography></Grid>
+                    <Grid item xs={12}><Typography align="left" textTransform="capitalize">ผู้จัดการแผนก:{man?.ManName}</Typography></Grid>
                     
                     
                     <LocalizationProvider dateAdapter={AdapterDateFns}>
                     
-                        <Grid item xs={2}><Typography>วันที่สลับ</Typography></Grid>
+                        <Grid item xs={2}><Typography align="left">วันที่สลับ</Typography></Grid>
                         <Grid item xs={4}>
                         <FormControl fullWidth variant="outlined">
                             {/* <DatePicker

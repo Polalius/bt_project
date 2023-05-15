@@ -80,5 +80,6 @@ func main() {
 	r.POST("/signin", controller.Signin)
 	r.GET("/valid", controller.Validation)
 	r.POST("/mail", controller.SendEmailHandler)
+	r.POST("/mail2", controller.SendEmailHandler2)
 	r.Run()
 }

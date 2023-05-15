@@ -45,7 +45,7 @@ function ManagerShow(){
             width: 85,
             renderCell: (params: GridRenderCellParams<any>) => {
                 <EditIcon />
-              return <Approve params={params.row.ID} />;
+              return <Approve params={params.row.ID} EmpEmail={params.row.EmpEmail} ManEmail={params.row.ManEmail}/>;
             },
             sortable: false,
             description: "Status",

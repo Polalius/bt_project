@@ -25,6 +25,9 @@ export interface LeaveInterface{
 
 export interface Leave1Interface{
     ID?: number;
+    DepID: number;
+    EmpEmail: string;
+    ManEmail: string;
     EmpName?: number;
     TypeName?: string;
     StartTime?:  Date | null;

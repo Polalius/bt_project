@@ -66,6 +66,17 @@ function EmployeeShow(){
                 <Box
                     display="flex"
                 >
+                    <Box>
+                        <Button
+                            component={RouterLink}
+                            to="/"
+                            variant="contained"
+                            color="primary"
+                            sx={{ borderRadius: 20, '&:hover': { color: '#065D95', backgroundColor: '#e3f2fd' } }}
+                        >
+                            กลับ
+                        </Button>
+                    </Box>
                     <Box flexGrow={1}>
                         <Typography
                             component="h2"

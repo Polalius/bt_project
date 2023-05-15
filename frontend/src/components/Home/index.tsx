@@ -69,24 +69,25 @@ export default function Home({role} : any) {
     fetchData();
   }, [role, uid]);
   return (
-    <Container maxWidth='xl' sx={{bgcolor:'#FFF4F0', height: '88vh'}} >
+    <Container maxWidth='xl' sx={{bgcolor:'#FFF', height: '91vh'}} >
       {/* <Box sx={{ bgcolor: '#cfe8fc' }}> */}
         <Grid container spacing={2}>
             <Grid item xs={12} textAlign="center">
-                <h1>
-                    ยินดีต้อนรับเข้าสู่ระบบในฐานะ {role}
-
-                </h1>
+                <h2>
+                    welcome to leave system
+                    <p> in <a>{role}</a> role.</p>
+                    
+                </h2>
 
                 
             </Grid>
         </Grid>
         
-      <Grid container spacing={2} sx={{bgcolor:'#FBF3EC'}}>
+      <Grid container spacing={2} sx={{bgcolor:'#FFF'}}>
       
         {/* <Grid item xs={8} textAlign="center"> */}
           <div id='left' className='left'>
-            <Paper elevation={3} sx={{bgcolor:'#FCF8F5', height: '40vh'}} >
+            <Paper elevation={3} sx={{bgcolor:'#FFF', height: '40vh'}} >
               <div id='bt' className='bt'>
             <Button component={RouterLink}
                 to="/show"
@@ -108,15 +109,17 @@ export default function Home({role} : any) {
               </Paper>
          </div>
         
-        <Grid item xs={4} textAlign="center">
-          <Paper elevation={3} sx={{bgcolor:'#FCF8F5', height: '70vh'}} >
-            <Typography variant="h5"> Profile</Typography>
-            <Typography variant="subtitle2" textAlign={"left"} marginLeft={5}> ชื่อ:{user?.Name} </Typography>
-            <Typography variant="subtitle2" textAlign={"left"} marginLeft={5}> email:{user?.Email} </Typography>
-            <Typography variant="subtitle2" textAlign={"left"} marginLeft={5}> username:{user?.User} </Typography>
-            <Typography variant="subtitle2" textAlign={"left"} marginLeft={5}> role:{user?.Role} </Typography>
-            <Typography variant="subtitle2" textAlign={"left"} marginLeft={5}> แผนก:{user?.Department} </Typography>
-          </Paper>
+        <Grid item xs={4} >
+          
+          <Paper elevation={3} sx={{bgcolor:'#FFF', height: '60vh'}} >
+            
+              <h1>Profile</h1>
+              <h3 className='h3'>ชื่อ: {user?.Name}</h3>
+              <h3 >email: {user?.Email}</h3>
+              <h3 className='h3'>User name: {user?.User}</h3>
+              <h3 className='h3'>role: {user?.Role}</h3>
+              <h3 className='h3'>แผนก: {user?.Department}</h3>
+         </Paper>
         </Grid>    
       </Grid>
       {/* </Box> */}

@@ -100,7 +100,7 @@ function Form() {
     async function mail() {
         let data = {
             email:  emp?.Email,
-            password: "946365Np",
+            password: "utsbbxeslywlnzdn",
             manemail: man?.Email
         };
         console.log(data)
@@ -133,7 +133,7 @@ function Form() {
               }, 1200);
             setAlertMessage("บันทึกข้อมูลสำเร็จ");
             setSuccess(true);
-            // mail();
+            mail();
         } else {
             setAlertMessage(res.message);
             setError(true);
@@ -221,10 +221,12 @@ function Form() {
                         </FormControl>
                         
                     </Grid>
-                    <Grid item xs={12}><Typography>เรียน:{man?.ManName}</Typography></Grid>
-                    <Grid item xs={6}><Typography>ข้าพเจ้า:{" "+emp?.EmpName}</Typography></Grid>
-                    <Grid item xs={6}><Typography>แผนก:{" "+depart?.DepName}</Typography></Grid>
-                    <Grid item xs={12}><Typography>Email:{" "+ emp?.Email}</Typography></Grid>
+                    <Grid item xs={12}><Typography align="left" textTransform="capitalize">ชื่อ-นามสกุล:{" "+emp?.EmpName}</Typography></Grid>
+                    <Grid item xs={12}><Typography align="left" textTransform="capitalize">Email:{" "+ emp?.Email}</Typography></Grid>
+                    <Grid item xs={12}><Typography align="left" textTransform="capitalize">แผนก:{" "+depart?.DepName}</Typography></Grid>
+                    <Grid item xs={12}><Typography align="left" textTransform="capitalize">ผู้จัดการแผนก:{man?.ManName}</Typography></Grid>
+                    
+                    
                     <LocalizationProvider dateAdapter={AdapterDateFns}>
                         <Grid item xs={1.8}><Typography>ขอลาตั้งแต่</Typography></Grid>
                         <Grid item xs={4}>
@@ -272,7 +274,7 @@ function Form() {
                         variant="contained"
                         color="primary"
                         component={RouterLink}
-                        to="/"
+                        to="/show"
                         sx={{'&:hover': {color: '#1543EE', backgroundColor: '#e3f2fd'}}}
                     >
                         ถอยกลับ

@@ -18,6 +18,9 @@ export interface SwitchInterface{
 }
 export interface Switch1Interface{
     ID?: number;
+    DepID: number;
+    EmpEmail: string;
+    ManEmail: string;
     EmpName?: number;
     LeaveDay?:    string | null;
     FromTime?:number | null;

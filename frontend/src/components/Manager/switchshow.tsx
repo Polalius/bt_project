@@ -53,7 +53,7 @@ function ManagerSwitchShow(){
             width: 85,
             renderCell: (params: GridRenderCellParams<any>) => {
                 <EditIcon />
-              return <SwitchApprove params={params.row.ID} />;
+              return <SwitchApprove params={params.row.ID} EmpEmail={params.row.EmpEmail} ManEmail={params.row.ManEmail} />;
             },
             sortable: false,
             description: "Status",

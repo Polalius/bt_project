@@ -118,7 +118,7 @@ func CreateLeaveList(c *gin.Context) {
 		return
 	}
 	if tx := entity.DB().Where("employee_id = ? AND ((start_time BETWEEN ? AND ?) OR (stop_time BETWEEN ? AND ?))", leavelists.EmployeeID, leavelists.StartTime.Local(), leavelists.StopTime.Local().Add(10 *time.Minute), leavelists.StartTime.Local(), leavelists.StopTime.Local().Add(10 *time.Minute)).First(&leavelists); tx.RowsAffected != 0 {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "มีการลาเวลานี้ไปแล้ว1"})
+		c.JSON(http.StatusBadRequest, gin.H{"error": "มีการลาเวลานี้ไปแล้ว"})
 		return
 	}
 	// if tx := entity.DB().Where("employee_id = ? AND (start_time BETWEEN ? AND ?) AND (stop_time BETWEEN ? AND ?)", leavelists.EmployeeID, leavelists.StartTime.Local(), leavelists.StopTime.Local(), leavelists.StartTime.Local(), leavelists.StopTime.Local()).First(&leavelists); tx.RowsAffected != 0 {
@@ -210,7 +210,9 @@ func ListLeaveListByDepIDnSwait(c *gin.Context) {
 }
 type results struct{
 	ID int
-	Id int
+	DepID int
+	EmpEmail string
+	ManEmail string
 	TypeName string
 	EmpName string
 	ManName string
@@ -223,7 +225,7 @@ func ListLeave(c *gin.Context){
 	var results []results
 	
 	if err := entity.DB().Table("leave_lists").
-	Select("leave_lists.id, departments.id, leave_types.type_name, employees.emp_name, managers.man_name, leave_lists.start_time, leave_lists.stop_time, leave_lists.status,departments.dep_name").
+	Select("leave_lists.id, departments.id as dep_id, employees.email as emp_email,managers.email as man_email, leave_types.type_name, employees.emp_name, managers.man_name, leave_lists.start_time, leave_lists.stop_time, leave_lists.status,departments.dep_name").
 	Joins("inner join leave_types on leave_types.id = leave_lists.leave_type_id").
 	Joins("inner join employees on employees.id = leave_lists.employee_id").
 	Joins("inner join managers on managers.id = leave_lists.manager_id").
@@ -237,7 +239,7 @@ func ListLeaveStatus(c *gin.Context){
 	var results []results
 	
 	if err := entity.DB().Table("leave_lists").
-	Select("leave_lists.id, departments.id, leave_types.type_name, employees.emp_name, managers.man_name, leave_lists.start_time, leave_lists.stop_time, leave_lists.status,departments.dep_name").
+	Select("leave_lists.id, departments.id as dep_id, employees.email as emp_email,managers.email as man_email, leave_types.type_name, employees.emp_name, managers.man_name, leave_lists.start_time, leave_lists.stop_time, leave_lists.status,departments.dep_name").
 	Joins("inner join leave_types on leave_types.id = leave_lists.leave_type_id").
 	Joins("inner join employees on employees.id = leave_lists.employee_id").
 	Joins("inner join managers on managers.id = leave_lists.manager_id").
@@ -253,7 +255,7 @@ func ListLeaveStatusDate(c *gin.Context){
 	start := c.Param("start")
 	stop := c.Param("stop")
 	if err := entity.DB().Table("leave_lists").
-	Select("leave_lists.id, departments.id, leave_types.type_name, employees.emp_name, managers.man_name, leave_lists.start_time, leave_lists.stop_time, leave_lists.status,departments.dep_name").
+	Select("leave_lists.id, departments.id as dep_id, employees.email as emp_email,managers.email as man_email, leave_types.type_name, employees.emp_name, managers.man_name, leave_lists.start_time, leave_lists.stop_time, leave_lists.status,departments.dep_name").
 	Joins("inner join leave_types on leave_types.id = leave_lists.leave_type_id").
 	Joins("inner join employees on employees.id = leave_lists.employee_id").
 	Joins("inner join managers on managers.id = leave_lists.manager_id").
@@ -268,7 +270,7 @@ func ListLeaveWait(c *gin.Context){
 	var results []results
 	dep_id := c.Param("id")
 	if err := entity.DB().Table("leave_lists").
-	Select("leave_lists.id, departments.id, leave_types.type_name, employees.emp_name, managers.man_name, leave_lists.start_time, leave_lists.stop_time, leave_lists.status,departments.dep_name").
+	Select("leave_lists.id, departments.id as dep_id, employees.email as emp_email,managers.email as man_email, leave_types.type_name, employees.emp_name, managers.man_name, leave_lists.start_time, leave_lists.stop_time, leave_lists.status,departments.dep_name").
 	Joins("inner join leave_types on leave_types.id = leave_lists.leave_type_id").
 	Joins("inner join employees on employees.id = leave_lists.employee_id").
 	Joins("inner join managers on managers.id = leave_lists.manager_id").
@@ -284,7 +286,7 @@ func ListLeaveWaitDate(c *gin.Context){
 	
 	dep_id := c.Param("id")
 	if err := entity.DB().Table("leave_lists").
-	Select("leave_lists.id, departments.id, leave_types.type_name, employees.emp_name, managers.man_name, leave_lists.start_time, leave_lists.stop_time, leave_lists.status,departments.dep_name").
+	Select("leave_lists.id, departments.id as dep_id, employees.email as emp_email,managers.email as man_email, leave_types.type_name, employees.emp_name, managers.man_name, leave_lists.start_time, leave_lists.stop_time, leave_lists.status,departments.dep_name").
 	Joins("inner join leave_types on leave_types.id = leave_lists.leave_type_id").
 	Joins("inner join employees on employees.id = leave_lists.employee_id").
 	Joins("inner join managers on managers.id = leave_lists.manager_id").
@@ -300,7 +302,7 @@ func ListLeaveListByDepIDnSNwait(c *gin.Context) {
 	var results []results
 	d_id := c.Param("id")
 	if err := entity.DB().Table("leave_lists").
-	Select("leave_lists.id, departments.id, leave_types.type_name, employees.emp_name, managers.man_name, leave_lists.start_time, leave_lists.stop_time, leave_lists.status,departments.dep_name").
+	Select("leave_lists.id, departments.id as dep_id, employees.email as emp_email,managers.email as man_email, leave_types.type_name, employees.emp_name, managers.man_name, leave_lists.start_time, leave_lists.stop_time, leave_lists.status,departments.dep_name").
 	Joins("inner join leave_types on leave_types.id = leave_lists.leave_type_id").
 	Joins("inner join employees on employees.id = leave_lists.employee_id").
 	Joins("inner join managers on managers.id = leave_lists.manager_id").

@@ -22,3 +22,42 @@
     flex-direction: column;
     gap: 10px;
 }
+h1 {
+    text-align: center;
+    text-transform: capitalize;
+    color: #605f5f;
+    font-family: "Lucida Console", "Courier New", monospace;
+  }
+h2 {
+    text-align: center;
+    text-transform: capitalize;
+    color: #af564c;
+    font-family: "Lucida Console", "Courier New", monospace;
+  }
+  h3 {
+    margin-left: 5%;
+    text-align: left;
+    text-transform: lowercase;
+    color: #919191;
+    font-family: "Lucida Console", "Courier New", monospace;
+  }
+  .h3 {
+    margin-left: 5%;
+    text-align: left;
+    text-transform: capitalize;
+    color: #919191;
+    font-family: "Lucida Console", "Courier New", monospace;
+  }
+  p {
+    text-align: center;
+    text-transform: lowercase;
+  }
+  
+  a {
+    text-transform: capitalize;
+    text-indent: 50px;
+    text-align: justify;
+    text-decoration: none;
+    color: #008CBA;
+    font-family: "Times New Roman", Times, serif;
+  }

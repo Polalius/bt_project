@@ -109,7 +109,7 @@ func SutupDatabase() {
 	////////////////
 	man1 := Manager{
 		ManName: "Tom Holland",
-		Email:     "napakant1236@gmail.com",
+		Email:     "napakan2np@gmail.com",
 		User:      userMan,
 		Department: de1,
 		Role: man,
@@ -126,7 +126,7 @@ func SutupDatabase() {
 
 	emp1 := Employee{
 		EmpName: "Chris Evans",
-		Email:     "napakant@hotmail.com",
+		Email:     "napakan1np@gmail.com",
 		User:      userEmp1,
 		Department: de1,
 		Role: emp,
@@ -135,7 +135,7 @@ func SutupDatabase() {
 
 	emp2 := Employee{
 		EmpName: "Robert Downey",
-		Email:     "robert@email.com",
+		Email:     "napakan1np@gmail.com",
 		User:      userEmp2,
 		Department: de1,
 		Role: emp,

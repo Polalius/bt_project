@@ -67,7 +67,9 @@ func ListSwitchByDate(c *gin.Context) {
 }
 type swresults struct{
 	ID int
-	Id int
+	DepID int
+	EmpEmail string
+	ManEmail string
 	EmpName string
 	ManName string
 	LeaveDay    string
@@ -81,7 +83,7 @@ func ListSwitchWait(c *gin.Context){
 	var results []swresults
 	dep_id := c.Param("id")
 	if err := entity.DB().Table("switch_leaves").
-	Select("switch_leaves.id, departments.id, employees.emp_name, managers.man_name, switch_leaves.work_day, switch_leaves.to_time, switch_leaves.from_time, switch_leaves.leave_day, switch_leaves.status,departments.dep_name").
+	Select("switch_leaves.id, departments.id as dep_id, employees.email as emp_email,managers.email as man_email, employees.emp_name, managers.man_name, switch_leaves.work_day, switch_leaves.to_time, switch_leaves.from_time, switch_leaves.leave_day, switch_leaves.status,departments.dep_name").
 	Joins("inner join employees on employees.id = switch_leaves.employee_id").
 	Joins("inner join managers on managers.id = switch_leaves.manager_id").
 	Joins("inner join departments on departments.id = switch_leaves.department_id").
@@ -96,7 +98,7 @@ func ListSwitchByDepIDnSNwait(c *gin.Context) {
 	var results []swresults
 	d_id := c.Param("id")
 	if err := entity.DB().Table("switch_leaves").
-	Select("switch_leaves.id, departments.id, employees.emp_name, managers.man_name, switch_leaves.work_day, switch_leaves.to_time, switch_leaves.from_time, switch_leaves.leave_day, switch_leaves.status,departments.dep_name").
+	Select("switch_leaves.id, departments.id as dep_id, employees.email as emp_email,managers.email as man_email, employees.emp_name, managers.man_name, switch_leaves.work_day, switch_leaves.to_time, switch_leaves.from_time, switch_leaves.leave_day, switch_leaves.status,departments.dep_name").
 	Joins("inner join employees on employees.id = switch_leaves.employee_id").
 	Joins("inner join managers on managers.id = switch_leaves.manager_id").
 	Joins("inner join departments on departments.id = switch_leaves.department_id").
@@ -133,7 +135,7 @@ func CreateSwitchLeave(c *gin.Context){
 		return
 	}
 	if tx := entity.DB().Where("employee_id = ? AND (leave_day = ?) AND ((from_time BETWEEN ? AND ?) OR (to_time BETWEEN ? AND ?))", switchleaves.EmployeeID, switchleaves.LeaveDay, switchleaves.FromTime, switchleaves.ToTime, switchleaves.FromTime, switchleaves.ToTime).First(&switchleaves); tx.RowsAffected != 0 {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "มีการลาเวลานี้ไปแล้ว1"})
+		c.JSON(http.StatusBadRequest, gin.H{"error": "มีการลาเวลานี้ไปแล้ว"})
 		return
 	}
 	
