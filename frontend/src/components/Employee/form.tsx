@@ -233,7 +233,7 @@ function Form() {
                         <FormControl fullWidth variant="outlined">
                             <DateTimePicker
                                 label="วันที่และเวลา"
-                                
+                                ampm={false}
                                 value={start}
                                 onChange={(newValue) => {
                                     setStart(newValue);
@@ -250,6 +250,7 @@ function Form() {
                             <DateTimePicker
                                 
                                 label="วันที่และเวลา"
+                                ampm={false}
                                 value={stop}
                                 onChange={(newValue) => {
                                     setStop(newValue);

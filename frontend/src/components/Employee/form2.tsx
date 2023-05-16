@@ -9,7 +9,7 @@ import MuiAlert from "@mui/material/Alert";
 import { AlertProps, Box, Button, Container, 
     CssBaseline, Divider, FormControl, Grid, 
     Paper, Select, SelectChangeEvent, Snackbar, Stack, TextField, Typography } from "@mui/material";
-import { DatePicker, DateTimePicker, LocalizationProvider, TimePicker } from '@mui/x-date-pickers';
+import { DatePicker, DateTimePicker, LocalizationProvider, TimeField, TimePicker } from '@mui/x-date-pickers';
 
 
 import { LeaveInterface, LeaveTypeInterface } from "../../models/ILeave";
@@ -44,31 +44,42 @@ function Form2() {
     const [message, setAlertMessage] = useState("");
     const [selectedDate, setSelectedDate] = useState<string>('');
 
-  const handleDateChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setLeave(event.target.value);
-  };
-  const handleDateChange1 = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setWork(event.target.value);
-  };
-    const handleChange1 = (event: React.ChangeEvent<HTMLInputElement>) => {
-        const timeString = event.target.value;
-        const [hours, minutes] = timeString.split(":").map(Number);
-        const time = hours * 60 + minutes;
-        setFtime(time);
+    const handleDateChange = (newValue: Date | null) => {
+        if (newValue !== null) {
+          const dateString = newValue.toISOString().split('T')[0];
+          setLeave(dateString);
+        } else {
+          setLeave('');
+        }
       };
-      const handleChange2 = (event: React.ChangeEvent<HTMLInputElement>) => {
-        const timeString = event.target.value;
-        const [hours, minutes] = timeString.split(":").map(Number);
-        const time = hours * 60 + minutes;
-        setTtime(time);
+      const handleDateChange2 = (newValue: Date | null) => {
+        if (newValue !== null) {
+          const dateString = newValue.toISOString().split('T')[0];
+          setWork(dateString);
+        } else {
+          setWork('');
+        }
       };
-    function formatTime(time: number): string {
-        const hours = Math.floor(time / 60);
-        const minutes = time % 60;
-        const hoursStr = hours.toString().padStart(2, "0");
-        const minutesStr = minutes.toString().padStart(2, "0");
-        return `${hoursStr}:${minutesStr}`;
-      }
+  const handleChange1 = (newValue: Date | null) => {
+    if (newValue !== null) {
+      const hours = newValue.getHours();
+      const minutes = newValue.getMinutes();
+      const time = hours * 60 + minutes;
+      setFtime(time);
+    } else {
+      setFtime(null);
+    }
+  };
+  const handleChange2 = (newValue: Date | null) => {
+    if (newValue !== null) {
+      const hours = newValue.getHours();
+      const minutes = newValue.getMinutes();
+      const time = hours * 60 + minutes;
+      setTtime(time);
+    } else {
+      setTtime(null);
+    }
+  };
       
     const getEmployeeID = async (id:any) => {
         let res = await GetEmployeeID(id);
@@ -228,58 +239,46 @@ function Form2() {
                     
                     <LocalizationProvider dateAdapter={AdapterDateFns}>
                     
-                        <Grid item xs={2}><Typography align="left">วันที่สลับ</Typography></Grid>
+                        
                         <Grid item xs={4}>
                         <FormControl fullWidth variant="outlined">
-                            {/* <DatePicker
-                                label="วันที่"
-                                
-                                value={leave}
-                                onChange={(newValue) => {
-                                    setLeave(newValue);
-                                    console.log(newValue)
-                                  }}
-                                 
-                                  
-                            /> */}
-                            <input
-                        type="date"
-                        id="datepicker"
-                        value={leave}
-                        onChange={handleDateChange}
-                    />
+                            <DatePicker
+                                label="วันที่สลับวันลา"
+                                value={leave !== '' ? new Date(leave) : null}
+                                onChange={handleDateChange}
+                            />
                         </FormControl>
                         </Grid>
                         <Grid item xs={2.5}>
                         <FormControl fullWidth variant="outlined">
-                        <input
-                        type="time"
-                        id="timepicker"
-                        name="FromTime"
-                        value={ftime !== null ? formatTime(ftime) : ""}
-                        onChange={handleChange1}
+                        <TimePicker
+                            label="เวลา"
+                            ampm={false}
+                            value={ftime !== null ? new Date(0, 0, 0, Math.floor(ftime / 60), ftime % 60) : null}
+                            onChange={handleChange1}
+                            
                         />
                         </FormControl>
                         </Grid>
                         <Grid item xs={2.5}>
                         <FormControl fullWidth variant="outlined">
-                        <input
-                        type="time"
-                        name="ToTime"
-                        value={ttime !== null ? formatTime(ttime) : ""}
-                        onChange={handleChange2}
+                        <TimePicker
+                            label="ถึงเวลา"
+                            ampm={false}
+                            value={ttime !== null ? new Date(0, 0, 0, Math.floor(ttime / 60), ttime % 60) : null}
+                            onChange={handleChange2}
+                            format="HH:mm"
                         />
                         </FormControl>
                         </Grid>
-                        <Grid item xs={2}><Typography>วันที่มาทำงาน</Typography></Grid>
+                        
                         <Grid item xs={4}>
                         <FormControl fullWidth variant="outlined">
-                        <input
-                        type="date"
-                        id="datepicker"
-                        value={work}
-                        onChange={handleDateChange1}
-                        />
+                        <DatePicker
+                                label="วันที่มาทำงาน"
+                                value={work !== '' ? new Date(work) : null}
+                                onChange={handleDateChange2}
+                            />
                         </FormControl>
                         </Grid>
                     </LocalizationProvider>
@@ -306,7 +305,6 @@ function Form2() {
                         variant="contained"
                         color="primary"
                         onClick={submit}
-                        // onSubmit={mail}
                         sx={{'&:hover': {color: '#1543EE', backgroundColor: '#e3f2fd'}}}
                     >
                         บันทึกข้อมูล
