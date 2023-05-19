@@ -28,9 +28,6 @@ const Alert = forwardRef<HTMLDivElement, AlertProps>(function Alert(props,ref,) 
 });
 
 function Form2() {
-    interface FromTime {
-        fromtime: string;
-    }
     const [leavelist, setLeavelist] = useState<Partial<SwitchInterface>>({});
     const [emp, setEmp] = useState<EmployeeInterface>();
     const [man, setMan] = useState<ManagerInterface>();
@@ -46,15 +43,21 @@ function Form2() {
 
     const handleDateChange = (newValue: Date | null) => {
         if (newValue !== null) {
-          const dateString = newValue.toISOString().split('T')[0];
-          setLeave(dateString);
-        } else {
-          setLeave('');
-        }
+            const year = newValue.getFullYear();
+            const month = (newValue.getMonth() + 1).toString().padStart(2, '0');
+            const day = newValue.getDate().toString().padStart(2, '0');
+            const dateString = `${month}-${day}-${year}`;
+            setLeave(dateString);
+          } else {
+            setLeave('');
+          }
       };
       const handleDateChange2 = (newValue: Date | null) => {
         if (newValue !== null) {
-          const dateString = newValue.toISOString().split('T')[0];
+            const year = newValue.getFullYear();
+            const month = (newValue.getMonth() + 1).toString().padStart(2, '0');
+            const day = newValue.getDate().toString().padStart(2, '0');
+            const dateString = `${month}-${day}-${year}`;
           setWork(dateString);
         } else {
           setWork('');
@@ -246,6 +249,7 @@ function Form2() {
                                 label="วันที่สลับวันลา"
                                 value={leave !== '' ? new Date(leave) : null}
                                 onChange={handleDateChange}
+                                format="dd-MM-yyyy"
                             />
                         </FormControl>
                         </Grid>
@@ -256,7 +260,7 @@ function Form2() {
                             ampm={false}
                             value={ftime !== null ? new Date(0, 0, 0, Math.floor(ftime / 60), ftime % 60) : null}
                             onChange={handleChange1}
-                            
+                            format="HH:mm"
                         />
                         </FormControl>
                         </Grid>
@@ -278,6 +282,7 @@ function Form2() {
                                 label="วันที่มาทำงาน"
                                 value={work !== '' ? new Date(work) : null}
                                 onChange={handleDateChange2}
+                                format="dd-MM-yyyy"
                             />
                         </FormControl>
                         </Grid>
@@ -295,8 +300,7 @@ function Form2() {
                     <Button
                         variant="contained"
                         color="primary"
-                        component={RouterLink}
-                        to="/switchshow"
+                        onClick={() => { window.location.href = "/switchshow"; }}
                         sx={{'&:hover': {color: '#1543EE', backgroundColor: '#e3f2fd'}}}
                     >
                         ถอยกลับ

@@ -3,6 +3,7 @@ package controller
 import (
 	"fmt"
 	"net/http"
+	"strconv"
 	"time"
 
 	"github.com/Polalius/bt_project/entity"
@@ -281,6 +282,21 @@ func ListLeaveWait(c *gin.Context){
 	}
 	c.JSON(http.StatusOK, gin.H{"data": results})
 }
+func ListLeaveEID(c *gin.Context){
+	var results []results
+	id := c.Param("id")
+	if err := entity.DB().Table("leave_lists").
+	Select("leave_lists.id, departments.id as dep_id, employees.email as emp_email,managers.email as man_email, leave_types.type_name, employees.emp_name, managers.man_name, leave_lists.start_time, leave_lists.stop_time, leave_lists.status,departments.dep_name").
+	Joins("inner join leave_types on leave_types.id = leave_lists.leave_type_id").
+	Joins("inner join employees on employees.id = leave_lists.employee_id").
+	Joins("inner join managers on managers.id = leave_lists.manager_id").
+	Joins("inner join departments on departments.id = leave_lists.department_id").
+	Where("leave_lists.employee_id = ? ORDER BY leave_lists.id DESC LIMIT 3", id).Find(&results).Error; err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{"data": results})
+}
 func ListLeaveWaitDate(c *gin.Context){
 	var results []results
 	
@@ -398,4 +414,18 @@ func UpdateLeaveList(c *gin.Context){
 	}
 
 	c.JSON(http.StatusOK, gin.H{"data": leavelist})
+}
+func CountL(c *gin.Context) {
+	var count int
+
+	id := c.Param("id")
+	year := strconv.Itoa(time.Now().Year())
+	if err := entity.DB().Table("switch_leaves").
+	Select("COUNT(*)").Where("employee_id = ?",id).Where("SUBSTR(start_time, 1, 4) = ?",year).
+	Scan(&count).Error; err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+	
+	c.JSON(http.StatusOK, gin.H{"data": count})
 }

@@ -78,8 +78,7 @@ function EmployeeShow2(){
                 >
                     <Box>
                         <Button
-                            component={RouterLink}
-                            to="/"
+                            onClick={() => { window.location.href = "/"; }}
                             variant="contained"
                             color="primary"
                             sx={{ borderRadius: 20, '&:hover': { color: '#065D95', backgroundColor: '#e3f2fd' } }}
@@ -100,8 +99,7 @@ function EmployeeShow2(){
                     </Box>
                     <Box>
                         <Button
-                            component={RouterLink}
-                            to="/switch"
+                            onClick={() => { window.location.href = "/switch"; }}
                             variant="contained"
                             color="primary"
                             sx={{ borderRadius: 20, '&:hover': { color: '#065D95', backgroundColor: '#e3f2fd' } }}

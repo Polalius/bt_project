@@ -174,10 +174,10 @@ func SutupDatabase() {
 	db.Model(&LeaveList{}).Create(&list3)
 	sw_leave1 := SwitchLeave{
 		Employee: emp1,
-		LeaveDay:  "2023-04-05",
+		LeaveDay:  "05-05-2023",
 		FromTime: 480,
 		ToTime: 720,
-		WorkDay: "2023-04-10",
+		WorkDay: "10-05-2023",
 		Manager: man1,
 		Department: de1,
 		Status: "approved",
@@ -185,10 +185,10 @@ func SutupDatabase() {
 	db.Model(&SwitchLeave{}).Create(&sw_leave1)
 	sw_leave2 := SwitchLeave{
 		Employee: emp2,
-		LeaveDay:  "2023-04-15",
+		LeaveDay:  "15-05-2023",
 		FromTime: 780,
 		ToTime: 1020,
-		WorkDay: "2023-04-20",
+		WorkDay: "20-05-2023",
 		Manager: man1,
 		Department: de1,
 		Status: "approved",

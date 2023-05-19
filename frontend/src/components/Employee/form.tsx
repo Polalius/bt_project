@@ -274,8 +274,7 @@ function Form() {
                     <Button
                         variant="contained"
                         color="primary"
-                        component={RouterLink}
-                        to="/show"
+                        onClick={() => { window.location.href = "/show"; }}
                         sx={{'&:hover': {color: '#1543EE', backgroundColor: '#e3f2fd'}}}
                     >
                         ถอยกลับ

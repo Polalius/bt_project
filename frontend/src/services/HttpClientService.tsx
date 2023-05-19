@@ -422,6 +422,65 @@ async function ListLeaveList() {
   
     return res;
   }
+  async function ListLeaveByEID(id:any) {
+    const requestOptions = {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+        "Content-Type": "application/json",
+      },
+    };
+  
+    let res = await fetch(`${apiUrl}/leave_eid/${id}`, requestOptions)
+      .then((response) => response.json())
+      .then((res) => {
+        if (res) {
+          return res;
+        } 
+      });
+  
+    return res;
+  }
+  async function ListSwitchByEID(id:any) {
+    const requestOptions = {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+        "Content-Type": "application/json",
+      },
+    };
+  
+    let res = await fetch(`${apiUrl}/switch_eid/${id}`, requestOptions)
+      .then((response) => response.json())
+      .then((res) => {
+        if (res) {
+          return res;
+        } 
+      });
+  
+    return res;
+  }
+  async function CountL(id:any) {
+    
+    const requestOptions = {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+        "Content-Type": "application/json",
+      },
+    };
+    let res = await fetch(`${apiUrl}/count_l/${id}`, requestOptions)
+      .then((response) => response.json())
+      .then((res) => {
+        if (res.data) {
+          return res.data;
+        } else {
+          return false;
+        }
+      });
+  
+    return res;
+  }
   async function GetSwitchByID(l_id:any) {
     
     const requestOptions = {
@@ -432,6 +491,27 @@ async function ListLeaveList() {
       },
     };
     let res = await fetch(`${apiUrl}/switch/${l_id}`, requestOptions)
+      .then((response) => response.json())
+      .then((res) => {
+        if (res.data) {
+          return res.data;
+        } else {
+          return false;
+        }
+      });
+  
+    return res;
+  }
+  async function CountSW(id:any) {
+    
+    const requestOptions = {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+        "Content-Type": "application/json",
+      },
+    };
+    let res = await fetch(`${apiUrl}/countsw/${id}`, requestOptions)
       .then((response) => response.json())
       .then((res) => {
         if (res.data) {
@@ -566,6 +646,7 @@ async function ListLeaveList() {
     ListLeave,
     ListLeaveStatus,
     // ListLeaveStatusDate,
+    ListLeaveByEID,
     ListLeaveWait,
     ListLeaveListByEmpID,
     ListLeaveListByDepID,
@@ -573,6 +654,7 @@ async function ListLeaveList() {
     ListLeaveListByDepIDnSNWait,
     GetLeaveListByID,
     UpdateLeaveList,
+    CountL,
     GetEmployeeByUID,
     CreateLeavaList,
     ListEmployee,
@@ -582,8 +664,9 @@ async function ListLeaveList() {
     GetManagerID1,
     GetUserID,
     GetDepartmentID,
-
+    CountSW,
     GetSwitchByID,
+    ListSwitchByEID,
     ListSwitch,
     ListSwitchWait,
     ListSwitchByEmpID,

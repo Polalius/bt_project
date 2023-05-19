@@ -49,6 +49,7 @@ func main() {
 
 	r.GET("/leavelists", controller.ListLeaveList)
 	r.GET("/leave", controller.ListLeave)
+	r.GET("/leave_eid/:id", controller.ListLeaveEID)
 	r.GET("/leavestatus", controller.ListLeaveStatus)
 	r.GET("/leavedate/start&stop", controller.ListLeaveStatusDate)
 	r.GET("/leavewait/:id", controller.ListLeaveWait)
@@ -58,15 +59,18 @@ func main() {
 	r.GET("/leavelist_depwait/:id", controller.ListLeaveListByDepIDnSwait)
 	r.GET("/leavelist_depnwait/:id", controller.ListLeaveListByDepIDnSNwait)
 	r.PATCH("/leavelists", controller.UpdateLeaveList)
+	r.GET("/count_l/:id", controller.CountL)
 
 	r.GET("/switch/:id", controller.GetSwitchID)
 	r.GET("/switchs", controller.ListSwitch)//
+	r.GET("/switch_eid/:id", controller.ListSwitchEID)
 	r.GET("/switch_id/:id", controller.ListSwitchByEmpID)//
 	r.GET("/switch_depid/:id", controller.ListSwitchByDepID)
 	r.GET("/switch_wait/:id", controller.ListSwitchWait)
 	r.GET("/switch_depnwaitid/:id", controller.ListSwitchByDepIDnSNwait)
 	r.POST("/switch_leaves", controller.CreateSwitchLeave)//
 	r.PATCH("/switch_leaves", controller.UpdateSwitch)
+	r.GET("/countsw/:id", controller.CountSW)
 
 	r.GET("/leavetypes", controller.ListLeaveType)
 	

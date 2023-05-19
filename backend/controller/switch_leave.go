@@ -3,7 +3,8 @@ package controller
 import (
 	"fmt"
 	"net/http"
-	
+	"strconv"
+	"time"
 
 	"github.com/Polalius/bt_project/entity"
 	"github.com/asaskevich/govalidator"
@@ -88,6 +89,20 @@ func ListSwitchWait(c *gin.Context){
 	Joins("inner join managers on managers.id = switch_leaves.manager_id").
 	Joins("inner join departments on departments.id = switch_leaves.department_id").
 	Where("departments.id = ? AND switch_leaves.status = 'pending approval'", dep_id).Find(&results).Error; err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{"data": results})
+}
+func ListSwitchEID(c *gin.Context){
+	var results []swresults
+	eid := c.Param("id")
+	if err := entity.DB().Table("switch_leaves").
+	Select("switch_leaves.id, departments.id as dep_id, employees.email as emp_email,managers.email as man_email, employees.emp_name, managers.man_name, switch_leaves.work_day, switch_leaves.to_time, switch_leaves.from_time, switch_leaves.leave_day, switch_leaves.status,departments.dep_name").
+	Joins("inner join employees on employees.id = switch_leaves.employee_id").
+	Joins("inner join managers on managers.id = switch_leaves.manager_id").
+	Joins("inner join departments on departments.id = switch_leaves.department_id").
+	Where("switch_leaves.employee_id = ? ORDER BY switch_leaves.id DESC LIMIT 3", eid).Find(&results).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
@@ -222,4 +237,18 @@ func UpdateSwitch(c *gin.Context){
 	}
 
 	c.JSON(http.StatusOK, gin.H{"data": switchs})
+}
+func CountSW(c *gin.Context) {
+	var count int
+
+	id := c.Param("id")
+	year := strconv.Itoa(time.Now().Year())
+	if err := entity.DB().Table("switch_leaves").
+	Select("COUNT(*)").Where("employee_id = ?",id).Where("SUBSTR(leave_day, -4) = ?",year).
+	Scan(&count).Error; err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+	
+	c.JSON(http.StatusOK, gin.H{"data": count})
 }

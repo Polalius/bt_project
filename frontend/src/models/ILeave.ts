@@ -28,13 +28,14 @@ export interface Leave1Interface{
     DepID: number;
     EmpEmail: string;
     ManEmail: string;
-    EmpName?: number;
     TypeName?: string;
+    EmpName?: string;
+    ManName?: string;
     StartTime?:  Date | null;
 	StopTime?:    Date | null;
-    ManName?: string;
-    Status?: string;
     DepName?: number;
+    Status?: string;
+    
 }
 export interface Leave2Interface{
     ID?: number;
