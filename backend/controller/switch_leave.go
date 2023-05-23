@@ -3,8 +3,7 @@ package controller
 import (
 	"fmt"
 	"net/http"
-	"strconv"
-	"time"
+	
 
 	"github.com/Polalius/bt_project/entity"
 	"github.com/asaskevich/govalidator"
@@ -76,6 +75,7 @@ type swresults struct{
 	LeaveDay    string
 	FromTime	int
 	ToTime 		int
+	Count		int
 	WorkDay   string
 	DepName		string
 	Status string
@@ -84,7 +84,7 @@ func ListSwitchWait(c *gin.Context){
 	var results []swresults
 	dep_id := c.Param("id")
 	if err := entity.DB().Table("switch_leaves").
-	Select("switch_leaves.id, departments.id as dep_id, employees.email as emp_email,managers.email as man_email, employees.emp_name, managers.man_name, switch_leaves.work_day, switch_leaves.to_time, switch_leaves.from_time, switch_leaves.leave_day, switch_leaves.status,departments.dep_name").
+	Select("switch_leaves.id, departments.id as dep_id, employees.email as emp_email,managers.email as man_email, employees.emp_name, managers.man_name, switch_leaves.work_day, switch_leaves.to_time, switch_leaves.from_time, switch_leaves.count, switch_leaves.leave_day, switch_leaves.status,departments.dep_name").
 	Joins("inner join employees on employees.id = switch_leaves.employee_id").
 	Joins("inner join managers on managers.id = switch_leaves.manager_id").
 	Joins("inner join departments on departments.id = switch_leaves.department_id").
@@ -98,7 +98,7 @@ func ListSwitchEID(c *gin.Context){
 	var results []swresults
 	eid := c.Param("id")
 	if err := entity.DB().Table("switch_leaves").
-	Select("switch_leaves.id, departments.id as dep_id, employees.email as emp_email,managers.email as man_email, employees.emp_name, managers.man_name, switch_leaves.work_day, switch_leaves.to_time, switch_leaves.from_time, switch_leaves.leave_day, switch_leaves.status,departments.dep_name").
+	Select("switch_leaves.id, departments.id as dep_id, employees.email as emp_email,managers.email as man_email, employees.emp_name, managers.man_name, switch_leaves.work_day, switch_leaves.to_time, switch_leaves.from_time, switch_leaves.count, switch_leaves.leave_day, switch_leaves.status,departments.dep_name").
 	Joins("inner join employees on employees.id = switch_leaves.employee_id").
 	Joins("inner join managers on managers.id = switch_leaves.manager_id").
 	Joins("inner join departments on departments.id = switch_leaves.department_id").
@@ -113,7 +113,7 @@ func ListSwitchByDepIDnSNwait(c *gin.Context) {
 	var results []swresults
 	d_id := c.Param("id")
 	if err := entity.DB().Table("switch_leaves").
-	Select("switch_leaves.id, departments.id as dep_id, employees.email as emp_email,managers.email as man_email, employees.emp_name, managers.man_name, switch_leaves.work_day, switch_leaves.to_time, switch_leaves.from_time, switch_leaves.leave_day, switch_leaves.status,departments.dep_name").
+	Select("switch_leaves.id, departments.id as dep_id, employees.email as emp_email,managers.email as man_email, employees.emp_name, managers.man_name, switch_leaves.work_day, switch_leaves.to_time, switch_leaves.from_time, switch_leaves.count, switch_leaves.leave_day, switch_leaves.status,departments.dep_name").
 	Joins("inner join employees on employees.id = switch_leaves.employee_id").
 	Joins("inner join managers on managers.id = switch_leaves.manager_id").
 	Joins("inner join departments on departments.id = switch_leaves.department_id").
@@ -160,6 +160,7 @@ func CreateSwitchLeave(c *gin.Context){
 		LeaveDay:  switchleaves.LeaveDay, // ตั้งค่าฟิลด์ Start_time
 		FromTime: switchleaves.FromTime,
 		ToTime: switchleaves.ToTime,
+		Count: switchleaves.Count,
 		WorkDay: switchleaves.WorkDay,  // ตั้งค่าฟิลด์ Stop_time
 		Manager: manager,
 		Department: depart,
@@ -242,9 +243,9 @@ func CountSW(c *gin.Context) {
 	var count int
 
 	id := c.Param("id")
-	year := strconv.Itoa(time.Now().Year())
+	
 	if err := entity.DB().Table("switch_leaves").
-	Select("COUNT(*)").Where("employee_id = ?",id).Where("SUBSTR(leave_day, -4) = ?",year).
+	Select("SUM(count)").Where("employee_id = ?",id).Where("status = 'approved'").
 	Scan(&count).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return

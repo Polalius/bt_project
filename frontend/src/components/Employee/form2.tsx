@@ -39,7 +39,7 @@ function Form2() {
     const [success, setSuccess] = useState(false);
     const [error, setError] = useState(false);
     const [message, setAlertMessage] = useState("");
-    const [selectedDate, setSelectedDate] = useState<string>('');
+    
 
     const handleDateChange = (newValue: Date | null) => {
         if (newValue !== null) {
@@ -110,7 +110,16 @@ function Form2() {
         let val = typeof data === "string" ? parseInt(data) : data;
         return val;
     };
-
+    
+    const Count = (f: any, t: any) => {
+        if (t - f > 300) {
+            const val = t - f - 60
+          return val;
+        } else {
+            const val = t - f
+          return val;
+        }
+      }
     
 
     const handleClose = (event?: React.SyntheticEvent | Event,reason?: string) => {
@@ -157,11 +166,11 @@ function Form2() {
             LeaveDay: leave,
             FromTime: ftime,
             ToTime: ttime,
+            Count: Count(ftime,ttime),
             WorkDay: work,
             ManagerID: convertType(man?.ID) ?? 0,
             DepartmentID: convertType(depart?.ID) ?? 0,
             Status: "pending approval",
-            select: selectedDate
         }
         console.log(data)
         let res = await CreateSwitchLeave(data);
@@ -172,7 +181,7 @@ function Form2() {
               }, 1200);
             setAlertMessage("บันทึกข้อมูลสำเร็จ");
             setSuccess(true);
-            mail();
+            // mail();
         } else {
             setAlertMessage(res.message);
             setError(true);
@@ -300,7 +309,9 @@ function Form2() {
                     <Button
                         variant="contained"
                         color="primary"
-                        onClick={() => { window.location.href = "/switchshow"; }}
+                        component={RouterLink}
+                            to="/switchshow"
+                        
                         sx={{'&:hover': {color: '#1543EE', backgroundColor: '#e3f2fd'}}}
                     >
                         ถอยกลับ

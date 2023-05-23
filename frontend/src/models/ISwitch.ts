@@ -9,6 +9,7 @@ export interface SwitchInterface{
     LeaveDay?:    string | null;
     FromTime?: number | null;
     ToTime?: number | null;
+    Count?: number | null;
     WorkDay?: string | null;
     ManagerID?: number;
     ManagerInterface?: ManagerInterface;
@@ -25,6 +26,7 @@ export interface Switch1Interface{
     LeaveDay?:    string | null;
     FromTime?:number | null;
     ToTime?: number | null;
+    Count?: number | null;
     WorkDay?:  string | null;
     ManName?: string;
     Status?: string;

@@ -1,7 +1,6 @@
 package entity
 
 import (
-	"time"
 
 	"golang.org/x/crypto/bcrypt"
 	"gorm.io/driver/sqlite"
@@ -145,8 +144,11 @@ func SutupDatabase() {
 	list1 := LeaveList{
 		Employee:   emp1,
 		LeaveType: l_type1,
-		StartTime: time.Date(2023, 4, 8, 0, 0, 0, 0, time.Now().Location()),
-		StopTime:  time.Date(2023, 4, 8, 0, 0, 0, 0, time.Now().Location()),
+		StartDate: "15-05-2023",
+		StartTime: 480,
+		StopDate:  "15-05-2023",
+		StopTime:  720,
+		CountL: 240,
 		Manager: man1,
 		Department: de1,
 		Status: "approved",
@@ -155,8 +157,11 @@ func SutupDatabase() {
 	list2 := LeaveList{
 		Employee:   emp2,
 		LeaveType: l_type2,
-		StartTime: time.Date(2023, 4, 8, 8, 0, 0, 0, time.Now().Location()),
-		StopTime:  time.Date(2023, 4, 8, 10, 0, 0, 0, time.Now().Location()),
+		StartDate: "15-05-2023",
+		StartTime: 780,
+		StopDate:  "15-05-2023",
+		StopTime:  1020,
+		CountL: 240,
 		Manager: man1,
 		Department: de1,
 		Status: "approved",
@@ -165,8 +170,11 @@ func SutupDatabase() {
 	list3 := LeaveList{
 		Employee:   emp2,
 		LeaveType: l_type2,
-		StartTime: time.Date(2023, 4, 8, 0, 0, 0, 0, time.Now().Location()),
-		StopTime:  time.Date(2023, 4, 8, 0, 0, 0, 0, time.Now().Location()),
+		StartDate: "16-05-2023",
+		StartTime: 780,
+		StopDate:  "17-05-2023",
+		StopTime:  1020,
+		CountL: 720,
 		Manager: man1,
 		Department: de1,
 		Status: "pending approval",
@@ -174,10 +182,11 @@ func SutupDatabase() {
 	db.Model(&LeaveList{}).Create(&list3)
 	sw_leave1 := SwitchLeave{
 		Employee: emp1,
-		LeaveDay:  "05-05-2023",
+		LeaveDay:  "15-05-2023",
 		FromTime: 480,
 		ToTime: 720,
-		WorkDay: "10-05-2023",
+		Count: 240,
+		WorkDay: "20-05-2023",
 		Manager: man1,
 		Department: de1,
 		Status: "approved",
@@ -188,6 +197,7 @@ func SutupDatabase() {
 		LeaveDay:  "15-05-2023",
 		FromTime: 780,
 		ToTime: 1020,
+		Count: 240,
 		WorkDay: "20-05-2023",
 		Manager: man1,
 		Department: de1,

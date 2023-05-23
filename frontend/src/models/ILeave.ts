@@ -14,8 +14,11 @@ export interface LeaveInterface{
     EmployeeInterface?: EmployeeInterface;
     LeaveTypeID?: number;
     LeaveTypeInterface?: LeaveTypeInterface;
-    StartTime?:  Date | null;
-	StopTime?:    Date | null;
+    StartDate?:  string | null;
+    StartTime?:  number | null;
+	StopDate?:    string | null;
+	StopTime?:    number | null;
+    CountL?: number | null
     ManagerID?: number;
     ManagerInterface?: ManagerInterface;
     Status?: string;
@@ -31,8 +34,10 @@ export interface Leave1Interface{
     TypeName?: string;
     EmpName?: string;
     ManName?: string;
-    StartTime?:  Date | null;
-	StopTime?:    Date | null;
+    StartDate?:  string | null;
+    StartTime?:  number | null;
+	StopDate?:    string | null;
+	StopTime?:    number | null;
     DepName?: number;
     Status?: string;
     

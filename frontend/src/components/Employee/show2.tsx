@@ -51,10 +51,10 @@ function EmployeeShow2(){
         { field: "Employee.FirstName", headerName: "ชื่อ-นามสกุล",type:"string", width: 120, headerAlign: "center", align: "center", renderCell: (params: GridRenderCellParams<any>) => {
             return <>{params.row.Employee.EmpName}</>},
         },
-        { field: "LeaveDay", headerName: "วันที่สลับ",type:"date", width: 220, headerAlign: "center", align: "center", valueFormatter: (params) => moment(params?.value).format("MM/DD/YYYY")},
-        { field: "FromTime", headerName: "จากเวลา",type:"string", width: 100, headerAlign: "center", align: "center", valueFormatter: (params) => formatMinutesToTime(params?.value as number)},
+        { field: "LeaveDay", headerName: "วันที่สลับ",type:"date", width: 220, headerAlign: "center", align: "center", valueFormatter: (params) => params?.value},
+        { field: "FromTime", headerName: "จากเวลา",type:"time", width: 100, headerAlign: "center", align: "center", valueFormatter: (params) => formatMinutesToTime(params?.value as number)},
         { field: "ToTime", headerName: "ถึงเวลา",type:"time", width: 100, headerAlign: "center", align: "center", valueFormatter: (params) => formatMinutesToTime(params?.value as number)},
-        { field: "WorkDay", headerName: "วันที่มาทำงาน",type:"date", width: 250, headerAlign: "center", align: "center", valueFormatter: (params) => moment(params?.value).format("MM/DD/YYYY ") },
+        { field: "WorkDay", headerName: "วันที่มาทำงาน",type:"date", width: 250, headerAlign: "center", align: "center", valueFormatter: (params) => params?.value },
         { field: "Manager.FirstName", headerName: "ผู้จัดการ",type:"string", width: 150, headerAlign: "center", align: "center", renderCell: (params: GridRenderCellParams<any>) => {
             return <>{params.row.Manager.ManName}</>;
           }, },
@@ -78,7 +78,8 @@ function EmployeeShow2(){
                 >
                     <Box>
                         <Button
-                            onClick={() => { window.location.href = "/"; }}
+                            component={RouterLink}
+                            to="/"
                             variant="contained"
                             color="primary"
                             sx={{ borderRadius: 20, '&:hover': { color: '#065D95', backgroundColor: '#e3f2fd' } }}
@@ -93,13 +94,15 @@ function EmployeeShow2(){
                             color="primary"
                             sx={{ fontWeight: 'bold' }}
                             gutterBottom
+                            align='center'
                         >
                             ประวัติสลับวันลา
                         </Typography>
                     </Box>
                     <Box>
                         <Button
-                            onClick={() => { window.location.href = "/switch"; }}
+                            component={RouterLink}
+                            to="/switch"
                             variant="contained"
                             color="primary"
                             sx={{ borderRadius: 20, '&:hover': { color: '#065D95', backgroundColor: '#e3f2fd' } }}

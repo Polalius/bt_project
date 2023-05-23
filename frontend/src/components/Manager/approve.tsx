@@ -66,7 +66,7 @@ export default function Approve(props: any){
         setTimeout(() => {
           window.location.reload();
         }, 800);
-        mail();
+        // mail();
     } catch (err) {
       setError(true);
       console.log(err);
@@ -89,7 +89,7 @@ export default function Approve(props: any){
         setTimeout(() => {
           window.location.reload();
         }, 800);
-        mail();
+        // mail();
     } catch (err) {
       setError(true);
       console.log(err);

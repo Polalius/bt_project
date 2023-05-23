@@ -2,7 +2,7 @@ package entity
 
 import (
 	"testing"
-	"time"
+	
 
 	"github.com/asaskevich/govalidator"
 	. "github.com/onsi/gomega"
@@ -12,8 +12,8 @@ func TestPassLeave(t *testing.T) {
 	g :=NewGomegaWithT(t)
 
 	leave := LeaveList{
-		StartTime: time.Now().Add(2 *time.Hour),
-		StopTime: time.Now().Add(4 *time.Hour),
+		StartTime: 240,
+		StopTime: 480,
 	}
 	ok, err := govalidator.ValidateStruct(leave)
 
@@ -26,7 +26,7 @@ func TestStartTimeNotBlank(t *testing.T) {
 
 	
 	leave := LeaveList{
-		StopTime: time.Now().Add(4 *time.Hour),
+		StopTime: 480,
 	}
 
 	// ตรวจสอบด้วย govalidator
@@ -44,7 +44,7 @@ func TestStopTimeNotBlank(t *testing.T) {
 
 	
 	leave := LeaveList{
-		StartTime: time.Now().Add(2 *time.Hour),
+		StartTime: 240,
 	}
 
 	// ตรวจสอบด้วย govalidator

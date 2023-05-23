@@ -18,6 +18,7 @@ function EmployeeShow(){
         let res = await ListLeaveListByEmpID(id);
         if (res.data) {
             setLeavelist(res.data);
+            console.log(res.data)
         }
     };
 
@@ -28,7 +29,13 @@ function EmployeeShow(){
             localStorage.setItem("did", res.DepartmentID)
         }
     }
-
+    function formatMinutesToTime(minutes: number) {
+        const hours = Math.floor(minutes / 60);
+        const minutesPart = minutes % 60;
+        const hoursStr = String(hours).padStart(2, '0');
+        const minutesStr = String(minutesPart).padStart(2, '0');
+        return `${hoursStr}:${minutesStr} น.`;
+      }
     useEffect(() => {    
         setLeavelist(JSON.parse(localStorage.getItem("pid") || ""));
         
@@ -43,8 +50,10 @@ function EmployeeShow(){
         { field: "LeaveType.TypeName", headerName: "ประเภทการลา",type:"string", width: 150, headerAlign: "center", align: "center", renderCell: (params: GridRenderCellParams<any>) => {
             return <>{params.row.LeaveType.TypeName}</>;
           },},
-        { field: "StartTime", headerName: "ลาวันที่เวลา",type:"date", width: 250, headerAlign: "center", align: "center", valueFormatter: (params) => moment(params?.value).format("MM/DD/YYYY hh:mm A")},
-        { field: "StopTime", headerName: "ถึงวันที่เวลา",type:"date", width: 250, headerAlign: "center", align: "center", valueFormatter: (params) => moment(params?.value).format("MM/DD/YYYY hh:mm A") },
+        { field: "StartDate", headerName: "ลาวันที่",type:"date", width: 120, headerAlign: "center", align: "center", valueFormatter: (params) => params?.value},
+        { field: "StartTime", headerName: "เวลา",type:"time", width: 100, headerAlign: "center", align: "center", valueFormatter: (params) => formatMinutesToTime(params?.value as number)},
+        { field: "StopDate", headerName: "ถึงวันที่",type:"date", width: 120, headerAlign: "center", align: "center", valueFormatter: (params) => params?.value },
+        { field: "StopTime", headerName: "เวลา",type:"time", width: 100, headerAlign: "center", align: "center", valueFormatter: (params) => formatMinutesToTime(params?.value as number)},
         { field: "Manager.FirstName", headerName: "ผู้จัดการ",type:"string", width: 150, headerAlign: "center", align: "center", renderCell: (params: GridRenderCellParams<any>) => {
             return <>{params.row.Manager.ManName}</>;
           }, },
@@ -67,8 +76,9 @@ function EmployeeShow(){
                     display="flex"
                 >
                     <Box>
-                        <Button
-                            onClick={() => { window.location.href = "/home"; }}
+                    <Button
+                            component={RouterLink}
+                            to="/"
                             variant="contained"
                             color="primary"
                             sx={{ borderRadius: 20, '&:hover': { color: '#065D95', backgroundColor: '#e3f2fd' } }}
@@ -83,20 +93,20 @@ function EmployeeShow(){
                             color="primary"
                             sx={{ fontWeight: 'bold' }}
                             gutterBottom
+                            align='center'
                         >
                             ประวัติการลางาน
                         </Typography>
                     </Box>
-                    <Box>
-                        <Button
-                            onClick={() => { window.location.href = "/form"; }}
+                    <Button
+                            component={RouterLink}
+                            to="/form"
                             variant="contained"
                             color="primary"
                             sx={{ borderRadius: 20, '&:hover': { color: '#065D95', backgroundColor: '#e3f2fd' } }}
                         >
                             กรอกแบบฟอร์ม
                         </Button>
-                    </Box>
                 </Box>
                 <Box sx={{ borderRadius: 20 }}>
                     <DataGrid

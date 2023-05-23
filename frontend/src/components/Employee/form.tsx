@@ -32,19 +32,112 @@ function Form() {
     const [man, setMan] = useState<ManagerInterface>();
     const [ltype, setLType] = useState<LeaveTypeInterface[]>([]);
     const [depart, setDepart] = useState<DepartmentInterface>();
-    const [start, setStart] = React.useState<Date | null>(new Date());
-    const [stop, setStop] = React.useState<Date | null>(new Date());
+    const [start, setStart] = React.useState<Date | null>();
+    const [stop, setStop] = React.useState<Date | null>();
+    const [startdate, setStartDate] = useState<string>('');
+    const [starttime, setStartTime] = useState<number | null>(null);
+    const [stopdate, setStopDate] = useState<string>('');
+    const [stoptime, setStopTime] = useState<number | null>(null);
     const [success, setSuccess] = useState(false);
     const [error, setError] = useState(false);
     const [message, setAlertMessage] = useState("");
-
+    const handleDateTimeChange = (newValue: Date | null) => {
+        if (newValue !== null) {
+            const year = newValue.getFullYear();
+            const month = (newValue.getMonth() + 1).toString().padStart(2, '0');
+            const day = newValue.getDate().toString().padStart(2, '0');
+            const dateString = `${day}-${month}-${year}`;
+            const hours = newValue.getHours();
+            const minutes = newValue.getMinutes();
+            const time = hours * 60 + minutes;
+            setStartDate(dateString);
+            setStartTime(time);
+          } else {
+            setStartDate('');
+            setStartTime(null)
+          }
+      };
+      const handleDateTimeChange2 = (newValue: Date | null) => {
+        if (newValue !== null) {
+            const year = newValue.getFullYear();
+            const month = (newValue.getMonth() + 1).toString().padStart(2, '0');
+            const day = newValue.getDate().toString().padStart(2, '0');
+            const dateString = `${day}-${month}-${year}`;
+            const hours = newValue.getHours();
+            const minutes = newValue.getMinutes();
+            const time = hours * 60 + minutes;
+            setStopDate(dateString);
+            setStopTime(time);
+          } else {
+            setStopDate('');
+            setStopTime(null)
+          }
+      };
     const getEmployeeID = async (id:any) => {
         let res = await GetEmployeeID(id);
         if (res){
             setEmp(res)
         }
     }
+    const compareDates = (start_date: string, stop_date: string) => {
+        // แยกวันที่, เดือน, และปีจากสตริง
+        const startParts = start_date.split('-');
+        const stopParts = stop_date.split('-');
+      
+        // สร้างวัตถุ Date โดยใช้ปี, เดือน (ลบ 1 เนื่องจากเดือนใน Date เริ่มนับจาก 0), และวัน
+        const start = new Date(+startParts[2], +startParts[1] - 1, +startParts[0]);
+        const stop = new Date(+stopParts[2], +stopParts[1] - 1, +stopParts[0]);
+      
+        // เทียบว่าเป็นวันเดียวกันหรือไม่
+        if (start.toDateString() === stop.toDateString()) {
+          return true;
+        }
+      
+        // คำนวณจำนวนวันระหว่างวันที่
+        const timeDiff = Math.abs(stop.getTime() - start.getTime());
+        const diffDays = Math.ceil(timeDiff / (1000 * 3600 * 24));
+        return diffDays;
+      }
+      const Count = (st_d:string,st:any,sp_d:string,sp:any) => {
 
+        const comp = compareDates(st_d,sp_d)
+        console.log(comp)
+        if (comp == true) {
+            if (sp - st > 300) {
+                const val = sp - st - 60
+                return val;
+            }else {
+                const val = sp - st
+                return val;
+            }
+        } else {
+            let val = 0
+            for (let i = 0; i <= comp; i++) {
+                if (i == 0) {
+                    if (1020 - st > 300)  {
+                        val += 1020 - st - 60
+                        console.log("1" +val)
+                    }else{
+                        val += 1020 - st
+                    }
+                }else if (i == comp) {
+                    if (sp - 480 > 300) {
+                        val += sp - 480 - 60
+                        console.log("end" +val)
+                    }else{
+                        val += sp - 480
+                        console.log("c" +val)
+                    }
+                }else{
+                    val += 480
+                    console.log("o" +val)
+                }
+            }
+            return val;
+        }
+      }
+
+      
     const getManagerID = async (id:any) => {
         let res = await GetManagerID(id);
         if (res){
@@ -118,8 +211,11 @@ function Form() {
         let data = {
             EmployeeID: convertType(emp?.ID) ?? 0,
             LeaveTypeID: convertType(leavelist?.LeaveTypeID) ?? 0,
-            StartTime: start,
-            StopTime: stop,
+            StartDate: startdate,
+            StartTime: starttime,
+            Stopdate: stopdate,
+            StopTime: stoptime,
+            CountL: Count(startdate,starttime,stopdate,stoptime),
             ManagerID: convertType(man?.ID) ?? 0,
             DepartmentID: convertType(depart?.ID) ?? 0,
             Status: "pending approval",
@@ -133,7 +229,7 @@ function Form() {
               }, 1200);
             setAlertMessage("บันทึกข้อมูลสำเร็จ");
             setSuccess(true);
-            mail();
+            // mail();
         } else {
             setAlertMessage(res.message);
             setError(true);
@@ -231,16 +327,12 @@ function Form() {
                         <Grid item xs={1.8}><Typography>ขอลาตั้งแต่</Typography></Grid>
                         <Grid item xs={4}>
                         <FormControl fullWidth variant="outlined">
-                            <DateTimePicker
-                                label="วันที่และเวลา"
-                                ampm={false}
-                                value={start}
-                                onChange={(newValue) => {
-                                    setStart(newValue);
-                                    console.log(newValue)
-                                  }}
-                                  
-                                  
+                        <DateTimePicker
+                            label="วันที่และเวลา"
+                            ampm={false}
+                            value={start}
+                            onChange={handleDateTimeChange}
+                            format="dd-MM-yyyy HH:mm"
                             />
                         </FormControl>
                         </Grid>
@@ -248,16 +340,12 @@ function Form() {
                         <Grid item xs={4}>
                         <FormControl fullWidth variant="outlined">
                             <DateTimePicker
-                                
                                 label="วันที่และเวลา"
                                 ampm={false}
                                 value={stop}
-                                onChange={(newValue) => {
-                                    setStop(newValue);
-                                  
-                                }}
-                                
-                            />
+                                onChange={handleDateTimeChange2}
+                                format="dd-MM-yyyy HH:mm"
+                                />
                         </FormControl>
                         </Grid>
                     </LocalizationProvider>
@@ -274,7 +362,8 @@ function Form() {
                     <Button
                         variant="contained"
                         color="primary"
-                        onClick={() => { window.location.href = "/show"; }}
+                        component={RouterLink}
+                            to="/show"
                         sx={{'&:hover': {color: '#1543EE', backgroundColor: '#e3f2fd'}}}
                     >
                         ถอยกลับ

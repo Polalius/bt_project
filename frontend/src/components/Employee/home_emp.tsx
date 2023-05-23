@@ -5,7 +5,7 @@ import { Link as RouterLink } from "react-router-dom";
 import './home_emp.css'
 
 import { blueGrey } from '@mui/material/colors';
-import { CountSW, GetEmployeeID1, GetManagerID1, ListLeaveByEID, ListSwitchByEID, ListSwitchByEmpID } from '../../services/HttpClientService';
+import { CountL, CountSW, GetEmployeeID1, GetManagerID1, ListLeaveByEID, ListSwitchByEID, ListSwitchByEmpID } from '../../services/HttpClientService';
 import { User1Interface } from '../../models/ISignin';
 import { Leave1Interface, LeaveInterface } from '../../models/ILeave';
 import moment from 'moment';
@@ -14,6 +14,7 @@ let theme = createTheme();
 export default function HomeEmp() {
   const [user ,setUser] = useState<User1Interface>();
   const [co, setCo] = useState<number | null>(0);
+  const [co2, setCo2] = useState<number | null>(0);
   const [leavelist, setLeavelist] = useState<Leave1Interface[]>([])
   const [switcht, setSwitch] = useState<Switch1Interface[]>([])
   const getLeaveList = async (id:any) => {
@@ -39,11 +40,29 @@ function formatMinutesToTime(minutes: any) {
     const minutesStr = String(minutesPart).padStart(2, '0');
     return `${hoursStr}:${minutesStr} น.`;
   }
+  function formatMinutesToDate(minutes: any) {
+    const days = Math.floor(minutes / (24 * 60));
+  const remainingMinutes = minutes % (24 * 60);
+  const hours = Math.floor(remainingMinutes / 60);
+  const minutesPart = remainingMinutes % 60;
+  const daysStr = String(days).padStart(2, '0');
+  const hoursStr = String(hours).padStart(2, '0');
+  const minutesStr = String(minutesPart).padStart(2, '0');
+  return `${daysStr} วัน ${hoursStr} ชม. ${minutesStr} น.`;
+  }
   const getCount =async (id:any) => {
     let res = await CountSW(id);
     if (res){
       console.log(res)
       setCo(res)
+      
+    }
+  }
+  const getCount2 =async (id:any) => {
+    let res = await CountL(id);
+    if (res){
+      console.log(res)
+      setCo2(res)
       
     }
   }
@@ -59,57 +78,57 @@ function formatMinutesToTime(minutes: any) {
   useEffect(() => {
         getEmployeeID(uid);
         getCount(uid);
+        getCount2(uid)
         getLeaveList(JSON.parse(localStorage.getItem("pid") || ""))
         getSwitch(JSON.parse(localStorage.getItem("pid") || ""))
   }, []);
   return (
     <Container maxWidth='xl' sx={{bgcolor:'#FFF', height: '91vh'}} >
-      {/* <Box sx={{ bgcolor: '#cfe8fc' }}> */}
-        <Grid container spacing={2}>
-            <Grid item xs={12} textAlign="center">
-                <h2>
-                    welcome to leave system
-                    
-                    
-                </h2>
-
-                
-            </Grid>
+      <Grid container spacing={2}>
+        <Grid item xs={12} textAlign="center">
+          <h2>
+            welcome to leave system
+          </h2>    
         </Grid>
-        
+      </Grid>
       <Grid container spacing={2} sx={{bgcolor:'#FFF'}}>
-        
-        {/* <Grid item xs={8} textAlign="center"> */}
-          <div id='lefte' className='lefte'>
-            <Paper elevation={3} sx={{bgcolor:'#FFF', height: '60vh'}} >
-            <div id='bte' className='bte'>
-            <Button onClick={() => { window.location.href = "/show"; }}
-                variant="contained"
-                color="primary"
-                
-                sx={{ borderRadius: 20, '&:hover': { color: '#065D95', backgroundColor: '#e3f2fd' } }}
-              >
+        <Grid item xs={8}>
+          <Paper elevation={3} sx={{bgcolor:'#FFF', height: '60vh'}} className='lefte'>
+            <Button 
+              variant="contained"
+              className='bte'
+              color="primary"
+              sx={{ borderRadius: 20, '&:hover': { color: '#065D95', backgroundColor: '#e3f2fd' } }}
+              component={RouterLink}
+              to="/show"
+            >
               ระบบลางาน
-              </Button>
-              </div>
-              <TableContainer component={Paper} sx={{width: 'auto', margin: 2}}>
+            </Button>
+            <Typography marginTop={1}>พนักงานลาทั้งหมด: {formatMinutesToDate(co2)}</Typography>
+            <TableContainer component={Paper} sx={{width: 'auto', margin: 2}}>
               <Table size='small'>
                 <TableHead>
                   <TableRow>
                     <TableCell width="">
-                    ชื่อ-นามสกุล
+                      ชื่อ-นามสกุล
                     </TableCell>
                     <TableCell>
-                    การลา
+                      การลา
                     </TableCell>
                     <TableCell>
-                    ลาวันที่เวลา
+                      ลาวันที่
                     </TableCell>
                     <TableCell>
-                    ถึงวันที่เวลา
+                      เวลา
                     </TableCell>
                     <TableCell>
-                    สถานะ
+                      ถึงวันที่
+                    </TableCell>
+                    <TableCell>
+                      เวลา
+                    </TableCell>
+                    <TableCell>
+                      สถานะ
                     </TableCell>
                   </TableRow>
                 </TableHead>
@@ -118,45 +137,46 @@ function formatMinutesToTime(minutes: any) {
                     <TableRow>
                       <TableCell>{item.EmpName}</TableCell>
                       <TableCell>{item.TypeName}</TableCell>
-                      <TableCell>{moment(item.StartTime).format("MM/DD/YYYY hh:mm A")}</TableCell>
-                      <TableCell>{moment(item.StopTime).format("MM/DD/YYYY hh:mm A")}</TableCell>
+                      <TableCell>{item.StartDate}</TableCell>
+                      <TableCell>{formatMinutesToTime(item.StartTime)}</TableCell>
+                      <TableCell>{item.StopDate}</TableCell>
+                      <TableCell>{formatMinutesToTime(item.StopTime)}</TableCell>
                       <TableCell>{item.Status}</TableCell>
                     </TableRow>
                   ))}
                 </TableBody>
               </Table>
-              </TableContainer>
-              <div id='bte' className='bte'>
-            <Button onClick={() => { window.location.href = "/switchshow"; }}
-                variant="contained"
-                color="primary"
-                
-                sx={{ borderRadius: 20, '&:hover': { color: '#065D95', backgroundColor: '#e3f2fd' } }}
-              >
+            </TableContainer>
+            <Button component={RouterLink}
+              to="/switchshow"
+              variant="contained"
+              color="primary"
+              sx={{ borderRadius: 20, '&:hover': { color: '#065D95', backgroundColor: '#e3f2fd' } }}
+            >
               ระบบสลับวันลา
-              </Button>
-              </div>
-              <TableContainer component={Paper} sx={{width: 'auto', margin: 2}}>
+            </Button>
+            <Typography marginTop={1}>พนักงานสลับวันลาทั้งหมด: {formatMinutesToDate(co)}</Typography>
+            <TableContainer component={Paper} sx={{width: 'auto', margin: 2}}>
               <Table size='small'>
                 <TableHead>
                   <TableRow>
-                  <TableCell width="">
-                    ชื่อ-นามสกุล
+                    <TableCell width="">
+                      ชื่อ-นามสกุล
                     </TableCell>
                     <TableCell>
-                    วันที่สลับ
+                      วันที่สลับ
                     </TableCell>
                     <TableCell>
-                    จากเวลา
+                      จากเวลา
                     </TableCell>
                     <TableCell>
-                    ถึงเวลา
+                      ถึงเวลา
                     </TableCell>
                     <TableCell>
-                    วันที่มาทำงาน
+                      วันที่มาทำงาน
                     </TableCell>
                     <TableCell>
-                    สถานะ
+                      สถานะ
                     </TableCell>
                   </TableRow>
                 </TableHead>
@@ -173,26 +193,20 @@ function formatMinutesToTime(minutes: any) {
                   ))}
                 </TableBody>
               </Table>
-              </TableContainer>
-              </Paper>
-         </div>
-        
-        <div id='right' className='right'>
-          
-          <Paper elevation={3} sx={{bgcolor:'#FFF', height: '60vh'}} >
-            
-              <h1>Profile</h1>
-              <h3 className='h3'>ชื่อ: {user?.Name}</h3>
-              <h3 >email: {user?.Email}</h3>
-              <h3 className='h3'>User name: {user?.User}</h3>
-              <h3 className='h3'>role: {user?.Role}</h3>
-              <h3 className='h3'>แผนก: {user?.Department}</h3>
-              <h3> co {co}</h3>
-         </Paper>
-        </div>  
+            </TableContainer>
+          </Paper>
+        </Grid>
+        <Grid item xs={4}>
+          <Paper elevation={3} sx={{bgcolor:'#FFF', height: '60vh'}} className='righte' >
+                <h1>Profile</h1>
+                <h3 className='h3'>ชื่อ: {user?.Name}</h3>
+                <h3 >email: {user?.Email}</h3>
+                <h3 className='h3'>User name: {user?.User}</h3>
+                <h3 className='h3'>role: {user?.Role}</h3>
+                <h3 className='h3'>แผนก: {user?.Department}</h3>
+            </Paper>
+        </Grid>
       </Grid>
-      {/* </Box> */}
-    </Container>
-    
+    </Container>   
   )
 }

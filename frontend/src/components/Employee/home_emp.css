@@ -1,17 +1,11 @@
 .righte {
-    padding: 0%;
-    width: 30%;
-    display: flex;
+    padding: 2%;
+    margin-top: 4%;
     
 }
 .lefte {
-    padding: 0%;
-    margin-left: 4%;
-    margin-right: 1%;
-    width: 60%;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
+    padding: 2%;
+    margin: 2%;
 }
 section {
     content: "";
@@ -19,12 +13,9 @@ section {
     clear: both;
 }
 .bte {
-    margin-left: 0%;
-    width: 20%;
-    margin: 2%;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
+    position: relative;
+    top: 0%;
+    left: 0%;
 }
 h1 {
     text-align: center;
@@ -51,19 +42,4 @@ h2 {
     text-transform: capitalize;
     color: #919191;
     font-family: "Lucida Console", "Courier New", monospace;
-  }
-  b {
-    text-align: justify;
-    text-transform: lowercase;
-    
-    text-decoration: none;
-  }
-  
-  a {
-    text-transform: capitalize;
-    text-indent: 50px;
-    text-align: justify;
-    text-decoration: none;
-    color: #008CBA;
-    font-family: "Times New Roman", Times, serif;
   }
