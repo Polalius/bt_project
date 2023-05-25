@@ -26,6 +26,7 @@ func TestStartTimeNotBlank(t *testing.T) {
 
 	
 	leave := LeaveList{
+		StopDate: "20-05-2023",
 		StopTime: 480,
 	}
 
@@ -44,6 +45,7 @@ func TestStopTimeNotBlank(t *testing.T) {
 
 	
 	leave := LeaveList{
+		StartDate: "25-05-2023",
 		StartTime: 240,
 	}
 

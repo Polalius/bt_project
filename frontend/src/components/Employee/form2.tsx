@@ -46,7 +46,7 @@ function Form2() {
             const year = newValue.getFullYear();
             const month = (newValue.getMonth() + 1).toString().padStart(2, '0');
             const day = newValue.getDate().toString().padStart(2, '0');
-            const dateString = `${month}-${day}-${year}`;
+            const dateString = `${month}/${day}/${year}`;
             setLeave(dateString);
           } else {
             setLeave('');
@@ -57,12 +57,17 @@ function Form2() {
             const year = newValue.getFullYear();
             const month = (newValue.getMonth() + 1).toString().padStart(2, '0');
             const day = newValue.getDate().toString().padStart(2, '0');
-            const dateString = `${month}-${day}-${year}`;
+            const dateString = `${month}/${day}/${year}`;
           setWork(dateString);
         } else {
           setWork('');
         }
       };
+    const reverseDate = (str: string) => {
+        let strParts = str.split('/');
+        const reversedDate = `${strParts[1]}/${strParts[0]}/${strParts[2]}`;
+        return reversedDate
+    }
   const handleChange1 = (newValue: Date | null) => {
     if (newValue !== null) {
       const hours = newValue.getHours();
@@ -163,11 +168,11 @@ function Form2() {
     async function submit(){
         let data = {
             EmployeeID: convertType(emp?.ID) ?? 0,
-            LeaveDay: leave,
+            LeaveDay: reverseDate(leave),
             FromTime: ftime,
             ToTime: ttime,
             Count: Count(ftime,ttime),
-            WorkDay: work,
+            WorkDay: reverseDate(work),
             ManagerID: convertType(man?.ID) ?? 0,
             DepartmentID: convertType(depart?.ID) ?? 0,
             Status: "pending approval",
@@ -258,7 +263,7 @@ function Form2() {
                                 label="วันที่สลับวันลา"
                                 value={leave !== '' ? new Date(leave) : null}
                                 onChange={handleDateChange}
-                                format="dd-MM-yyyy"
+                                format="dd/MM/yyyy"
                             />
                         </FormControl>
                         </Grid>
@@ -291,7 +296,7 @@ function Form2() {
                                 label="วันที่มาทำงาน"
                                 value={work !== '' ? new Date(work) : null}
                                 onChange={handleDateChange2}
-                                format="dd-MM-yyyy"
+                                format="dd/MM/yyyy"
                             />
                         </FormControl>
                         </Grid>
@@ -310,7 +315,7 @@ function Form2() {
                         variant="contained"
                         color="primary"
                         component={RouterLink}
-                            to="/switchshow"
+                            to="/รายการสลับวันลา"
                         
                         sx={{'&:hover': {color: '#1543EE', backgroundColor: '#e3f2fd'}}}
                     >

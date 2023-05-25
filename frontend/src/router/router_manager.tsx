@@ -12,6 +12,7 @@ import ManagerHistory from "../components/Manager/history"
 import ManagerSwitchShow from "../components/Manager/switchshow"
 import MyTable from "../components/Manager/switchtest"
 import { useState } from "react"
+import HomeMan from "../components/Manager/home_manager"
 
 const RouterManager = () => {
     const [role, setRole] = useState<String>("")
@@ -20,12 +21,16 @@ const RouterManager = () => {
             <Navbar />
             <div className='container-router'>
               <Routes>
-              <Route path="/" element={<Home role={role} />} />
-                  <Route path="/show" element={<ManagerShow  />} />
-                  <Route path="/approve" element={<Approve  />} />
-                  <Route path="/history" element={<ManagerHistory  />} />
-                  <Route path="/switchshow" element={<ManagerSwitchShow  />} />
-                  <Route path='/switchhistory' element={<MyTable />}/>
+              <Route path="/" element={<HomeMan />} />
+                  <Route path="/รายการคำร้องขอลา" element={<ManagerShow  />} />
+                  <Route path="/รายการอนุมัติการลา" element={<ManagerHistory  />} />
+                  <Route path="/รายการคำร้องขอสลับวันลา" element={<ManagerSwitchShow  />} />
+                  <Route path='/รายการอนุมัติสลับวันลา' element={<MyTable />}/>
+
+                  <Route path="/รายการลางาน" element={<EmployeeShow  />} />
+                  <Route path="/แบบฟอร์มขอลา" element={<Form  />} />
+                  <Route path="/รายการสลับวันลา" element={<EmployeeShow2  />} />
+                  <Route path="/แบบฟอร์มสลับวันลา" element={<Form2/>} />
                   
               </Routes>
             

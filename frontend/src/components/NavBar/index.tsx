@@ -135,10 +135,10 @@ export default function Navbar() {
   ]
   const menumanager = [
     { name: "หน้าแรก", icon: <HomeIcon />, path: "/" },
-    { name: "รายการคำร้องขอลา", icon: <EventNoteIcon />, path: "/show", },
-    { name: "ประวัติการอนุมัติการลา", icon: <EventNoteIcon />, path: "/history", },
-    { name: "รายการคำร้องขอสลับวันลา", icon: <EventNoteIcon />, path: "/switchshow", },
-    { name: "ประวัติการอนุมัติสลับวันลา", icon: <EventNoteIcon />, path: "/switchhistory",},
+    { name: "รายการคำร้องขอลา", icon: <EventNoteIcon />, path: "/รายการคำร้องขอลา", },
+    { name: "ประวัติการอนุมัติการลา", icon: <EventNoteIcon />, path: "/รายการอนุมัติการลา", },
+    { name: "รายการคำร้องขอสลับวันลา", icon: <EventNoteIcon />, path: "/รายการคำร้องขอสลับวันลา", },
+    { name: "ประวัติการอนุมัติสลับวันลา", icon: <EventNoteIcon />, path: "/รายการอนุมัติสลับวันลา",},
   ]
   const menupayroll = [
     { name: "หน้าแรก", icon: <HomeIcon />, path: "/" },

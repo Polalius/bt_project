@@ -144,9 +144,9 @@ func SutupDatabase() {
 	list1 := LeaveList{
 		Employee:   emp1,
 		LeaveType: l_type1,
-		StartDate: "15-05-2023",
+		StartDate: "15/05/2023",
 		StartTime: 480,
-		StopDate:  "15-05-2023",
+		StopDate:  "15/05/2023",
 		StopTime:  720,
 		CountL: 240,
 		Manager: man1,
@@ -157,9 +157,9 @@ func SutupDatabase() {
 	list2 := LeaveList{
 		Employee:   emp2,
 		LeaveType: l_type2,
-		StartDate: "15-05-2023",
+		StartDate: "15/05/2023",
 		StartTime: 780,
-		StopDate:  "15-05-2023",
+		StopDate:  "15/05/2023",
 		StopTime:  1020,
 		CountL: 240,
 		Manager: man1,
@@ -170,9 +170,9 @@ func SutupDatabase() {
 	list3 := LeaveList{
 		Employee:   emp2,
 		LeaveType: l_type2,
-		StartDate: "16-05-2023",
+		StartDate: "16/05/2023",
 		StartTime: 780,
-		StopDate:  "17-05-2023",
+		StopDate:  "17/05/2023",
 		StopTime:  1020,
 		CountL: 720,
 		Manager: man1,
@@ -182,11 +182,11 @@ func SutupDatabase() {
 	db.Model(&LeaveList{}).Create(&list3)
 	sw_leave1 := SwitchLeave{
 		Employee: emp1,
-		LeaveDay:  "15-05-2023",
+		LeaveDay:  "15/05/2023",
 		FromTime: 480,
 		ToTime: 720,
 		Count: 240,
-		WorkDay: "20-05-2023",
+		WorkDay: "20/05/2023",
 		Manager: man1,
 		Department: de1,
 		Status: "approved",
@@ -194,11 +194,11 @@ func SutupDatabase() {
 	db.Model(&SwitchLeave{}).Create(&sw_leave1)
 	sw_leave2 := SwitchLeave{
 		Employee: emp2,
-		LeaveDay:  "15-05-2023",
+		LeaveDay:  "15/05/2023",
 		FromTime: 780,
 		ToTime: 1020,
 		Count: 240,
-		WorkDay: "20-05-2023",
+		WorkDay: "20/05/2023",
 		Manager: man1,
 		Department: de1,
 		Status: "approved",

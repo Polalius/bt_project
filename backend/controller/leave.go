@@ -115,15 +115,38 @@ func CreateLeaveList(c *gin.Context) {
 		return
 	}
 	//เช็ค ลาซ้ำ
-	if tx := entity.DB().Where("employee_id = ? AND (start_date = ? AND ( ? BETWEEN start_time AND stop_time) )", leavelists.EmployeeID, leavelists.StartDate, leavelists.StartTime).First(&leavelists); tx.RowsAffected != 0 {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "มีการลาเวลานี้ไปแล้ว1"})
+	if leavelists.StartDate == leavelists.StopDate {
+		if tx := entity.DB().Where("employee_id = ? AND (start_date = ?) AND (start_date = stop_date) AND ( ? BETWEEN start_time AND stop_time)", leavelists.EmployeeID, leavelists.StartDate, leavelists.StartTime).First(&leavelists); tx.RowsAffected != 0 {
+			c.JSON(http.StatusBadRequest, gin.H{"error": "มีการลาเวลานี้ไปแล้ว วันเดียวกัน1"})
+			return
+		}
+		if tx := entity.DB().Where("employee_id = ? AND (start_date = ?) AND (start_date = stop_date) AND ( ? BETWEEN start_time AND stop_time)", leavelists.EmployeeID, leavelists.StartDate, leavelists.StopTime).First(&leavelists); tx.RowsAffected != 0 {
+			c.JSON(http.StatusBadRequest, gin.H{"error": "มีการลาเวลานี้ไปแล้ว วันเดียวกัน2"})
+			return
+		}
+		if tx := entity.DB().Where("employee_id = ? AND (stop_date = ?) AND (start_date != stop_date) AND ( ? BETWEEN 480 AND stop_time)", leavelists.EmployeeID, leavelists.StartDate, leavelists.StopTime).First(&leavelists); tx.RowsAffected != 0 {
+			c.JSON(http.StatusBadRequest, gin.H{"error": "มีการลาเวลานี้ไปแล้ว วันเดียวกัน7"})
+			return
+		}
+		if tx := entity.DB().Where("employee_id = ? AND (start_date = ?) AND (start_date != stop_date) AND (? BETWEEN start_time and 1020)", leavelists.EmployeeID, leavelists.StartDate, leavelists.StopTime).First(&leavelists); tx.RowsAffected != 0 {
+			c.JSON(http.StatusBadRequest, gin.H{"error": "มีการลาเวลานี้ไปแล้ว6"})
+			return
+		}
+	}
+	if leavelists.StartDate != leavelists.StopDate {
+	if tx := entity.DB().Where("employee_id = ? AND (start_date = ?) AND (start_date != stop_date) AND (? BETWEEN start_time and 1020)", leavelists.EmployeeID, leavelists.StartDate, leavelists.StartTime).First(&leavelists); tx.RowsAffected != 0 {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "มีการลาเวลานี้ไปแล้ว3"})
 		return
 	}
-	if tx := entity.DB().Where("employee_id = ? AND (stop_date = ? AND ( ? BETWEEN start_time AND stop_time) )", leavelists.EmployeeID, leavelists.StopDate, leavelists.StopTime).First(&leavelists); tx.RowsAffected != 0 {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "มีการลาเวลานี้ไปแล้ว2"})
+	if tx := entity.DB().Where("employee_id = ? AND (start_date = ?) AND (start_date != stop_date) AND (stop_date = ?) AND (? BETWEEN 480 and stop_time)", leavelists.EmployeeID, leavelists.StartDate, leavelists.StopDate, leavelists.StartTime).First(&leavelists); tx.RowsAffected != 0 {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "มีการลาเวลานี้ไปแล้ว4"})
 		return
 	}
-	
+	if tx := entity.DB().Where("employee_id = ? AND (stop_date = ?) AND (start_date != stop_date) AND (? BETWEEN 480 AND stop_time)", leavelists.EmployeeID, leavelists.StartDate, leavelists.StartTime).First(&leavelists); tx.RowsAffected != 0 {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "มีการลาเวลานี้ไปแล้ว5"})
+		return
+	}
+	}
 	// 12: สร้าง leave_list
 	l_list := entity.LeaveList{
 		Employee:   employees,             // โยงความสัมพันธ์กับ Entity Employee
@@ -415,12 +438,38 @@ func UpdateLeaveList(c *gin.Context){
 
 	c.JSON(http.StatusOK, gin.H{"data": leavelist})
 }
-func CountL(c *gin.Context) {
+func CountL1(c *gin.Context) {
 	var count int
 
 	id := c.Param("id")
 	if err := entity.DB().Table("leave_lists").
 	Select("SUM(count_l)").Where("employee_id = ?",id).Where("status = 'approved'").
+	Scan(&count).Error; err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+	
+	c.JSON(http.StatusOK, gin.H{"data": count})
+}
+func CountL2(c *gin.Context) {
+	var count int
+
+	id := c.Param("id")
+	if err := entity.DB().Table("leave_lists").
+	Select("SUM(count_l)").Where("employee_id = ?",id).Where("status = 'approved'").Where("leave_type_id = 1").
+	Scan(&count).Error; err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+	
+	c.JSON(http.StatusOK, gin.H{"data": count})
+}
+func CountL3(c *gin.Context) {
+	var count int
+
+	id := c.Param("id")
+	if err := entity.DB().Table("leave_lists").
+	Select("SUM(count_l)").Where("employee_id = ?",id).Where("status = 'approved'").Where("leave_type_id = 2").
 	Scan(&count).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return

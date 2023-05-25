@@ -46,7 +46,7 @@ function Form() {
             const year = newValue.getFullYear();
             const month = (newValue.getMonth() + 1).toString().padStart(2, '0');
             const day = newValue.getDate().toString().padStart(2, '0');
-            const dateString = `${day}-${month}-${year}`;
+            const dateString = `${day}/${month}/${year}`;
             const hours = newValue.getHours();
             const minutes = newValue.getMinutes();
             const time = hours * 60 + minutes;
@@ -62,7 +62,7 @@ function Form() {
             const year = newValue.getFullYear();
             const month = (newValue.getMonth() + 1).toString().padStart(2, '0');
             const day = newValue.getDate().toString().padStart(2, '0');
-            const dateString = `${day}-${month}-${year}`;
+            const dateString = `${day}/${month}/${year}`;
             const hours = newValue.getHours();
             const minutes = newValue.getMinutes();
             const time = hours * 60 + minutes;
@@ -81,8 +81,8 @@ function Form() {
     }
     const compareDates = (start_date: string, stop_date: string) => {
         // แยกวันที่, เดือน, และปีจากสตริง
-        const startParts = start_date.split('-');
-        const stopParts = stop_date.split('-');
+        const startParts = start_date.split('/');
+        const stopParts = stop_date.split('/');
       
         // สร้างวัตถุ Date โดยใช้ปี, เดือน (ลบ 1 เนื่องจากเดือนใน Date เริ่มนับจาก 0), และวัน
         const start = new Date(+startParts[2], +startParts[1] - 1, +startParts[0]);
@@ -90,7 +90,7 @@ function Form() {
       
         // เทียบว่าเป็นวันเดียวกันหรือไม่
         if (start.toDateString() === stop.toDateString()) {
-          return true;
+          return 0;
         }
       
         // คำนวณจำนวนวันระหว่างวันที่
@@ -101,16 +101,9 @@ function Form() {
       const Count = (st_d:string,st:any,sp_d:string,sp:any) => {
 
         const comp = compareDates(st_d,sp_d)
-        console.log(comp)
-        if (comp == true) {
-            if (sp - st > 300) {
-                const val = sp - st - 60
-                return val;
-            }else {
-                const val = sp - st
-                return val;
-            }
-        } else {
+        
+        if (comp >= 1) {
+            console.log(comp)
             let val = 0
             for (let i = 0; i <= comp; i++) {
                 if (i == 0) {
@@ -134,6 +127,15 @@ function Form() {
                 }
             }
             return val;
+        } else {
+           console.log(comp)
+            if (sp - st > 300) {
+                const val = sp - st - 60
+                return val;
+            }else {
+                const val = sp - st
+                return val;
+            } 
         }
       }
 
@@ -165,7 +167,8 @@ function Form() {
         return val;
     };
 
-    
+    const eightAM = dayjs().set('hour', 8).startOf('hour');
+    const fivePM = dayjs().set('hour', 17).set('minute', 0);
 
     const handleClose = (event?: React.SyntheticEvent | Event,reason?: string) => {
         if (reason === "clickaway") {
@@ -331,8 +334,10 @@ function Form() {
                             label="วันที่และเวลา"
                             ampm={false}
                             value={start}
+                            minTime={eightAM.toDate()}
+                            maxTime={fivePM.toDate()}
                             onChange={handleDateTimeChange}
-                            format="dd-MM-yyyy HH:mm"
+                            format="dd/MM/yyyy HH:mm"
                             />
                         </FormControl>
                         </Grid>
@@ -343,8 +348,10 @@ function Form() {
                                 label="วันที่และเวลา"
                                 ampm={false}
                                 value={stop}
+                                minTime={eightAM.toDate()}
+                                maxTime={fivePM.toDate()}
                                 onChange={handleDateTimeChange2}
-                                format="dd-MM-yyyy HH:mm"
+                                format="dd/MM/yyyy HH:mm"
                                 />
                         </FormControl>
                         </Grid>
@@ -363,7 +370,7 @@ function Form() {
                         variant="contained"
                         color="primary"
                         component={RouterLink}
-                            to="/show"
+                            to="/รายการลางาน"
                         sx={{'&:hover': {color: '#1543EE', backgroundColor: '#e3f2fd'}}}
                     >
                         ถอยกลับ

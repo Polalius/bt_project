@@ -5,6 +5,7 @@ import { ListSwitchByDepIDnSNWait, ListSwitchWait } from '../../services/HttpCli
 import './test.css';
 import * as XLSX from 'xlsx';
 import moment from 'moment';
+import { Container, Paper } from '@mui/material';
 const MyTable = () => {
   const ToTimeFormat1 = 'DD/MM/YYYY';
   const ToTimeFormat2 = 'DD/MM/YYYY';
@@ -34,6 +35,11 @@ const MyTable = () => {
             console.log(res.data)
         }
     };
+    const reverseDate = (str: any) => {
+      let strParts = str.split('/');
+      const reversedDate = `${strParts[2]}-${strParts[1]}`;
+      return reversedDate
+  }
     useEffect(() => {    
         
         getSwitch(JSON.parse(localStorage.getItem("did") || ""))
@@ -46,7 +52,7 @@ const MyTable = () => {
     const filteredSwitchs = switchs.filter((row) => {
       if (filterDate) {
         return (
-          moment(row.WorkDay).format(TimeFilter) === filterDate
+          reverseDate(row.WorkDay) === filterDate
         );
       }
       return true;
@@ -68,10 +74,10 @@ const MyTable = () => {
       const { EmpName, LeaveDay, FromTime, ToTime, WorkDay, ManName, Status } = row;
       worksheet.addRow({
         EmpName,
-        LeaveDay: LeaveDay ? moment(LeaveDay).format(ToTimeFormat1): null,
+        LeaveDay,
         FromTime: FromTime ? formatTime(FromTime):null,
         ToTime: ToTime ? formatTime(ToTime): null,
-        WorkDay: WorkDay ? moment(WorkDay).format(ToTimeFormat2) : null,
+        WorkDay,
         ManName,
         Status
       });
@@ -115,7 +121,15 @@ const MyTable = () => {
   // }
   
   return (
-    
+    <Container className="container" maxWidth="lg" >
+      <Paper 
+      className="paper"
+                elevation={6}
+                sx={{
+                  height: '80vh',
+                padding: 2,
+                borderRadius: 3,
+                }}>
     <div className='div'>
       <input type="month" value={filterDate} onChange={handleFilterDateChange}/>
       <button onClick={handleExportExcel}>Export to Excel</button>
@@ -136,17 +150,17 @@ const MyTable = () => {
         // กรองข้อมูลด้วยวันที่ LeaveDay ถ้า filterDate ไม่เป็น null
         if (filterDate) {
           return (
-            moment(row.WorkDay).format(TimeFilter) === filterDate
+            reverseDate(row.WorkDay) === filterDate
           );
         }
         return true;
       }).map((row, index) => (
             <tr key={index}>
               <td>{row.EmpName}</td>
-              <td>{row.LeaveDay ? new Date(row.LeaveDay).toLocaleDateString('th-TH', { year: 'numeric', month: '2-digit', day: '2-digit'}) : ""}</td>
+              <td>{row.LeaveDay}</td>
               <td>{row.FromTime ? formatTime(row.FromTime) : ''}</td>
               <td>{row.ToTime ? formatTime(row.ToTime) : ''}</td>
-              <td>{row.WorkDay ? new Date(row.WorkDay).toLocaleDateString('th-TH', { year: 'numeric', month: '2-digit', day: '2-digit' }) : ""}</td>
+              <td>{row.WorkDay }</td>
               <td>{row.ManName}</td>
               <td>{row.Status}</td>
             </tr>
@@ -154,7 +168,7 @@ const MyTable = () => {
         </tbody>
       </table>
       
-    </div>
+    </div></Paper></Container>
   );
 };
 

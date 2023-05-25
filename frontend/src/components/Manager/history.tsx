@@ -26,6 +26,11 @@ function ManagerHistory(){
             console.log(Array(res))
         }
     };
+    const reverseDate = (str: any) => {
+      let strParts = str.split('/');
+      const reversedDate = `${strParts[2]}-${strParts[1]}`;
+      return reversedDate
+  }
     useEffect(() => {
         getLeaveList(JSON.parse(localStorage.getItem("did") || ""));
     }, []);
@@ -37,7 +42,7 @@ function ManagerHistory(){
       const filteredSwitchs = leavelist.filter((row) => {
       if (filterDate) {
         return (
-          moment(row.StartTime).format(TimeFilter) === filterDate
+          reverseDate(row.StartDate) === filterDate
         );
       }
       return true;
@@ -46,8 +51,10 @@ function ManagerHistory(){
     worksheet.columns = [
       { header: 'พนักงาน', key: 'EmpName', width: 15 },
       { header: 'ประเภทการลา', key: 'TypeName', width: 15 },
-      { header: 'ลาวันที่เวลา', key: 'StartTime', width: 20 },
-      { header: 'ถึงวันที่เวลา', key: 'StopTime', width: 20 },
+      { header: 'ลาวันที่', key: 'StartDate', width: 20 },
+      { header: 'เวลา', key: 'StartTime', width: 20 },
+      { header: 'ถึงวันที่', key: 'StopDate', width: 20 },
+      { header: 'เวลา', key: 'StopTime', width: 20 },
       { header: 'ผู้จัดการ', key: 'ManName', width: 15 },
       { header: 'สถานะ', key: 'Status', width: 20 }
     ];
@@ -55,12 +62,14 @@ function ManagerHistory(){
     // เพิ่มข้อมูลลงในตาราง
     filteredSwitchs.forEach(row => {
       console.log(row);
-      const { EmpName, TypeName, StartTime,StopTime, ManName, Status } = row;
+      const { EmpName, TypeName, StartDate,StartTime,StopDate,StopTime, ManName, Status } = row;
       worksheet.addRow({
         EmpName,
         TypeName,
-        StartTime: StartTime ? moment(StartTime).format(ToTimeFormat1): null,
-        StopTime: StopTime ? moment(StopTime).format(ToTimeFormat1) : null,
+        StartDate,
+        StartTime: formatMinutesToTime(StartTime),
+        StopDate,
+        StopTime: formatMinutesToTime(StopTime),
         ManName,
         Status
       });
@@ -81,7 +90,23 @@ function ManagerHistory(){
         console.log(`Error: ${error.message}`);
       });
   };
+  function formatMinutesToTime(minutes: any) {
+    const hours = Math.floor(minutes / 60);
+    const minutesPart = minutes % 60;
+    const hoursStr = String(hours).padStart(2, '0');
+    const minutesStr = String(minutesPart).padStart(2, '0');
+    return `${hoursStr}:${minutesStr}`;
+  }
     return (
+      <Container className="container" maxWidth="lg" >
+      <Paper 
+      className="paper"
+                elevation={6}
+                sx={{
+                  height: '80vh',
+                padding: 2,
+                borderRadius: 3,
+                }}>
         <div className='div'>
         <input type="month" value={filterDate} onChange={handleFilterDateChange}/>
       <button onClick={handleExportExcel}>Export to Excel</button>
@@ -91,7 +116,9 @@ function ManagerHistory(){
             <th>พนักงาน</th>
             <th>ประเภทการลา</th>
             <th>วันที่ลา</th>
+            <th>เวลา</th>
             <th>ถึงวันที่</th>
+            <th>เวลา</th>
             <th>ผู้จัดการ</th>
             <th>สถานะ</th>
           </tr>
@@ -101,7 +128,7 @@ function ManagerHistory(){
         // กรองข้อมูลด้วยวันที่ LeaveDay ถ้า filterDate ไม่เป็น null
         if (filterDate) {
           return (
-            moment(row.StartTime).format(TimeFilter) === filterDate
+            reverseDate(row.StartDate) === filterDate
           );
         }
         return true;
@@ -109,15 +136,17 @@ function ManagerHistory(){
             <tr key={index}>
               <td>{row.EmpName}</td>
               <td>{row.TypeName}</td>
-              <td>{row.StartTime ? new Date(row.StartTime).toLocaleDateString('th-TH', { year: 'numeric', month: '2-digit', day: '2-digit',hour: '2-digit', minute: '2-digit' }) : ""}</td>
-              <td>{row.StopTime ? new Date(row.StopTime).toLocaleDateString('th-TH', { year: 'numeric', month: '2-digit', day: '2-digit',hour: '2-digit', minute: '2-digit' }) : ""}</td>
+              <td>{row.StartDate}</td>
+              <td>{formatMinutesToTime(row.StartTime)}</td>
+              <td>{row.StopDate}</td>
+              <td>{formatMinutesToTime(row.StopTime)}</td>
               <td>{row.ManName}</td>
               <td>{row.Status}</td>
             </tr>
           ))}
         </tbody>
       </table>
-    </div>
+    </div></Paper></Container>
     )
 }
 export default ManagerHistory

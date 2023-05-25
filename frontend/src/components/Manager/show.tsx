@@ -20,7 +20,21 @@ function ManagerShow(){
             console.log(res.data)
         }
     };
-
+    function formatMinutesToTime(minutes: number) {
+        const hours = Math.floor(minutes / 60);
+        const minutesPart = minutes % 60;
+        const hoursStr = String(hours).padStart(2, '0');
+        const minutesStr = String(minutesPart).padStart(2, '0');
+        return `${hoursStr}:${minutesStr} น.`;
+      }
+    function parseDateString(dateString: string) {
+        const dateParts = dateString.split('/');
+        const day = parseInt(dateParts[0], 10);
+        const month = parseInt(dateParts[1], 10) - 1; // ลดค่าเดือนลง 1 เพื่อใช้ในการสร้างวัตถุ Date (เนื่องจากเดือนใน JavaScript เริ่มจาก 0)
+        const year = parseInt(dateParts[2], 10);
+        const newDate = new Date(year, month, day);
+        return newDate;
+      }
     useEffect(() => {    
         
         getLeaveList(JSON.parse(localStorage.getItem("did") || ""))
@@ -33,8 +47,10 @@ function ManagerShow(){
         { field: "TypeName", headerName: "ประเภทการลา",type:"string", width: 150, headerAlign: "center", align: "center", renderCell: (params: GridRenderCellParams<any>) => {
             return <>{params.row.TypeName}</>;
           },},
-        { field: "StartTime", headerName: "ลาวันที่เวลา",type:"date", width: 250, headerAlign: "center", align: "center", valueFormatter: (params) => moment(params?.value).format("MM/DD/YYYY hh:mm A")},
-        { field: "StopTime", headerName: "ถึงวันที่เวลา",type:"date", width: 250, headerAlign: "center", align: "center", valueFormatter: (params) => moment(params?.value).format("MM/DD/YYYY hh:mm A")},
+        { field: "StartDate", headerName: "ลาวันที่",type:"date", width: 120, headerAlign: "center", align: "center", valueFormatter: (params) => moment(parseDateString(params?.value)).format("MM/DD/YYYY")},
+        { field: "StartTime", headerName: "เวลา",type:"time", width: 100, headerAlign: "center", align: "center", valueFormatter: (params) => formatMinutesToTime(params?.value as number)},
+        { field: "StopDate", headerName: "ถึงวันที่",type:"date", width: 120, headerAlign: "center", align: "center", valueFormatter: (params) => params?.value },
+        { field: "StopTime", headerName: "เวลา",type:"time", width: 100, headerAlign: "center", align: "center", valueFormatter: (params) => formatMinutesToTime(params?.value as number)},
           { field: "ManName", headerName: "ผู้จัดการ",type:"string", width: 150, headerAlign: "center", align: "center", renderCell: (params: GridRenderCellParams<any>) => {
             return <>{params.row.ManName}</>;
           }, },
@@ -68,6 +84,17 @@ function ManagerShow(){
                 <Box
                     display="flex"
                 >
+                    <Box>
+                    <Button
+                            component={RouterLink}
+                            to="/"
+                            variant="contained"
+                            color="primary"
+                            sx={{ borderRadius: 20, '&:hover': { color: '#065D95', backgroundColor: '#e3f2fd' } }}
+                        >
+                            กลับ
+                        </Button>
+                    </Box>
                     <Box flexGrow={1}>
                         <Typography
                             component="h2"
@@ -82,7 +109,7 @@ function ManagerShow(){
                     <Box>
                         <Button
                             component={RouterLink}
-                            to="/history"
+                            to="/รายการอนุมัติการลา"
                             variant="contained"
                             color="primary"
                             sx={{ borderRadius: 20, '&:hover': { color: '#065D95', backgroundColor: '#e3f2fd' } }}
@@ -93,6 +120,7 @@ function ManagerShow(){
                 </Box>
                 
                 <Box sx={{ borderRadius: 20 }}>
+                    
                     <DataGrid
                         rows={leavelist}
                         getRowId={(row) => row.ID}

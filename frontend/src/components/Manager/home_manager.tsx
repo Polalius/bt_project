@@ -2,7 +2,7 @@ import { Button, Grid, Paper, Table, TableBody, TableCell, TableContainer, Table
 import { Container } from '@mui/system'
 import { useEffect, useState } from 'react'
 import { Link as RouterLink } from "react-router-dom";
-import './home_emp.css'
+
 
 import { blueGrey } from '@mui/material/colors';
 import { CountL1, CountL2, CountL3, CountSW, GetEmployeeID1, GetManagerID1, ListLeaveByEID, ListSwitchByEID, ListSwitchByEmpID } from '../../services/HttpClientService';
@@ -11,7 +11,7 @@ import { Leave1Interface, LeaveInterface } from '../../models/ILeave';
 import moment from 'moment';
 import { Switch1Interface } from '../../models/ISwitch';
 let theme = createTheme();
-export default function HomeEmp() {
+export default function HomeMan() {
   const [user ,setUser] = useState<User1Interface>();
   const [co, setCo] = useState<number | null>(0);
   const [co1, setCo1] = useState<number | null>(0);
@@ -114,13 +114,15 @@ function formatMinutesToTime(minutes: any) {
       <Grid container spacing={2} sx={{bgcolor:'#FFF'}}>
         <Grid item xs={8}>
           <Paper elevation={3} sx={{bgcolor:'#FFF', height: '74vh'}} className='lefte'>
+            <Grid container>
+                <Grid item xs={8}>
             <Button 
               variant="contained"
               className='bte'
               color="primary"
               sx={{ borderRadius: 20, '&:hover': { color: '#065D95', backgroundColor: '#e3f2fd' } }}
               component={RouterLink}
-              to="/show"
+              to="/รายการลางาน"
             >
               ระบบลางาน
             </Button>
@@ -129,7 +131,7 @@ function formatMinutesToTime(minutes: any) {
                 <Grid item xs={3.5}>
                   ลาป่วย :  <TextField  value={formatMinutesToDate(co2)} size='small' color='warning' sx={{width:165}}/>
                 </Grid>
-                <Grid item xs={6}>
+                <Grid item xs={4}>
                   ลากิจ :<TextField  value={formatMinutesToDate(co3)} size='small' color='warning' sx={{width:165}}/>
                 </Grid>
   </Grid>
@@ -137,6 +139,21 @@ function formatMinutesToTime(minutes: any) {
               </Typography>
             
             <Typography marginTop={1}>พนักงานลาทั้งหมด: {formatMinutesToDate(co1)}</Typography>
+            </Grid>
+            <Grid item xs={4}>
+            <Button 
+              variant="contained"
+              className='bte'
+              color="primary"
+              sx={{ borderRadius: 20, '&:hover': { color: '#065D95', backgroundColor: '#e3f2fd' } }}
+              component={RouterLink}
+              to="/รายการคำร้องขอลา"
+            >
+              อนุมัติลางาน
+            </Button>
+                
+            </Grid>
+            </Grid>
             <TableContainer component={Paper} sx={{width: 'auto', margin: 2}}>
               <Table size='small'>
                 <TableHead>
@@ -179,15 +196,30 @@ function formatMinutesToTime(minutes: any) {
                 </TableBody>
               </Table>
             </TableContainer>
+            <Grid container>
+                <Grid item xs={8}>
             <Button component={RouterLink}
-              to="/switchshow"
+              to="/รายการสลับวันลา"
               variant="contained"
               color="primary"
               sx={{ borderRadius: 20, '&:hover': { color: '#065D95', backgroundColor: '#e3f2fd' } }}
             >
               ระบบสลับวันลา
             </Button>
-            <Typography marginTop={1}>พนักงานสลับวันลา: {co} ครั้ง</Typography>
+            <Typography marginTop={1}>พนักงานสลับวันลา: {co} ครั้ง</Typography></Grid>
+            <Grid item xs={4}>
+            <Button 
+              variant="contained"
+              className='bte'
+              color="primary"
+              sx={{ borderRadius: 20, '&:hover': { color: '#065D95', backgroundColor: '#e3f2fd' } }}
+              component={RouterLink}
+              to="/รายการคำร้องขอสลับวันลา"
+            >
+              อนุมัติสลับวันลา
+            </Button>
+                
+            </Grid></Grid>
             <TableContainer component={Paper} sx={{width: 'auto', margin: 2}}>
               <Table size='small'>
                 <TableHead>

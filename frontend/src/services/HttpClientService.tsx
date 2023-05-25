@@ -460,7 +460,7 @@ async function ListLeaveList() {
   
     return res;
   }
-  async function CountL(id:any) {
+  async function CountL1(id:any) {
     
     const requestOptions = {
       method: "GET",
@@ -469,7 +469,49 @@ async function ListLeaveList() {
         "Content-Type": "application/json",
       },
     };
-    let res = await fetch(`${apiUrl}/count_l/${id}`, requestOptions)
+    let res = await fetch(`${apiUrl}/count_l1/${id}`, requestOptions)
+      .then((response) => response.json())
+      .then((res) => {
+        if (res.data) {
+          return res.data;
+        } else {
+          return false;
+        }
+      });
+  
+    return res;
+  }
+  async function CountL2(id:any) {
+    
+    const requestOptions = {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+        "Content-Type": "application/json",
+      },
+    };
+    let res = await fetch(`${apiUrl}/count_l2/${id}`, requestOptions)
+      .then((response) => response.json())
+      .then((res) => {
+        if (res.data) {
+          return res.data;
+        } else {
+          return false;
+        }
+      });
+  
+    return res;
+  }
+  async function CountL3(id:any) {
+    
+    const requestOptions = {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+        "Content-Type": "application/json",
+      },
+    };
+    let res = await fetch(`${apiUrl}/count_l3/${id}`, requestOptions)
       .then((response) => response.json())
       .then((res) => {
         if (res.data) {
@@ -654,7 +696,9 @@ async function ListLeaveList() {
     ListLeaveListByDepIDnSNWait,
     GetLeaveListByID,
     UpdateLeaveList,
-    CountL,
+    CountL1,
+    CountL2,
+    CountL3,
     GetEmployeeByUID,
     CreateLeavaList,
     ListEmployee,

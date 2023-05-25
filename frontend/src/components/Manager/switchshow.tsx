@@ -29,6 +29,11 @@ function ManagerSwitchShow(){
         const minutesStr = String(minutesPart).padStart(2, '0');
         return `${hoursStr}:${minutesStr}`;
       }
+    const reverseDate = (str: string) => {
+        let strParts = str.split('/');
+        const reversedDate = `${strParts[1]}/${strParts[0]}/${strParts[2]}`;
+        return reversedDate
+    }
     useEffect(() => {    
         
         getSwitch(JSON.parse(localStorage.getItem("did") || ""))
@@ -38,10 +43,10 @@ function ManagerSwitchShow(){
         { field: "EmpName", headerName: "ชื่อ-นามสกุล",type:"string", width: 120, headerAlign: "center", align: "center", renderCell: (params: GridRenderCellParams<any>) => {
             return <>{params.row.EmpName}</>},
         },
-        { field: "LeaveDay", headerName: "วันที่สลับ",type:"date", width: 250, headerAlign: "center", align: "center", valueFormatter: (params) => moment(params?.value).format("DD/MM/YYYY")},
+        { field: "LeaveDay", headerName: "วันที่สลับ",type:"date", width: 250, headerAlign: "center", align: "center", valueFormatter: (params) => reverseDate(params?.value)},
         { field: "FromTime", headerName: "จากเวลา",type:"string", width: 100, headerAlign: "center", align: "center", valueFormatter: (params) => formatMinutesToTime(params?.value as number)},
         { field: "ToTime", headerName: "ถึงเวลา",type:"time", width: 100, headerAlign: "center", align: "center", valueFormatter: (params) => formatMinutesToTime(params?.value as number)},
-        { field: "WorkDay", headerName: "วันที่มาทำงาน",type:"date", width: 250, headerAlign: "center", align: "center", valueFormatter: (params) => moment(params?.value).format("DD/MM/YYYY ") },
+        { field: "WorkDay", headerName: "วันที่มาทำงาน",type:"date", width: 250, headerAlign: "center", align: "center", valueFormatter: (params) =>reverseDate(params?.value) },
           { field: "ManName", headerName: "ผู้จัดการ",type:"string", width: 150, headerAlign: "center", align: "center", renderCell: (params: GridRenderCellParams<any>) => {
             return <>{params.row.ManName}</>;
           }, },
@@ -75,7 +80,18 @@ function ManagerSwitchShow(){
             >
                 <Box
                     display="flex"
-                >
+                >   
+                    <Box>
+                    <Button
+                            component={RouterLink}
+                            to="/"
+                            variant="contained"
+                            color="primary"
+                            sx={{ borderRadius: 20, '&:hover': { color: '#065D95', backgroundColor: '#e3f2fd' } }}
+                        >
+                            กลับ
+                        </Button>
+                    </Box>
                     <Box flexGrow={1}>
                         <Typography
                             component="h2"
@@ -90,7 +106,7 @@ function ManagerSwitchShow(){
                     <Box>
                         <Button
                             component={RouterLink}
-                            to="/switchhistory"
+                            to="/รายการอนุมัติสลับวันลา"
                             variant="contained"
                             color="primary"
                             sx={{ borderRadius: 20, '&:hover': { color: '#065D95', backgroundColor: '#e3f2fd' } }}

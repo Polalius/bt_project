@@ -245,7 +245,7 @@ func CountSW(c *gin.Context) {
 	id := c.Param("id")
 	
 	if err := entity.DB().Table("switch_leaves").
-	Select("SUM(count)").Where("employee_id = ?",id).Where("status = 'approved'").
+	Select("COUNT(*)").Where("employee_id = ?",id).Where("status = 'approved'").
 	Scan(&count).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
