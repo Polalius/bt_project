@@ -62,6 +62,7 @@ func main() {
 	r.GET("/count_l1/:id", controller.CountL1)
 	r.GET("/count_l2/:id", controller.CountL2)
 	r.GET("/count_l3/:id", controller.CountL3)
+	r.GET("/count_l4/:id", controller.CountL4)
 
 	r.GET("/switch/:id", controller.GetSwitchID)
 	r.GET("/switchs", controller.ListSwitch)//
@@ -73,6 +74,7 @@ func main() {
 	r.POST("/switch_leaves", controller.CreateSwitchLeave)//
 	r.PATCH("/switch_leaves", controller.UpdateSwitch)
 	r.GET("/countsw/:id", controller.CountSW)
+	r.GET("/countsw2/:id", controller.CountSW2)
 
 	r.GET("/leavetypes", controller.ListLeaveType)
 	
@@ -87,5 +89,7 @@ func main() {
 	r.GET("/valid", controller.Validation)
 	r.POST("/mail", controller.SendEmailHandler)
 	r.POST("/mail2", controller.SendEmailHandler2)
+	r.POST("/mail3", controller.SendEmailHandler3)
+	r.POST("/mail4", controller.SendEmailHandler4)
 	r.Run()
 }

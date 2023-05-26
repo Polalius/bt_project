@@ -107,7 +107,7 @@ export default function Approve(props: any){
               empemail: EmpEmail
           };
           console.log(data)
-          axios.post('http://localhost:8080/mail2', data)
+          axios.post('http://localhost:8080/mail3', data)
         .then(response => {
           console.log(response.data);
           // ทำสิ่งที่คุณต้องการเมื่อส่งอีเมลสำเร็จ

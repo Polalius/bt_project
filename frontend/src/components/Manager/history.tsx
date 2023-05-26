@@ -107,6 +107,32 @@ function ManagerHistory(){
                 padding: 2,
                 borderRadius: 3,
                 }}>
+          <Box
+                    display="flex"
+                >
+                  <Box>
+                    <Button
+                            component={RouterLink}
+                            to="/รายการคำร้องขอลา"
+                            variant="contained"
+                            color="primary"
+                            sx={{ borderRadius: 20, '&:hover': { color: '#065D95', backgroundColor: '#e3f2fd' } }}
+                        >
+                            กลับ
+                        </Button>
+                    </Box>
+                  <Box flexGrow={1}>
+                        <Typography
+                            component="h2"
+                            variant="h5"
+                            color="secondary"
+                            sx={{ fontWeight: 'bold' }}
+                            gutterBottom
+                            align='center'
+                        >
+                            ประวัติอนุมัติการลา
+                        </Typography>
+                    </Box></Box>
         <div className='div'>
         <input type="month" value={filterDate} onChange={handleFilterDateChange}/>
       <button onClick={handleExportExcel}>Export to Excel</button>

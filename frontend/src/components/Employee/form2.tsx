@@ -155,7 +155,7 @@ function Form2() {
             manemail: man?.Email
         };
         console.log(data)
-        axios.post('http://localhost:8080/mail', data)
+        axios.post('http://localhost:8080/mail2', data)
       .then(response => {
         console.log(response.data);
         // ทำสิ่งที่คุณต้องการเมื่อส่งอีเมลสำเร็จ
@@ -182,7 +182,7 @@ function Form2() {
         
         if (res.status) {
             setTimeout(() => {
-                window.location.href = "/switchshow";
+                window.location.href = "/รายการสลับวันลา";
               }, 1200);
             setAlertMessage("บันทึกข้อมูลสำเร็จ");
             setSuccess(true);
@@ -236,7 +236,8 @@ function Form2() {
                     <Box>
                         <Typography
                             variant="h5"
-                            color="primary"
+                            color="secondary"
+                            align="center"
                             sx={{ padding: 2, fontWeight: "bold", marginTop: 1 }}
                         >
                             แบบฟอร์มสลับวันลา

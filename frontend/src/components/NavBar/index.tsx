@@ -10,7 +10,12 @@ import { IconButton, Toolbar, Typography, Button, Box, Badge, CssBaseline, MenuI
 import { ManagerInterface } from "../../models/IManager";
 import { orange, blueGrey } from "@mui/material/colors";
 import HomeIcon from "@mui/icons-material/Home";
+import PostAddIcon from '@mui/icons-material/PostAdd';
+import HailIcon from '@mui/icons-material/Hail';
+import TransferWithinAStationIcon from '@mui/icons-material/TransferWithinAStation';
 import EventNoteIcon from '@mui/icons-material/EventNote';
+import ApprovalIcon from '@mui/icons-material/Approval';
+import EventAvailableIcon from '@mui/icons-material/EventAvailable';
 import LogoutIcon from "@mui/icons-material/Logout";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
@@ -128,17 +133,17 @@ export default function Navbar() {
 
   const menuemployee = [
     { name: "หน้าแรก", icon: <HomeIcon />, path: "/" },
-    { name: "รายการคำขอลา", icon: <EventNoteIcon />, path: "/show", },
-    { name: "แบบฟอร์มการลา", icon: <EventNoteIcon />, path: "/form", },
-    { name: "รายการคำขอสลับวันลา", icon: <EventNoteIcon />, path: "/switchshow", },
-    { name: "แบบฟอร์มสลับวันลา", icon: <EventNoteIcon />, path: "/switch", },
+    { name: "รายการคำขอลา", icon: <EventNoteIcon />, path: "/รายการลางาน", },
+    { name: "แบบฟอร์มการลา", icon: <HailIcon />, path: "/แบบฟอร์มขอลา", },
+    { name: "รายการคำขอสลับวันลา", icon: <EventNoteIcon />, path: "/รายการสลับวันลา", },
+    { name: "แบบฟอร์มสลับวันลา", icon: <TransferWithinAStationIcon />, path: "/แบบฟอร์มสลับวันลา", },
   ]
   const menumanager = [
     { name: "หน้าแรก", icon: <HomeIcon />, path: "/" },
-    { name: "รายการคำร้องขอลา", icon: <EventNoteIcon />, path: "/รายการคำร้องขอลา", },
-    { name: "ประวัติการอนุมัติการลา", icon: <EventNoteIcon />, path: "/รายการอนุมัติการลา", },
-    { name: "รายการคำร้องขอสลับวันลา", icon: <EventNoteIcon />, path: "/รายการคำร้องขอสลับวันลา", },
-    { name: "ประวัติการอนุมัติสลับวันลา", icon: <EventNoteIcon />, path: "/รายการอนุมัติสลับวันลา",},
+    { name: "คำร้องขอลา", icon: <ApprovalIcon />, path: "/รายการคำร้องขอลา", },
+    { name: "ประวัติการอนุมัติการลา", icon: <EventAvailableIcon />, path: "/รายการอนุมัติการลา", },
+    { name: "คำร้องขอสลับวันลา", icon: <ApprovalIcon />, path: "/รายการคำร้องขอสลับวันลา", },
+    { name: "ประวัติการอนุมัติสลับวันลา", icon: <EventAvailableIcon />, path: "/รายการอนุมัติสลับวันลา",},
   ]
   const menupayroll = [
     { name: "หน้าแรก", icon: <HomeIcon />, path: "/" },
@@ -154,11 +159,14 @@ export default function Navbar() {
       theme = createTheme({
         palette: {
           primary: {
-            main: '#A46C42',
+            main: '#7484AD',
           },
           secondary: {
-            main: '#F4F6F6',
+            main: '#17202A',
           },
+          info: {
+            main: "#92B3D8"
+          }
         },
       });
       break;
@@ -167,12 +175,14 @@ export default function Navbar() {
       theme = createTheme({
         palette: {
           primary: {
-            main: blueGrey[400],
+            main: "#F0B27A",
           },
           secondary: {
             main: '#F4F6F6',
           },
-          
+          info: {
+            main: "#F5CBA7"
+          }
         },
       });
       break;
@@ -215,15 +225,24 @@ export default function Navbar() {
             </IconButton>
             <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%' }}>
               <Typography variant="h6" color="secondary" noWrap component="div" fontFamily= 'Gloock'>
-                โปรแกรมการลา
+                ระบบลางาน
               </Typography>
               {/* <Typography color="secondary" >User:{user?.UserName}</Typography> */}
               
-              <Tooltip title="Account settings">
+              <Tooltip title="Log-out">
           <IconButton
             onClick={handleClick}
             size="small"
-            sx={{ ml: 2 }}
+            sx={{ ml: 2
+              , backgroundColor: '#EBEDEF', // กำหนดสีพื้นหลังเป็นโปร่งแสง
+            // border: '1px solid rgba(0, 0, 0, 0.5)', // กำหนดกรอบสี่เหลี่ยมเป็นเส้นขอบสีเทาอ่อน
+            borderRadius: '4px', // กำหนดรูปร่างของกรอบเป็นสี่เหลี่ยมมีเส้นมนแบบกลมมน (borderRadius)
+            padding: '4px', // กำหนดระยะห่างภายใน IconButton
+            display: 'flex',
+    alignItems: 'center',
+    flexDirection: 'column',
+            }}
+            
             aria-controls={open ? 'account-menu' : undefined}
             aria-haspopup="true"
             aria-expanded={open ? 'true' : undefined}
@@ -231,9 +250,14 @@ export default function Navbar() {
             <StyledBadge 
             overlap="rectangular"
             anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+            
             variant="dot"> 
               
               <Avatar sx={{ width: 32, height: 32 }} >{user?.UserName?.charAt(0).toUpperCase()}</Avatar>
+              <Typography align="justify" sx={{
+        fontSize: '20px',
+        marginTop: '2px', // กำหนดระยะห่างด้านบนของ Typography
+      }}>{user?.UserName.slice(1)}</Typography>
             </StyledBadge>
             
           </IconButton>

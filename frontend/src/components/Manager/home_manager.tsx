@@ -5,7 +5,7 @@ import { Link as RouterLink } from "react-router-dom";
 
 
 import { blueGrey } from '@mui/material/colors';
-import { CountL1, CountL2, CountL3, CountSW, GetEmployeeID1, GetManagerID1, ListLeaveByEID, ListSwitchByEID, ListSwitchByEmpID } from '../../services/HttpClientService';
+import { CountL1, CountL2, CountL3, CountL4, CountSW, CountSW2, GetEmployeeID1, GetManagerID1, ListLeaveByEID, ListLeaveWait, ListSwitchByEID, ListSwitchByEmpID, ListSwitchWait } from '../../services/HttpClientService';
 import { User1Interface } from '../../models/ISignin';
 import { Leave1Interface, LeaveInterface } from '../../models/ILeave';
 import moment from 'moment';
@@ -13,27 +13,23 @@ import { Switch1Interface } from '../../models/ISwitch';
 let theme = createTheme();
 export default function HomeMan() {
   const [user ,setUser] = useState<User1Interface>();
-  const [co, setCo] = useState<number | null>(0);
   const [co1, setCo1] = useState<number | null>(0);
   const [co2, setCo2] = useState<number | null>(0);
-  const [co3, setCo3] = useState<number | null>(0);
   const [leavelist, setLeavelist] = useState<Leave1Interface[]>([])
   const [switcht, setSwitch] = useState<Switch1Interface[]>([])
   const getLeaveList = async (id:any) => {
-    let res = await ListLeaveByEID(id);
+    let res = await ListLeaveWait(id);
     if (res.data) {
         setLeavelist(res.data);
+        console.log(res.data)
     }
-    
-    console.log(res.data)
 };
 const getSwitch = async (id:any) => {
-    let res = await ListSwitchByEID(id);
-    if (res.data) {
-        setSwitch(res.data);
-    }
-    
-    console.log(res.data)
+  let res = await ListSwitchWait(id);
+  if (res.data) {
+      setSwitch(res.data);
+      console.log(res.data)
+  }
 };
 function formatMinutesToTime(minutes: any) {
     const hours = Math.floor(minutes / 60);
@@ -52,16 +48,8 @@ function formatMinutesToTime(minutes: any) {
   const minutesStr = String(minutesPart).padStart(2, '0');
   return `${daysStr} วัน ${hoursStr} ชม. ${minutesStr} น.`;
   }
-  const getCount =async (id:any) => {
-    let res = await CountSW(id);
-    if (res){
-      console.log(res)
-      setCo(res)
-      
-    }
-  }
   const getCount1 =async (id:any) => {
-    let res = await CountL1(id);
+    let res = await CountL4(id);
     if (res){
       console.log(res)
       setCo1(res)
@@ -69,37 +57,27 @@ function formatMinutesToTime(minutes: any) {
     }
   }
   const getCount2 =async (id:any) => {
-    let res = await CountL2(id);
+    let res = await CountSW2(id);
     if (res){
       console.log(res)
       setCo2(res)
       
     }
   }
-  const getCount3 =async (id:any) => {
-    let res = await CountL3(id);
-    if (res){
-      console.log(res)
-      setCo3(res)
-      
-    }
-  }
-  const getEmployeeID = async (id:any) => {
-    let res = await GetEmployeeID1(id);
+  const getManagerID = async (id:any) => {
+    let res = await GetManagerID1(id);
     if (res){
         setUser(res)
         console.log(res)
     }
   }
   const uid = localStorage.getItem("uid") || "";
-  
+  const did = localStorage.getItem("did") || ""
   useEffect(() => {
-        getEmployeeID(uid);
-        getCount(uid);
-        getCount1(uid)
-        getCount2(uid)
-        getCount3(uid)
-        getLeaveList(JSON.parse(localStorage.getItem("pid") || ""))
+        getManagerID(uid);
+        getCount1(did)
+        getCount2(did)
+        getLeaveList(did)
         getSwitch(JSON.parse(localStorage.getItem("pid") || ""))
   }, []);
   return (
@@ -114,34 +92,7 @@ function formatMinutesToTime(minutes: any) {
       <Grid container spacing={2} sx={{bgcolor:'#FFF'}}>
         <Grid item xs={8}>
           <Paper elevation={3} sx={{bgcolor:'#FFF', height: '74vh'}} className='lefte'>
-            <Grid container>
-                <Grid item xs={8}>
-            <Button 
-              variant="contained"
-              className='bte'
-              color="primary"
-              sx={{ borderRadius: 20, '&:hover': { color: '#065D95', backgroundColor: '#e3f2fd' } }}
-              component={RouterLink}
-              to="/รายการลางาน"
-            >
-              ระบบลางาน
-            </Button>
-            <Typography marginTop={1}>
-            <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
-                <Grid item xs={3.5}>
-                  ลาป่วย :  <TextField  value={formatMinutesToDate(co2)} size='small' color='warning' sx={{width:165}}/>
-                </Grid>
-                <Grid item xs={4}>
-                  ลากิจ :<TextField  value={formatMinutesToDate(co3)} size='small' color='warning' sx={{width:165}}/>
-                </Grid>
-  </Grid>
-                
-              </Typography>
-            
-            <Typography marginTop={1}>พนักงานลาทั้งหมด: {formatMinutesToDate(co1)}</Typography>
-            </Grid>
-            <Grid item xs={4}>
-            <Button 
+                <Button 
               variant="contained"
               className='bte'
               color="primary"
@@ -151,9 +102,7 @@ function formatMinutesToTime(minutes: any) {
             >
               อนุมัติลางาน
             </Button>
-                
-            </Grid>
-            </Grid>
+            <Typography marginTop={1}>คำร้องขอลารออนุมัติ: {co1} รายการ</Typography>
             <TableContainer component={Paper} sx={{width: 'auto', margin: 2}}>
               <Table size='small'>
                 <TableHead>
@@ -196,18 +145,7 @@ function formatMinutesToTime(minutes: any) {
                 </TableBody>
               </Table>
             </TableContainer>
-            <Grid container>
-                <Grid item xs={8}>
-            <Button component={RouterLink}
-              to="/รายการสลับวันลา"
-              variant="contained"
-              color="primary"
-              sx={{ borderRadius: 20, '&:hover': { color: '#065D95', backgroundColor: '#e3f2fd' } }}
-            >
-              ระบบสลับวันลา
-            </Button>
-            <Typography marginTop={1}>พนักงานสลับวันลา: {co} ครั้ง</Typography></Grid>
-            <Grid item xs={4}>
+            
             <Button 
               variant="contained"
               className='bte'
@@ -218,8 +156,7 @@ function formatMinutesToTime(minutes: any) {
             >
               อนุมัติสลับวันลา
             </Button>
-                
-            </Grid></Grid>
+            <Typography marginTop={1}>คำร้องขอสลับวันลารออนุมัติ: {co2} รายการ</Typography>      
             <TableContainer component={Paper} sx={{width: 'auto', margin: 2}}>
               <Table size='small'>
                 <TableHead>

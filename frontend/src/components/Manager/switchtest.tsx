@@ -3,9 +3,10 @@ import * as ExcelJS from 'exceljs';
 import { Switch1Interface } from '../../models/ISwitch';
 import { ListSwitchByDepIDnSNWait, ListSwitchWait } from '../../services/HttpClientService';
 import './test.css';
+import { Link as RouterLink } from "react-router-dom";
 import * as XLSX from 'xlsx';
 import moment from 'moment';
-import { Container, Paper } from '@mui/material';
+import { Box, Button, Container, Paper, Typography } from '@mui/material';
 const MyTable = () => {
   const ToTimeFormat1 = 'DD/MM/YYYY';
   const ToTimeFormat2 = 'DD/MM/YYYY';
@@ -130,6 +131,32 @@ const MyTable = () => {
                 padding: 2,
                 borderRadius: 3,
                 }}>
+                  <Box
+                    display="flex"
+                >
+                  <Box>
+                    <Button
+                            component={RouterLink}
+                            to="/รายการคำร้องขอสลับวันลา"
+                            variant="contained"
+                            color="primary"
+                            sx={{ borderRadius: 20, '&:hover': { color: '#065D95', backgroundColor: '#e3f2fd' } }}
+                        >
+                            กลับ
+                        </Button>
+                    </Box>
+                  <Box flexGrow={1}>
+                        <Typography
+                            component="h2"
+                            variant="h5"
+                            color="secondary"
+                            sx={{ fontWeight: 'bold' }}
+                            gutterBottom
+                            align='center'
+                        >
+                            ประวัติอนุมัติสลับวันลา
+                        </Typography>
+                    </Box></Box>
     <div className='div'>
       <input type="month" value={filterDate} onChange={handleFilterDateChange}/>
       <button onClick={handleExportExcel}>Export to Excel</button>

@@ -120,7 +120,7 @@ function formatMinutesToTime(minutes: any) {
               color="primary"
               sx={{ borderRadius: 20, '&:hover': { color: '#065D95', backgroundColor: '#e3f2fd' } }}
               component={RouterLink}
-              to="/show"
+              to="/รายการลางาน"
             >
               ระบบลางาน
             </Button>
@@ -180,7 +180,7 @@ function formatMinutesToTime(minutes: any) {
               </Table>
             </TableContainer>
             <Button component={RouterLink}
-              to="/switchshow"
+              to="/รายการสลับวันลา"
               variant="contained"
               color="primary"
               sx={{ borderRadius: 20, '&:hover': { color: '#065D95', backgroundColor: '#e3f2fd' } }}
