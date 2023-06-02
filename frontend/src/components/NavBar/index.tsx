@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { EmployeeInterface } from "../../models/IEmployee";
 import MuiAppBar, {AppBarProps as MuiAppBarProps} from '@mui/material/AppBar';
 import {createTheme, styled, ThemeProvider, useTheme} from '@mui/material/styles';
 import { useNavigate } from "react-router-dom";
@@ -7,9 +6,10 @@ import MenuIcon from "@mui/icons-material/Menu";
 import ExitToAppIcon from "@mui/icons-material/ExitToApp";
 import { Link as RouterLink } from "react-router-dom";
 import { IconButton, Toolbar, Typography, Button, Box, Badge, CssBaseline, MenuItem, Drawer, Divider, Tooltip, Avatar, Menu } from "@mui/material";
-import { ManagerInterface } from "../../models/IManager";
 import { orange, blueGrey } from "@mui/material/colors";
 import HomeIcon from "@mui/icons-material/Home";
+import HailIcon from '@mui/icons-material/Hail';
+import TransferWithinAStationIcon from '@mui/icons-material/TransferWithinAStation';
 import EventNoteIcon from '@mui/icons-material/EventNote';
 import LogoutIcon from "@mui/icons-material/Logout";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
@@ -128,10 +128,10 @@ export default function Navbar() {
 
   const menuemployee = [
     { name: "หน้าแรก", icon: <HomeIcon />, path: "/" },
-    { name: "รายการคำขอลา", icon: <EventNoteIcon />, path: "/show", },
-    { name: "แบบฟอร์มการลา", icon: <EventNoteIcon />, path: "/form", },
-    { name: "รายการคำขอสลับวันลา", icon: <EventNoteIcon />, path: "/switchshow", },
-    { name: "แบบฟอร์มสลับวันลา", icon: <EventNoteIcon />, path: "/switch", },
+    { name: "รายการคำขอลา", icon: <EventNoteIcon />, path: "/รายการลางาน", },
+    { name: "แบบฟอร์มการลา", icon: <HailIcon />, path: "/แบบฟอร์มขอลา", },
+    { name: "รายการคำขอสลับวันลา", icon: <EventNoteIcon />, path: "/รายการสลับวันลา", },
+    { name: "แบบฟอร์มสลับวันลา", icon: <TransferWithinAStationIcon />, path: "/แบบฟอร์มสลับวันลา", },
   ]
   const menumanager = [
     { name: "หน้าแรก", icon: <HomeIcon />, path: "/" },
@@ -149,7 +149,7 @@ export default function Navbar() {
 
   var menu: any[];
   switch (role) {
-    case "employee":
+    case "0":
       menu = menuemployee;
       theme = createTheme({
         palette: {
@@ -162,7 +162,7 @@ export default function Navbar() {
         },
       });
       break;
-    case "manager":
+    case "1":
       menu = menumanager;
       theme = createTheme({
         palette: {
@@ -194,8 +194,8 @@ export default function Navbar() {
   useEffect(() => {
     const getToken = localStorage.getItem("token");
     if (getToken) {
-      setRole(localStorage.getItem("role") || "");
-      getUserID(localStorage.getItem("uid"))
+      setRole(localStorage.getItem("position") || "");
+      getUserID(localStorage.getItem("user_serial"))
     }
   }, [])
   return (

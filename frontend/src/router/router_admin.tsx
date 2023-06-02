@@ -21,8 +21,8 @@ const RouterAdmin = () => {
             <Navbar />
             <div className='container-router'>
               <Routes>
-              <Route path="/" element={<Home role={role} />} />
-              <Route path="/show" element={<PayrollShow  />} />
+              <Route path="/" element={<Home />} />
+              <Route path="/รายการลางาน" element={<PayrollShow  />} />
                   
               </Routes>
             

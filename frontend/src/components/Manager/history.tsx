@@ -3,7 +3,7 @@ import { Link as RouterLink } from "react-router-dom";
 import * as ExcelJS from 'exceljs';
 import { Box, Button, Container, Paper, Stack, Typography } from '@mui/material';
 
-import { Leave1Interface, LeaveInterface } from '../../models/ILeave';
+import { Leave1Interface, LeaveInterface, LeavesInterface } from '../../models/ILeave';
 import { ListLeaveListByDepIDnSNWait } from '../../services/HttpClientService';
 import React from 'react';
 import moment from 'moment';
@@ -18,7 +18,7 @@ function ManagerHistory(){
   console.log(formattedDate);
   setFilterDate(formattedDate);
   };
-    const [leavelist, setLeavelist] = useState<Leave1Interface[]>([])
+    const [leavelist, setLeavelist] = useState<LeavesInterface[]>([])
     const getLeaveList = async (id:any) => {
         let res = await ListLeaveListByDepIDnSNWait(id);
         if (res.data) {
@@ -32,7 +32,7 @@ function ManagerHistory(){
       return reversedDate
   }
     useEffect(() => {
-        getLeaveList(JSON.parse(localStorage.getItem("did") || ""));
+        getLeaveList(JSON.parse(localStorage.getItem("dep_id") || ""));
     }, []);
 
     const handleExportExcel = () => {
@@ -49,28 +49,28 @@ function ManagerHistory(){
     });
     // เพิ่มหัวข้อตาราง
     worksheet.columns = [
-      { header: 'พนักงาน', key: 'EmpName', width: 15 },
-      { header: 'ประเภทการลา', key: 'TypeName', width: 15 },
+      { header: 'พนักงาน', key: 'UserLname', width: 15 },
+      { header: 'ประเภทการลา', key: 'LeaveType', width: 15 },
       { header: 'ลาวันที่', key: 'StartDate', width: 20 },
       { header: 'เวลา', key: 'StartTime', width: 20 },
       { header: 'ถึงวันที่', key: 'StopDate', width: 20 },
       { header: 'เวลา', key: 'StopTime', width: 20 },
-      { header: 'ผู้จัดการ', key: 'ManName', width: 15 },
+      { header: 'แผนก/ฝ่าย', key: 'DepName', width: 15 },
       { header: 'สถานะ', key: 'Status', width: 20 }
     ];
 
     // เพิ่มข้อมูลลงในตาราง
     filteredSwitchs.forEach(row => {
       console.log(row);
-      const { EmpName, TypeName, StartDate,StartTime,StopDate,StopTime, ManName, Status } = row;
+      const { UserLname, LeaveType, StartDate,StartTime,StopDate,StopTime,DepName, Status } = row;
       worksheet.addRow({
-        EmpName,
-        TypeName,
+        UserLname,
+        LeaveType,
         StartDate,
         StartTime: formatMinutesToTime(StartTime),
         StopDate,
         StopTime: formatMinutesToTime(StopTime),
-        ManName,
+        DepName,
         Status
       });
     });
@@ -82,7 +82,7 @@ function ManagerHistory(){
         const url = URL.createObjectURL(blob);
         const link = document.createElement('a');
         link.href = url;
-        link.download = 'my-workbook.xlsx';
+        link.download = 'leave-list.xlsx';
         link.click();
         URL.revokeObjectURL(url);
       })
@@ -119,7 +119,7 @@ function ManagerHistory(){
             <th>เวลา</th>
             <th>ถึงวันที่</th>
             <th>เวลา</th>
-            <th>ผู้จัดการ</th>
+            <th>แผนก/ฝ่าย</th>
             <th>สถานะ</th>
           </tr>
         </thead>
@@ -134,13 +134,13 @@ function ManagerHistory(){
         return true;
       }).map((row, index) => (
             <tr key={index}>
-              <td>{row.EmpName}</td>
-              <td>{row.TypeName}</td>
+              <td>{row.UserLname}</td>
+              <td>{row.LeaveType}</td>
               <td>{row.StartDate}</td>
               <td>{formatMinutesToTime(row.StartTime)}</td>
               <td>{row.StopDate}</td>
               <td>{formatMinutesToTime(row.StopTime)}</td>
-              <td>{row.ManName}</td>
+              <td>{row.DepName}</td>
               <td>{row.Status}</td>
             </tr>
           ))}

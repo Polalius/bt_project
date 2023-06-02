@@ -4,16 +4,14 @@ import moment from 'moment';
 import { Box, Button, Container, Paper, Typography } from '@mui/material';
 import { DataGrid, GridColDef, GridRenderCellParams,  GridToolbarFilterButton } from '@mui/x-data-grid';
 
-import { EmployeeInterface } from '../../models/IEmployee';
 import { LeaveInterface } from '../../models/ILeave';
 
 import { GetEmployeeID, ListLeaveListByEmpID, ListSwitchByEmpID } from '../../services/HttpClientService';
-import { SwitchInterface } from '../../models/ISwitch';
+import { SwitchInterface, SwitchsInterface } from '../../models/ISwitch';
 
 function EmployeeShow2(){
 
-    const [leavelist, setLeavelist] = useState<SwitchInterface[]>([])
-    const [emp, setEmp] = useState<EmployeeInterface>();
+    const [leavelist, setLeavelist] = useState<SwitchsInterface[]>([])
 
     const getLeaveList = async (id:any) => {
         let res = await ListSwitchByEmpID(id);
@@ -24,13 +22,6 @@ function EmployeeShow2(){
         console.log(res.data)
     };
 
-    const getEmployeeID = async (id:any) => {
-        let res = await GetEmployeeID(id);
-        if (res){
-            setEmp(res)
-            localStorage.setItem("did", res.DepartmentID)
-        }
-    }
 
     function formatMinutesToTime(minutes: number) {
         const hours = Math.floor(minutes / 60);
@@ -40,23 +31,21 @@ function EmployeeShow2(){
         return `${hoursStr}:${minutesStr} น.`;
       }
     useEffect(() => {    
-        setLeavelist(JSON.parse(localStorage.getItem("pid") || ""));
-        getLeaveList(JSON.parse(localStorage.getItem("pid") || ""));
+        getLeaveList(JSON.parse(localStorage.getItem("user_serial") || ""));
         
-        getEmployeeID(JSON.parse(localStorage.getItem("pid") || ""))
     }, []);
 
     
     const columns: GridColDef[] = [
         { field: "Employee.FirstName", headerName: "ชื่อ-นามสกุล",type:"string", width: 120, headerAlign: "center", align: "center", renderCell: (params: GridRenderCellParams<any>) => {
-            return <>{params.row.Employee.EmpName}</>},
+            return <>{params.row.UserLname}</>},
         },
         { field: "LeaveDay", headerName: "วันที่สลับ",type:"date", width: 220, headerAlign: "center", align: "center", valueFormatter: (params) => params?.value},
         { field: "FromTime", headerName: "จากเวลา",type:"time", width: 100, headerAlign: "center", align: "center", valueFormatter: (params) => formatMinutesToTime(params?.value as number)},
         { field: "ToTime", headerName: "ถึงเวลา",type:"time", width: 100, headerAlign: "center", align: "center", valueFormatter: (params) => formatMinutesToTime(params?.value as number)},
         { field: "WorkDay", headerName: "วันที่มาทำงาน",type:"date", width: 250, headerAlign: "center", align: "center", valueFormatter: (params) => params?.value },
-        { field: "Manager.FirstName", headerName: "ผู้จัดการ",type:"string", width: 150, headerAlign: "center", align: "center", renderCell: (params: GridRenderCellParams<any>) => {
-            return <>{params.row.Manager.ManName}</>;
+        { field: "Department.DepName", headerName: "แผนก",type:"string", width: 150, headerAlign: "center", align: "center", renderCell: (params: GridRenderCellParams<any>) => {
+            return <>{params.row.DepName}</>;
           }, },
         { field: "Status", headerName: "สถานะ",type:"string", width: 150, headerAlign: "center", align: "center" },  
     ];

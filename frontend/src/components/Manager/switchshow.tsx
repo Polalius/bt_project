@@ -9,12 +9,12 @@ import { Leave1Interface, LeaveInterface } from '../../models/ILeave';
 import { ListLeaveWait, ListSwitchWait } from '../../services/HttpClientService';
 import Approve from './approve';
 import moment from 'moment';
-import { Switch1Interface } from '../../models/ISwitch';
+import { Switch1Interface, SwitchsInterface } from '../../models/ISwitch';
 import SwitchApprove from './switchaprove';
 
 function ManagerSwitchShow(){
     
-    const [switchs, setSwitch] = useState<Switch1Interface[]>([])
+    const [switchs, setSwitch] = useState<SwitchsInterface[]>([])
     const getSwitch = async (id:any) => {
         let res = await ListSwitchWait(id);
         if (res.data) {
@@ -36,19 +36,19 @@ function ManagerSwitchShow(){
     }
     useEffect(() => {    
         
-        getSwitch(JSON.parse(localStorage.getItem("did") || ""))
+        getSwitch(JSON.parse(localStorage.getItem("dep_id") || ""))
     }, []);
 
     const columns: GridColDef[] = [
         { field: "EmpName", headerName: "ชื่อ-นามสกุล",type:"string", width: 120, headerAlign: "center", align: "center", renderCell: (params: GridRenderCellParams<any>) => {
-            return <>{params.row.EmpName}</>},
+            return <>{params.row.UserLname}</>},
         },
         { field: "LeaveDay", headerName: "วันที่สลับ",type:"date", width: 250, headerAlign: "center", align: "center", valueFormatter: (params) => reverseDate(params?.value)},
         { field: "FromTime", headerName: "จากเวลา",type:"string", width: 100, headerAlign: "center", align: "center", valueFormatter: (params) => formatMinutesToTime(params?.value as number)},
         { field: "ToTime", headerName: "ถึงเวลา",type:"time", width: 100, headerAlign: "center", align: "center", valueFormatter: (params) => formatMinutesToTime(params?.value as number)},
         { field: "WorkDay", headerName: "วันที่มาทำงาน",type:"date", width: 250, headerAlign: "center", align: "center", valueFormatter: (params) =>reverseDate(params?.value) },
           { field: "ManName", headerName: "ผู้จัดการ",type:"string", width: 150, headerAlign: "center", align: "center", renderCell: (params: GridRenderCellParams<any>) => {
-            return <>{params.row.ManName}</>;
+            return <>{params.row.DepName}</>;
           }, },
           {
             field: "อนุมัติ",
@@ -58,7 +58,7 @@ function ManagerSwitchShow(){
             width: 85,
             renderCell: (params: GridRenderCellParams<any>) => {
                 <EditIcon />
-              return <SwitchApprove params={params.row.ID} EmpEmail={params.row.EmpEmail} ManEmail={params.row.ManEmail} />;
+              return <SwitchApprove params={params.row.ID} />;
             },
             sortable: false,
             description: "Status",
@@ -99,6 +99,7 @@ function ManagerSwitchShow(){
                             color="primary"
                             sx={{ fontWeight: 'bold' }}
                             gutterBottom
+                            align='center'
                         >
                             รายการคำร้องขอสลับวันลา
                         </Typography>

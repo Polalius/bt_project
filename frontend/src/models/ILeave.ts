@@ -1,7 +1,6 @@
 import dayjs, { Dayjs } from "dayjs";
-import { EmployeeInterface } from "./IEmployee";
-import { ManagerInterface } from "./IManager";
-import { DepartmentInterface } from "./IDepartmemt";
+
+import { User1Interface, UserInterface } from "./ISignin";
 
 export interface LeaveTypeInterface{
     ID?: number;
@@ -10,30 +9,24 @@ export interface LeaveTypeInterface{
 }
 export interface LeaveInterface{
     ID?: number;
-    EmployeeID?: number;
-    EmployeeInterface?: EmployeeInterface;
-    LeaveTypeID?: number;
-    LeaveTypeInterface?: LeaveTypeInterface;
+    UserSerial?: number;
+    LeaveType?: string;
     StartDate?:  string | null;
     StartTime?:  number | null;
 	StopDate?:    string | null;
 	StopTime?:    number | null;
     CountL?: number | null
-    ManagerID?: number;
-    ManagerInterface?: ManagerInterface;
     Status?: string;
-    DepartmentID?: number;
-    DepartmentInterface?: DepartmentInterface;
+    DepID?: number;
+    
 }
 
 export interface Leave1Interface{
     ID?: number;
-    DepID: number;
-    EmpEmail: string;
-    ManEmail: string;
+    Name: string;
+    Email: string; 
     TypeName?: string;
-    EmpName?: string;
-    ManName?: string;
+    ManEmail: string;
     StartDate?:  string | null;
     StartTime?:  number | null;
 	StopDate?:    string | null;
@@ -59,4 +52,18 @@ export interface Leave3Interface{
     ManName?: string;
     Status?: string;
     DepName?: number;
+}
+export interface LeavesInterface{
+    ID?: number;
+    UserLname: string;
+    DepName: string;
+    DepMail: string; 
+    LeaveType?: string;
+    ManagerMail: string;
+    StartDate?:  string | null;
+    StartTime?:  number | null;
+	StopDate?:    string | null;
+	StopTime?:    number | null;
+    Status?: string;
+    
 }

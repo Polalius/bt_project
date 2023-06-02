@@ -8,8 +8,7 @@ import { LeaveInterface } from "../../models/ILeave";
 import { GetEmployeeID, GetLeaveListByID, GetManagerID, GetSwitchByID, UpdateLeaveList, UpdateSwitch } from "../../services/HttpClientService";
 import React from "react";
 import { SwitchInterface } from "../../models/ISwitch";
-import { EmployeeInterface } from "../../models/IEmployee";
-import { ManagerInterface } from "../../models/IManager";
+
 import axios from "axios";
 const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(
   props,
@@ -18,7 +17,7 @@ const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
 });
 export default function SwitchApprove(props: any){
-    const { params, EmpEmail, ManEmail } = props;
+    const { params} = props;
     const [open, setOpen] = useState(false);
     const [alertmessage, setAlertMessage] = useState("");
     const [success, setSuccess] = useState(false);
@@ -51,8 +50,8 @@ export default function SwitchApprove(props: any){
     async function approve() {
         try {let data = {
             ID: params,
-            EmployeeID: leavelist?.EmployeeID,
-            ManagerID: leavelist?.ManagerID,
+            UserSerial: leavelist?.UserSerial,
+            DepID: leavelist?.DepID,
             LeaveDay: leavelist?.LeaveDay,
             ToTime: leavelist?.ToTime,
             WorkDay: leavelist?.WorkDay,
@@ -74,8 +73,8 @@ export default function SwitchApprove(props: any){
         try {
         let data = {
             ID: params,
-            EmployeeID: leavelist?.EmployeeID,
-            ManagerID: leavelist?.ManagerID,
+            UserSerial: leavelist?.UserSerial,
+            DepID: leavelist?.DepID,
             LeaveDay: leavelist?.LeaveDay,
             ToTime: leavelist?.ToTime,
             WorkDay: leavelist?.WorkDay,
@@ -87,7 +86,7 @@ export default function SwitchApprove(props: any){
         setTimeout(() => {
           window.location.reload();
         }, 800);
-        // mail();
+        
     } catch (err) {
       setError(true);
       console.log(err);
@@ -96,23 +95,6 @@ export default function SwitchApprove(props: any){
     useEffect(() => {
             getSwitchByID(params);
         }, []);
-        async function mail() {
-          let data = {
-              email:  ManEmail,
-              password: "gplilgnlhvmsiedr",
-              empemail: EmpEmail
-          };
-          console.log(data)
-          axios.post('http://localhost:8080/mail2', data)
-        .then(response => {
-          console.log(response.data);
-          // ทำสิ่งที่คุณต้องการเมื่อส่งอีเมลสำเร็จ
-        })
-        .catch(error => {
-          console.error(error);
-          // ทำสิ่งที่คุณต้องการเมื่อเกิดข้อผิดพลาดในการส่งอีเมล
-        });
-      }
     return (
         <div>
       <IconButton

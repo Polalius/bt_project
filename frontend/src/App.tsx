@@ -8,7 +8,6 @@ import { Box } from '@mui/system';
 
 import Signin from './components/Signin';
 import Navbar from './components/NavBar';
-import Home from './components/Home';
 import Form from './components/Employee/form';
 import EmployeeShow from './components/Employee/show';
 import ManagerShow from './components/Manager/show';
@@ -60,7 +59,7 @@ function App() {
     
     if (token) {
       setToken(token)
-      setRole(localStorage.getItem("role") || "")
+      setRole(localStorage.getItem("position") || "")
       // validToken()
     }
 
@@ -70,11 +69,11 @@ function App() {
     <div>
         <ThemeProvider theme={theme}>
           <>
-            {token && role === "employee" ? (
+            {token && role === "0" ? (
               <RouterEmployee />
-            ) : token && role === "manager" ? (
+            ) : token && role === "1" ? (
               <RouterManager/>
-            ) : token && role === "payroll" ? (
+            ) : token && role === "2" ? (
               <RouterAdmin/>
             ) : (
               <Signin/>

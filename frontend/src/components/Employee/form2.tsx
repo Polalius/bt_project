@@ -13,13 +13,11 @@ import { DatePicker, DateTimePicker, LocalizationProvider, TimeField, TimePicker
 
 
 import { LeaveInterface, LeaveTypeInterface } from "../../models/ILeave";
-import { EmployeeInterface } from "../../models/IEmployee";
-import { ManagerInterface } from "../../models/IManager";
-import { DepartmentInterface } from "../../models/IDepartmemt";
 
-import { CreateLeavaList, CreateSwitchLeave, GetDepartmentID, GetEmployeeID, GetManagerID, ListLeaveType } from "../../services/HttpClientService";
+import { CreateLeavaList, CreateSwitchLeave, GetDepartmentID, GetEmployeeID, GetEmployeeID1, GetManagerID, ListLeaveType } from "../../services/HttpClientService";
 import { SwitchInterface } from "../../models/ISwitch";
 import axios from "axios";
+import { User1Interface } from "../../models/ISignin";
 
 
 dayjs.extend(utc);
@@ -29,9 +27,6 @@ const Alert = forwardRef<HTMLDivElement, AlertProps>(function Alert(props,ref,) 
 
 function Form2() {
     const [leavelist, setLeavelist] = useState<Partial<SwitchInterface>>({});
-    const [emp, setEmp] = useState<EmployeeInterface>();
-    const [man, setMan] = useState<ManagerInterface>();
-    const [depart, setDepart] = useState<DepartmentInterface>();
     const [leave, setLeave] = useState<string>('');
     const [work, setWork] = useState<string>('');
     const [ftime, setFtime] = React.useState<number | null>(null);
@@ -39,7 +34,7 @@ function Form2() {
     const [success, setSuccess] = useState(false);
     const [error, setError] = useState(false);
     const [message, setAlertMessage] = useState("");
-    
+    const [user ,setUser] = useState<User1Interface>();
 
     const handleDateChange = (newValue: Date | null) => {
         if (newValue !== null) {
@@ -89,26 +84,6 @@ function Form2() {
     }
   };
       
-    const getEmployeeID = async (id:any) => {
-        let res = await GetEmployeeID(id);
-        if (res){
-            setEmp(res)
-        }
-    }
-
-    const getManagerID = async (id:any) => {
-        let res = await GetManagerID(id);
-        if (res){
-            setMan(res)
-        }
-    }
-    const getDepartmentID = async (id:any) => {
-        let res = await GetDepartmentID(id);
-        if (res){
-            setDepart(res)
-            console.log(res)
-        }
-    }
 
 
     const convertType = (data: string | number | undefined | null) => {
@@ -142,17 +117,22 @@ function Form2() {
             [name]: event.target.value,
         });
     };
-
+    const getEmployeeID = async (id:any) => {
+        let res = await GetEmployeeID1(id);
+        if (res){
+            setUser(res)
+        }
+    }
+    const uid = localStorage.getItem("user_serial") || "";
+    const dep_id = localStorage.getItem("dep_id") || "";
     useEffect(()=>{
-        getEmployeeID(JSON.parse(localStorage.getItem("uid") || ""));
-        getManagerID(JSON.parse(localStorage.getItem("did") || ""));
-        getDepartmentID(JSON.parse(localStorage.getItem("did") || ""))
+        getEmployeeID(JSON.parse(uid));
     }, []);
     async function mail() {
         let data = {
-            email:  emp?.Email,
+            email:  user?.DepMail,
             password: "utsbbxeslywlnzdn",
-            manemail: man?.Email
+            manemail: user?.ManagerMail
         };
         console.log(data)
         axios.post('http://localhost:8080/mail', data)
@@ -167,14 +147,13 @@ function Form2() {
     }
     async function submit(){
         let data = {
-            EmployeeID: convertType(emp?.ID) ?? 0,
+            UserSerial: convertType(user?.UserSerial) ?? 0,
             LeaveDay: reverseDate(leave),
             FromTime: ftime,
             ToTime: ttime,
             Count: Count(ftime,ttime),
             WorkDay: reverseDate(work),
-            ManagerID: convertType(man?.ID) ?? 0,
-            DepartmentID: convertType(depart?.ID) ?? 0,
+            DepID: convertType(dep_id) ?? 0,
             Status: "pending approval",
         }
         console.log(data)
@@ -182,7 +161,7 @@ function Form2() {
         
         if (res.status) {
             setTimeout(() => {
-                window.location.href = "/switchshow";
+                window.location.href = "/รายการสลับวันลา";
               }, 1200);
             setAlertMessage("บันทึกข้อมูลสำเร็จ");
             setSuccess(true);
@@ -248,10 +227,9 @@ function Form2() {
                     <Grid item xs={3}></Grid>
                     <Grid item xs={2.5}></Grid>
                 <Grid container spacing={{ xs: 12, md: 5 }}>
-                    <Grid item xs={12}><Typography align="left" textTransform="capitalize">ชื่อ-นามสกุล:{" "+emp?.EmpName}</Typography></Grid>
-                    <Grid item xs={12}><Typography align="left" textTransform="capitalize">Email:{" "+ emp?.Email}</Typography></Grid>
-                    <Grid item xs={12}><Typography align="left" textTransform="capitalize">แผนก:{" "+depart?.DepName}</Typography></Grid>
-                    <Grid item xs={12}><Typography align="left" textTransform="capitalize">ผู้จัดการแผนก:{man?.ManName}</Typography></Grid>
+                    <Grid item xs={12}><Typography align="left" textTransform="capitalize">ชื่อ-นามสกุล:{" "+user?.UserLname}</Typography></Grid>
+                    <Grid item xs={12}><Typography align="left" textTransform="capitalize">Email:{" "+ user?.DepMail}</Typography></Grid>
+                    <Grid item xs={12}><Typography align="left" textTransform="capitalize">แผนก:{" "+user?.DepName}</Typography></Grid>
                     
                     
                     <LocalizationProvider dateAdapter={AdapterDateFns}>

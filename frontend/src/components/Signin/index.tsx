@@ -27,6 +27,7 @@ export default function Signin(){
         const { value } = event.target; //value will collect value attribute
 
         setSignin({ ...signin, [id]: value })
+        console.log(signin)
     }
     
 
@@ -37,17 +38,17 @@ export default function Signin(){
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(signin)
         }
-
+        console.log(signin)
         fetch(apiUrl, requestOptions)
             .then((res) => res.json())
             .then((res) => {
                 if (res.data) {
                     setSuccess(true);
                     localStorage.setItem("token", res.data.Token)
-                    localStorage.setItem("uid", res.data.user_id)
-                    localStorage.setItem("pid", res.data.p_id)
-                    localStorage.setItem("role", res.data.role_name)
-                    localStorage.setItem("did", res.data.did)
+                    localStorage.setItem("user_serial", res.data.user_serial)
+                    localStorage.setItem("position", res.data.position)
+                    localStorage.setItem("dep_id", res.data.dep_id)
+                    
                     window.location.reload()
                 } else {
                     setError(true)

@@ -8,8 +8,10 @@ require (
 	github.com/gin-gonic/gin v1.9.0
 	golang.org/x/crypto v0.7.0
 	gorm.io/driver/sqlite v1.4.4
-	gorm.io/gorm v1.24.6
+	gorm.io/gorm v1.25.1
 )
+
+require github.com/go-sql-driver/mysql v1.7.0 // indirect
 
 require (
 	github.com/bytedance/sonic v1.8.6 // indirect
@@ -39,4 +41,5 @@ require (
 	golang.org/x/text v0.8.0 // indirect
 	google.golang.org/protobuf v1.30.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
+	gorm.io/driver/mysql v1.5.1
 )

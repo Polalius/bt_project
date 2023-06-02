@@ -1,21 +1,16 @@
-import { DepartmentInterface } from "./IDepartmemt";
-import { EmployeeInterface } from "./IEmployee";
-import { ManagerInterface } from "./IManager";
+import { UserInterface } from "./ISignin";
 
 export interface SwitchInterface{
     ID?: number;
-    EmployeeID?: number;
-    EmployeeInterface?: EmployeeInterface;
+    UserSerial?: number;
     LeaveDay?:    string | null;
     FromTime?: number | null;
     ToTime?: number | null;
     Count?: number | null;
     WorkDay?: string | null;
-    ManagerID?: number;
-    ManagerInterface?: ManagerInterface;
     Status?: string;
-    DepartmentID?: number;
-    DepartmentInterface?: DepartmentInterface;
+    DepID?: number;
+
 }
 export interface Switch1Interface{
     ID?: number;
@@ -31,4 +26,17 @@ export interface Switch1Interface{
     ManName?: string;
     Status?: string;
     DepName?: number;
+}
+export interface SwitchsInterface{
+    ID?: number;
+    UserLname: string;
+    DepName: string;
+    DepMail: string;
+    ManagerMail: string; 
+    LeaveDay?:    string | null;
+    FromTime?:number | null;
+    ToTime?: number | null;
+    Count?: number | null;
+    WorkDay?:  string | null;
+    Status?: string;   
 }

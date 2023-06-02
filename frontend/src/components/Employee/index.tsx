@@ -2,7 +2,7 @@ import { Box, Button, Card, CardActionArea, CardMedia, Grid, Typography } from '
 import { Container } from '@mui/system'
 import React from 'react'
 import { Link as RouterLink } from "react-router-dom";
-export default function EmpHome({role} : any) {
+export default function Home({role} : any) {
   return (
     <Container>
         <Grid container spacing={3}>

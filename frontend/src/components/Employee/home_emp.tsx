@@ -5,11 +5,12 @@ import { Link as RouterLink } from "react-router-dom";
 import './home_emp.css'
 
 import { blueGrey } from '@mui/material/colors';
-import { CountL1, CountL2, CountL3, CountSW, GetEmployeeID1, GetManagerID1, ListLeaveByEID, ListSwitchByEID, ListSwitchByEmpID } from '../../services/HttpClientService';
-import { User1Interface } from '../../models/ISignin';
-import { Leave1Interface, LeaveInterface } from '../../models/ILeave';
+import { CountL1, CountL2, CountL3, CountSW, GetEmployeeID1, GetManagerID1, ListLeaveByEID, ListSwitchByEID, ListSwitchByEmpID, ListSwitchByEmpID1 } from '../../services/HttpClientService';
+import { User1Interface, UserInterface } from '../../models/ISignin';
+import { Leave1Interface, LeaveInterface, LeavesInterface } from '../../models/ILeave';
 import moment from 'moment';
-import { Switch1Interface } from '../../models/ISwitch';
+import { Switch1Interface, SwitchsInterface } from '../../models/ISwitch';
+import Approve from '../Manager/approve';
 let theme = createTheme();
 export default function HomeEmp() {
   const [user ,setUser] = useState<User1Interface>();
@@ -17,8 +18,8 @@ export default function HomeEmp() {
   const [co1, setCo1] = useState<number | null>(0);
   const [co2, setCo2] = useState<number | null>(0);
   const [co3, setCo3] = useState<number | null>(0);
-  const [leavelist, setLeavelist] = useState<Leave1Interface[]>([])
-  const [switcht, setSwitch] = useState<Switch1Interface[]>([])
+  const [leavelist, setLeavelist] = useState<LeavesInterface[]>([])
+  const [switcht, setSwitch] = useState<SwitchsInterface[]>([])
   const getLeaveList = async (id:any) => {
     let res = await ListLeaveByEID(id);
     if (res.data) {
@@ -28,7 +29,7 @@ export default function HomeEmp() {
     console.log(res.data)
 };
 const getSwitch = async (id:any) => {
-    let res = await ListSwitchByEID(id);
+    let res = await ListSwitchByEmpID1(id);
     if (res.data) {
         setSwitch(res.data);
     }
@@ -91,7 +92,7 @@ function formatMinutesToTime(minutes: any) {
         console.log(res)
     }
   }
-  const uid = localStorage.getItem("uid") || "";
+  const uid = localStorage.getItem("user_serial") || "";
   
   useEffect(() => {
         getEmployeeID(uid);
@@ -99,8 +100,8 @@ function formatMinutesToTime(minutes: any) {
         getCount1(uid)
         getCount2(uid)
         getCount3(uid)
-        getLeaveList(JSON.parse(localStorage.getItem("pid") || ""))
-        getSwitch(JSON.parse(localStorage.getItem("pid") || ""))
+        getLeaveList(JSON.parse(uid))
+        getSwitch(JSON.parse(uid))
   }, []);
   return (
     <Container maxWidth='xl' sx={{bgcolor:'#FFF', height: '91vh'}} >
@@ -120,7 +121,7 @@ function formatMinutesToTime(minutes: any) {
               color="primary"
               sx={{ borderRadius: 20, '&:hover': { color: '#065D95', backgroundColor: '#e3f2fd' } }}
               component={RouterLink}
-              to="/show"
+              to="/รายการลางาน"
             >
               ระบบลางาน
             </Button>
@@ -165,22 +166,23 @@ function formatMinutesToTime(minutes: any) {
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {leavelist.map((item: Leave1Interface) => (
+                  {leavelist.map((item: LeavesInterface) => (
                     <TableRow>
-                      <TableCell>{item.EmpName}</TableCell>
-                      <TableCell>{item.TypeName}</TableCell>
+                      <TableCell>{item.UserLname}</TableCell>
+                      <TableCell>{item.LeaveType}</TableCell>
                       <TableCell>{item.StartDate}</TableCell>
                       <TableCell>{formatMinutesToTime(item.StartTime)}</TableCell>
                       <TableCell>{item.StopDate}</TableCell>
                       <TableCell>{formatMinutesToTime(item.StopTime)}</TableCell>
                       <TableCell>{item.Status}</TableCell>
+                      
                     </TableRow>
                   ))}
                 </TableBody>
               </Table>
             </TableContainer>
             <Button component={RouterLink}
-              to="/switchshow"
+              to="/รายการสลับวันลา"
               variant="contained"
               color="primary"
               sx={{ borderRadius: 20, '&:hover': { color: '#065D95', backgroundColor: '#e3f2fd' } }}
@@ -213,9 +215,9 @@ function formatMinutesToTime(minutes: any) {
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {switcht.map((item: Switch1Interface) => (
+                  {switcht.map((item: SwitchsInterface) => (
                     <TableRow>
-                      <TableCell>{item.EmpName}</TableCell>
+                      <TableCell>{item.UserLname}</TableCell>
                       <TableCell>{item.LeaveDay}</TableCell>
                       <TableCell>{formatMinutesToTime(item.FromTime)}</TableCell>
                       <TableCell>{formatMinutesToTime(item.ToTime)}</TableCell>
@@ -231,11 +233,9 @@ function formatMinutesToTime(minutes: any) {
         <Grid item xs={4}>
           <Paper elevation={3} sx={{bgcolor:'#FFF', height: '60vh'}} className='righte' >
                 <h1>Profile</h1>
-                <h3 className='h3'>ชื่อ: {user?.Name}</h3>
-                <h3 >email: {user?.Email}</h3>
-                <h3 className='h3'>User name: {user?.User}</h3>
-                <h3 className='h3'>role: {user?.Role}</h3>
-                <h3 className='h3'>แผนก: {user?.Department}</h3>
+                <h3 className='h3'>ชื่อ: {user?.UserLname}</h3>
+                <h3 className='h3'>User name: {user?.UserName}</h3>
+                <h3 className='h3'>แผนก: {user?.DepName}</h3>
             </Paper>
         </Grid>
       </Grid>

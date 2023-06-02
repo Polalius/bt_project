@@ -6,27 +6,34 @@ import (
 )
 
 type SwitchLeave struct {
-	gorm.Model
-	EmployeeID   	*uint
-	Employee     	Employee	`gorm:"references:id" valid:"-"`
+	ID				uint
+	UserSerial  	uint
+	DepID       	uint
 	LeaveDay    	string		`valid:"required~กรุณาเลือกวันที่สลับวันลา"`
 	FromTime		int			`valid:"required~กรุณาเลือกเวลา"`
 	ToTime			int			`valid:"required~กรุณาเลือกเวลา"`
 	Count			int
 	WorkDay   		string		`valid:"required~กรุณาเลือกวันทำงาน"`
-	ManagerID		*uint
-	Manager			Manager		`gorm:"references:id" valid:"-"`
-	DepartmentID 	*uint
-	Department		Department	`gorm:"references:id" valid:"-"`
+	Status       	string
+}
+type SwitchLeaves struct {
+	ID				uint
+	UserSerial  	uint
+	UserLname		string
+	DepID       	uint
+	DepName			string
+	LeaveDay    	string		`valid:"required~กรุณาเลือกวันที่สลับวันลา"`
+	FromTime		int			`valid:"required~กรุณาเลือกเวลา"`
+	ToTime			int			`valid:"required~กรุณาเลือกเวลา"`
+	Count			int
+	WorkDay   		string		`valid:"required~กรุณาเลือกวันทำงาน"`
 	Status       	string
 }
 type SwitchLeave1 struct {
 	gorm.Model
-	EmployeeID   	*uint
-	Employee     	Employee	`gorm:"references:id" valid:"-"`
-	ManagerID		*uint
-	Manager			Manager		`gorm:"references:id" valid:"-"`
-	DepartmentID 	*uint
-	Department		Department	`gorm:"references:id" valid:"-"`
+	UserID   		*uint
+	DepartmentName 	*string
+	User    		User	`gorm:"references:id" valid:"-"`
+	
 	Status       	string
 }

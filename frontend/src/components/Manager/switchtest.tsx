@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import * as ExcelJS from 'exceljs';
-import { Switch1Interface } from '../../models/ISwitch';
+import { Switch1Interface, SwitchsInterface } from '../../models/ISwitch';
 import { ListSwitchByDepIDnSNWait, ListSwitchWait } from '../../services/HttpClientService';
 import './test.css';
 import * as XLSX from 'xlsx';
@@ -27,7 +27,7 @@ const MyTable = () => {
   
     return `${formattedHours}:${formattedMins}`; // ส่งค่าเวลาในรูปแบบ "HH:mm น."
   };
-  const [switchs, setSwitch] = useState<Switch1Interface[]>([])
+  const [switchs, setSwitch] = useState<SwitchsInterface[]>([])
     const getSwitch = async (id:any) => {
         let res = await ListSwitchByDepIDnSNWait(id);
         if (res.data) {
@@ -42,7 +42,7 @@ const MyTable = () => {
   }
     useEffect(() => {    
         
-        getSwitch(JSON.parse(localStorage.getItem("did") || ""))
+        getSwitch(JSON.parse(localStorage.getItem("dep_id") || ""))
         
     }, []);
   const handleExportExcel = () => {
@@ -59,26 +59,26 @@ const MyTable = () => {
     });
     // เพิ่มหัวข้อตาราง
     worksheet.columns = [
-      { header: 'พนักงาน', key: 'EmpName', width: 15 },
+      { header: 'พนักงาน', key: 'UserLname', width: 15 },
       { header: 'วันที่สลับ', key: 'LeaveDay', width: 20 },
       { header: 'จากเวลา', key: 'FromTime', width: 20 },
       { header: 'ถึงเวลา', key: 'ToTime', width: 20 },
       { header: 'วันที่มาทำงาน', key: 'WorkDay', width: 20 },
-      { header: 'ผู้จัดการ', key: 'ManName', width: 15 },
+      { header: 'แผนก/ฝ่าย', key: 'DepName', width: 15 },
       { header: 'สถานะ', key: 'Status', width: 20 }
     ];
 
     // เพิ่มข้อมูลลงในตาราง
     filteredSwitchs.forEach(row => {
       console.log(row);
-      const { EmpName, LeaveDay, FromTime, ToTime, WorkDay, ManName, Status } = row;
+      const { UserLname, LeaveDay, FromTime, ToTime, WorkDay, DepName, Status } = row;
       worksheet.addRow({
-        EmpName,
+        UserLname,
         LeaveDay,
         FromTime: FromTime ? formatTime(FromTime):null,
         ToTime: ToTime ? formatTime(ToTime): null,
         WorkDay,
-        ManName,
+        DepName,
         Status
       });
     });
@@ -90,7 +90,7 @@ const MyTable = () => {
         const url = URL.createObjectURL(blob);
         const link = document.createElement('a');
         link.href = url;
-        link.download = 'my-workbook.xlsx';
+        link.download = 'switch-list.xlsx';
         link.click();
         URL.revokeObjectURL(url);
       })
@@ -141,7 +141,7 @@ const MyTable = () => {
             <th>จากเวลา</th>
             <th>ถึงเวลา</th>
             <th>วันที่มาทำงาน</th>
-            <th>ผู้จัดการ</th>
+            <th>แผนก/ฝ่าย</th>
             <th>สถานะ</th>
           </tr>
         </thead>
@@ -156,12 +156,12 @@ const MyTable = () => {
         return true;
       }).map((row, index) => (
             <tr key={index}>
-              <td>{row.EmpName}</td>
+              <td>{row.UserLname}</td>
               <td>{row.LeaveDay}</td>
               <td>{row.FromTime ? formatTime(row.FromTime) : ''}</td>
               <td>{row.ToTime ? formatTime(row.ToTime) : ''}</td>
               <td>{row.WorkDay }</td>
-              <td>{row.ManName}</td>
+              <td>{row.DepName}</td>
               <td>{row.Status}</td>
             </tr>
           ))}

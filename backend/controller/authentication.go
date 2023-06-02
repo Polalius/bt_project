@@ -18,27 +18,17 @@ type LoginPayload struct {
 	Password string `json:"password"`
 }
 
-type EmployeeResponse struct {
-	Token    string
-	UserID   uint   `json:"user_id"`
-	EmpID    uint   `json:"p_id"`
-	RoleName string `json:"role_name"`
-	DepID  	uint	`json:"did"`
+type UserResponse struct {
+	Token    	string	`json:"token"`
+	UserSerial  uint   	`json:"user_serial"`
+	DepID 		uint 	`json:"dep_id"`
+	Position 	int 	`json:"position"`
 }
-type ManagerResponse struct {
-	Token    string
-	UserID   uint   `json:"user_id"`
-	ManID    uint   `json:"p_id"`
-	RoleName string `json:"role_name"`
-	DepID  	uint	`json:"did"`
-}
-
 // POST /signin
 func Signin(c *gin.Context) {
 	var payload LoginPayload
-	var login entity.User
-	var role entity.Role
-	var dep entity.Department
+	var login entity.UserAuthen
+	var dep		entity.Department
 
 	if err := c.ShouldBindJSON(&payload); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
@@ -46,86 +36,40 @@ func Signin(c *gin.Context) {
 	}
 
 	//ค้นหา login ด้วย Username ที่ผู้ใช้กรอกมา
-	if err := entity.DB().Raw("SELECT * FROM users WHERE user_name = ?", payload.User).Scan(&login).Error; err != nil {
+	if err := entity.DB().Raw("SELECT * FROM user_authens WHERE user_name = ?", payload.User).Scan(&login).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
-
+	
 	//ตรวจสอบ Password
 	err := services.VerifyPassword(login.Password, payload.Password)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "invalid user credentials"})
 		return
 	}
-
-	//ค้นหา Role ด้วย role_id
-	if err := entity.DB().Raw("SELECT * FROM roles WHERE id = ?", login.RoleID).Scan(&role).Error; err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
-	}
 	//ค้นหา Department ด้วย did
-	if err := entity.DB().Raw("SELECT * FROM departments WHERE id = ?", login.DepartmentID).Scan(&dep).Error; err != nil {
+	if err := entity.DB().Raw("SELECT * FROM departments WHERE dep_id = ?", login.DepID).Scan(&dep).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
-
 	jwtWrapper := services.JwtWrapper{
 		SecretKey:      "Secret",
 		Issuer:         "AuthService",
 		ExpirationHour: 24,
 	}
 
-	signedToken, err := jwtWrapper.GenerateToken(login.ID, role.Name)
+	signedToken, err := jwtWrapper.GenerateToken(login.UserSerial, login.Position)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "error signing token"})
 		return
 	}
-	if role.Name == "employee"{
-		var emp entity.Employee
-		if tx := entity.DB().
-			Raw("SELECT * FROM employees WHERE user_id = ?", login.ID).Find(&emp); tx.RowsAffected == 0 {
-			c.JSON(http.StatusBadRequest, gin.H{"error": "employees not found"})
-			return
-		}
-		tokenResponse := EmployeeResponse{
+		tokenResponse := UserResponse{
 			Token:    signedToken,
-			UserID:   login.ID,
-			EmpID: emp.ID,
-			RoleName: role.Name,
-			DepID: dep.ID,
+			UserSerial:  login.UserSerial,
+			DepID: dep.DepID,
+			Position: login.Position,
 		}
 		c.JSON(http.StatusOK, gin.H{"data": tokenResponse})
-	}else if role.Name == "manager"{
-		var man entity.Manager
-		if tx := entity.DB().
-			Raw("SELECT * FROM managers WHERE user_id = ?", login.ID).Find(&man); tx.RowsAffected == 0 {
-			c.JSON(http.StatusBadRequest, gin.H{"error": "managers not found"})
-			return
-		}
-		tokenResponse := ManagerResponse{
-			Token:    signedToken,
-			UserID:   login.ID,
-			ManID: man.ID,
-			RoleName: role.Name,
-			DepID: dep.ID,
-		}
-		c.JSON(http.StatusOK, gin.H{"data": tokenResponse})
-	}else if role.Name == "payroll"{
-		var pay entity.Manager
-		if tx := entity.DB().
-			Raw("SELECT * FROM managers WHERE user_id = ?", login.ID).Find(&pay); tx.RowsAffected == 0 {
-			c.JSON(http.StatusBadRequest, gin.H{"error": "payroll not found"})
-			return
-		}
-		tokenResponse := ManagerResponse{
-			Token:    signedToken,
-			UserID:   login.ID,
-			ManID: pay.ID,
-			RoleName: role.Name,
-			DepID: dep.ID,
-		}
-		c.JSON(http.StatusOK, gin.H{"data": tokenResponse})
-	}
 	
 }
 

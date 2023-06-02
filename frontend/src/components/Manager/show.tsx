@@ -5,14 +5,14 @@ import { Box, Button, Container, IconButton, Paper, Typography } from '@mui/mate
 import { DataGrid, GridColDef, GridRenderCellParams, GridToolbarFilterButton} from '@mui/x-data-grid';
 import EditIcon from '@mui/icons-material/Edit';
 
-import { Leave1Interface, LeaveInterface } from '../../models/ILeave';
+import { Leave1Interface, LeaveInterface, LeavesInterface } from '../../models/ILeave';
 import { ListLeaveWait } from '../../services/HttpClientService';
 import Approve from './approve';
 import moment from 'moment';
 
 function ManagerShow(){
     
-    const [leavelist, setLeavelist] = useState<Leave1Interface[]>([])
+    const [leavelist, setLeavelist] = useState<LeavesInterface[]>([])
     const getLeaveList = async (id:any) => {
         let res = await ListLeaveWait(id);
         if (res.data) {
@@ -37,22 +37,22 @@ function ManagerShow(){
       }
     useEffect(() => {    
         
-        getLeaveList(JSON.parse(localStorage.getItem("did") || ""))
+        getLeaveList(JSON.parse(localStorage.getItem("dep_id") || ""))
     }, []);
 
     const columns: GridColDef[] = [
         { field: "EmpName", headerName: "ชื่อ-นามสกุล",type:"string", width: 120, headerAlign: "center", align: "center", renderCell: (params: GridRenderCellParams<any>) => {
-            return <>{params.row.EmpName}</>},
+            return <>{params.row.UserLname}</>},
         },
         { field: "TypeName", headerName: "ประเภทการลา",type:"string", width: 150, headerAlign: "center", align: "center", renderCell: (params: GridRenderCellParams<any>) => {
-            return <>{params.row.TypeName}</>;
+            return <>{params.row.LeaveType}</>;
           },},
         { field: "StartDate", headerName: "ลาวันที่",type:"date", width: 120, headerAlign: "center", align: "center", valueFormatter: (params) => moment(parseDateString(params?.value)).format("MM/DD/YYYY")},
         { field: "StartTime", headerName: "เวลา",type:"time", width: 100, headerAlign: "center", align: "center", valueFormatter: (params) => formatMinutesToTime(params?.value as number)},
         { field: "StopDate", headerName: "ถึงวันที่",type:"date", width: 120, headerAlign: "center", align: "center", valueFormatter: (params) => params?.value },
         { field: "StopTime", headerName: "เวลา",type:"time", width: 100, headerAlign: "center", align: "center", valueFormatter: (params) => formatMinutesToTime(params?.value as number)},
-          { field: "ManName", headerName: "ผู้จัดการ",type:"string", width: 150, headerAlign: "center", align: "center", renderCell: (params: GridRenderCellParams<any>) => {
-            return <>{params.row.ManName}</>;
+          { field: "ManName", headerName: "แผนก/ฝ่าย",type:"string", width: 150, headerAlign: "center", align: "center", renderCell: (params: GridRenderCellParams<any>) => {
+            return <>{params.row.DepName}</>;
           }, },
           {
             field: "Status",
@@ -61,7 +61,7 @@ function ManagerShow(){
             width: 85,
             renderCell: (params: GridRenderCellParams<any>) => {
                 <EditIcon />
-              return <Approve params={params.row.ID} EmpEmail={params.row.EmpEmail} ManEmail={params.row.ManEmail}/>;
+              return <Approve params={params.row.ID}/>;
             },
             sortable: false,
             description: "Status",
@@ -102,6 +102,7 @@ function ManagerShow(){
                             color="primary"
                             sx={{ fontWeight: 'bold' }}
                             gutterBottom
+                            align='center'
                         >
                             รายการคำร้องขอลา
                         </Typography>

@@ -1,15 +1,17 @@
-import { Button, Grid, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Typography, createTheme } from '@mui/material'
+import { Badge, Button, Grid, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Typography, createTheme } from '@mui/material'
 import { Container } from '@mui/system'
 import { useEffect, useState } from 'react'
 import { Link as RouterLink } from "react-router-dom";
 
 
 import { blueGrey } from '@mui/material/colors';
-import { CountL1, CountL2, CountL3, CountSW, GetEmployeeID1, GetManagerID1, ListLeaveByEID, ListSwitchByEID, ListSwitchByEmpID } from '../../services/HttpClientService';
+import { CountL1, CountL2, CountL3, CountL4, CountSW, CountSW2, GetEmployeeID1, GetManagerID1, ListLeaveByEID, ListSwitchByEID, ListSwitchByEmpID, ListSwitchByEmpID1 } from '../../services/HttpClientService';
 import { User1Interface } from '../../models/ISignin';
-import { Leave1Interface, LeaveInterface } from '../../models/ILeave';
+import { Leave1Interface, LeaveInterface, LeavesInterface } from '../../models/ILeave';
 import moment from 'moment';
-import { Switch1Interface } from '../../models/ISwitch';
+import { Switch1Interface, SwitchsInterface } from '../../models/ISwitch';
+import HourglassBottomTwoToneIcon from '@mui/icons-material/HourglassBottomTwoTone';
+import Approve from './approve';
 let theme = createTheme();
 export default function HomeMan() {
   const [user ,setUser] = useState<User1Interface>();
@@ -17,8 +19,15 @@ export default function HomeMan() {
   const [co1, setCo1] = useState<number | null>(0);
   const [co2, setCo2] = useState<number | null>(0);
   const [co3, setCo3] = useState<number | null>(0);
-  const [leavelist, setLeavelist] = useState<Leave1Interface[]>([])
-  const [switcht, setSwitch] = useState<Switch1Interface[]>([])
+  const [co4, setCo4] = useState<number | null>(0);
+  const [co5, setCo5] = useState<number | null>(0);
+  const [leavelist, setLeavelist] = useState<LeavesInterface[]>([])
+  const [switcht, setSwitch] = useState<SwitchsInterface[]>([])
+  const [isApproved, setIsApproved] = useState(false);
+
+  const handleApproveClick = () => {
+    setIsApproved(true);
+  };
   const getLeaveList = async (id:any) => {
     let res = await ListLeaveByEID(id);
     if (res.data) {
@@ -28,7 +37,7 @@ export default function HomeMan() {
     console.log(res.data)
 };
 const getSwitch = async (id:any) => {
-    let res = await ListSwitchByEID(id);
+    let res = await ListSwitchByEmpID1(id);
     if (res.data) {
         setSwitch(res.data);
     }
@@ -84,6 +93,22 @@ function formatMinutesToTime(minutes: any) {
       
     }
   }
+  const getCount4 =async (id:any) => {
+    let res = await CountL4(id);
+    if (res){
+      console.log(res)
+      setCo4(res)
+      
+    }
+  }
+  const getCount5 =async (id:any) => {
+    let res = await CountSW2(id);
+    if (res){
+      console.log(res)
+      setCo5(res)
+      
+    }
+  }
   const getEmployeeID = async (id:any) => {
     let res = await GetEmployeeID1(id);
     if (res){
@@ -91,16 +116,18 @@ function formatMinutesToTime(minutes: any) {
         console.log(res)
     }
   }
-  const uid = localStorage.getItem("uid") || "";
-  
+  const uid = localStorage.getItem("user_serial") || "";
+  const dep_id = localStorage.getItem("dep_id") || "";
   useEffect(() => {
         getEmployeeID(uid);
         getCount(uid);
         getCount1(uid)
         getCount2(uid)
         getCount3(uid)
-        getLeaveList(JSON.parse(localStorage.getItem("pid") || ""))
-        getSwitch(JSON.parse(localStorage.getItem("pid") || ""))
+        getCount4(dep_id)
+        getCount5(dep_id)
+        getLeaveList(JSON.parse(uid))
+        getSwitch(JSON.parse(uid))
   }, []);
   return (
     <Container maxWidth='xl' sx={{bgcolor:'#FFF', height: '91vh'}} >
@@ -141,6 +168,7 @@ function formatMinutesToTime(minutes: any) {
             <Typography marginTop={1}>พนักงานลาทั้งหมด: {formatMinutesToDate(co1)}</Typography>
             </Grid>
             <Grid item xs={4}>
+              <Badge badgeContent={co4} color="warning">
             <Button 
               variant="contained"
               className='bte'
@@ -150,8 +178,8 @@ function formatMinutesToTime(minutes: any) {
               to="/รายการคำร้องขอลา"
             >
               อนุมัติลางาน
-            </Button>
-                
+            </Button></Badge>
+            <Typography marginTop={1}>รายการรออนุมัติ: {co4} รายการ</Typography>    
             </Grid>
             </Grid>
             <TableContainer component={Paper} sx={{width: 'auto', margin: 2}}>
@@ -182,15 +210,16 @@ function formatMinutesToTime(minutes: any) {
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {leavelist.map((item: Leave1Interface) => (
+                  {leavelist.map((item: LeavesInterface) => (
                     <TableRow>
-                      <TableCell>{item.EmpName}</TableCell>
-                      <TableCell>{item.TypeName}</TableCell>
+                      <TableCell>{item.UserLname}</TableCell>
+                      <TableCell>{item.LeaveType}</TableCell>
                       <TableCell>{item.StartDate}</TableCell>
                       <TableCell>{formatMinutesToTime(item.StartTime)}</TableCell>
                       <TableCell>{item.StopDate}</TableCell>
                       <TableCell>{formatMinutesToTime(item.StopTime)}</TableCell>
                       <TableCell>{item.Status}</TableCell>
+                      
                     </TableRow>
                   ))}
                 </TableBody>
@@ -208,6 +237,7 @@ function formatMinutesToTime(minutes: any) {
             </Button>
             <Typography marginTop={1}>พนักงานสลับวันลา: {co} ครั้ง</Typography></Grid>
             <Grid item xs={4}>
+              <Badge badgeContent={co5} color="warning">
             <Button 
               variant="contained"
               className='bte'
@@ -217,8 +247,8 @@ function formatMinutesToTime(minutes: any) {
               to="/รายการคำร้องขอสลับวันลา"
             >
               อนุมัติสลับวันลา
-            </Button>
-                
+            </Button></Badge>
+            <Typography marginTop={1}>รายการรออนุมัติ: {co5} รายการ</Typography>
             </Grid></Grid>
             <TableContainer component={Paper} sx={{width: 'auto', margin: 2}}>
               <Table size='small'>
@@ -245,9 +275,9 @@ function formatMinutesToTime(minutes: any) {
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {switcht.map((item: Switch1Interface) => (
+                  {switcht.map((item: SwitchsInterface) => (
                     <TableRow>
-                      <TableCell>{item.EmpName}</TableCell>
+                      <TableCell>{item.UserLname}</TableCell>
                       <TableCell>{item.LeaveDay}</TableCell>
                       <TableCell>{formatMinutesToTime(item.FromTime)}</TableCell>
                       <TableCell>{formatMinutesToTime(item.ToTime)}</TableCell>
@@ -263,11 +293,10 @@ function formatMinutesToTime(minutes: any) {
         <Grid item xs={4}>
           <Paper elevation={3} sx={{bgcolor:'#FFF', height: '60vh'}} className='righte' >
                 <h1>Profile</h1>
-                <h3 className='h3'>ชื่อ: {user?.Name}</h3>
-                <h3 >email: {user?.Email}</h3>
-                <h3 className='h3'>User name: {user?.User}</h3>
-                <h3 className='h3'>role: {user?.Role}</h3>
-                <h3 className='h3'>แผนก: {user?.Department}</h3>
+                <h3 className='h3'>ชื่อ: {user?.UserLname}</h3>
+                <h3 className='h3'>User name: {user?.UserName}</h3>
+                
+                <h3 className='h3'>แผนก: {user?.DepName}</h3>
             </Paper>
         </Grid>
       </Grid>

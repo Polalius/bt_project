@@ -68,7 +68,7 @@ async function ListLeaveList() {
       },
     };
   
-    let res = await fetch(`${apiUrl}/leavelistempid/${id}`, requestOptions)
+    let res = await fetch(`${apiUrl}/leavelist_uid/${id}`, requestOptions)
       .then((response) => response.json())
       .then((res) => {
         if (res) {
@@ -145,7 +145,7 @@ async function ListLeaveList() {
       },
     };
   
-    let res = await fetch(`${apiUrl}/leavewait/${id}`, requestOptions)
+    let res = await fetch(`${apiUrl}/leave_depwait/${id}`, requestOptions)
       .then((response) => response.json())
       .then((res) => {
         if (res) {
@@ -296,7 +296,7 @@ async function ListLeaveList() {
       },
     };
   
-    let res = await fetch(`${apiUrl}/employee1/${id}`, requestOptions)
+    let res = await fetch(`${apiUrl}/user/${id}`, requestOptions)
       .then((response) => response.json())
       .then((res) => {
         if (res.data) {
@@ -422,6 +422,25 @@ async function ListLeaveList() {
   
     return res;
   }
+  async function ListSwitchByEmpID1(id:any) {
+    const requestOptions = {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+        "Content-Type": "application/json",
+      },
+    };
+  
+    let res = await fetch(`${apiUrl}/switch_id1/${id}`, requestOptions)
+      .then((response) => response.json())
+      .then((res) => {
+        if (res) {
+          return res;
+        } 
+      });
+  
+    return res;
+  }
   async function ListLeaveByEID(id:any) {
     const requestOptions = {
       method: "GET",
@@ -523,6 +542,27 @@ async function ListLeaveList() {
   
     return res;
   }
+  async function CountL4(id:any) {
+    
+    const requestOptions = {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+        "Content-Type": "application/json",
+      },
+    };
+    let res = await fetch(`${apiUrl}/count_l4/${id}`, requestOptions)
+      .then((response) => response.json())
+      .then((res) => {
+        if (res.data) {
+          return res.data;
+        } else {
+          return false;
+        }
+      });
+  
+    return res;
+  }
   async function GetSwitchByID(l_id:any) {
     
     const requestOptions = {
@@ -554,6 +594,27 @@ async function ListLeaveList() {
       },
     };
     let res = await fetch(`${apiUrl}/countsw/${id}`, requestOptions)
+      .then((response) => response.json())
+      .then((res) => {
+        if (res.data) {
+          return res.data;
+        } else {
+          return false;
+        }
+      });
+  
+    return res;
+  }
+  async function CountSW2(id:any) {
+    
+    const requestOptions = {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+        "Content-Type": "application/json",
+      },
+    };
+    let res = await fetch(`${apiUrl}/countsw2/${id}`, requestOptions)
       .then((response) => response.json())
       .then((res) => {
         if (res.data) {
@@ -672,7 +733,7 @@ async function ListLeaveList() {
       },
     };
   
-    let res = await fetch(`${apiUrl}/switch_depnwaitid/${id}`, requestOptions)
+    let res = await fetch(`${apiUrl}/switch_nwait/${id}`, requestOptions)
       .then((response) => response.json())
       .then((res) => {
         if (res) {
@@ -699,6 +760,7 @@ async function ListLeaveList() {
     CountL1,
     CountL2,
     CountL3,
+    CountL4,
     GetEmployeeByUID,
     CreateLeavaList,
     ListEmployee,
@@ -709,11 +771,13 @@ async function ListLeaveList() {
     GetUserID,
     GetDepartmentID,
     CountSW,
+    CountSW2,
     GetSwitchByID,
     ListSwitchByEID,
     ListSwitch,
     ListSwitchWait,
     ListSwitchByEmpID,
+    ListSwitchByEmpID1,
     ListSwitchByDepIDnSNWait,
     CreateSwitchLeave,
     UpdateSwitch

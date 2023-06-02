@@ -1,14 +1,8 @@
 package entity
 
-import (
-	"gorm.io/gorm"
-)
 type Department struct {
-	gorm.Model
-	DepName   	string
-
-	Manager 	[]Manager 	`gorm:"foreignKey:DepartmentID"`
-	Employee 	[]Employee 	`gorm:"foreignKey:DepartmentID"`
-	LeaveList 	[]LeaveList `gorm:"foreignKey:DepartmentID"`
-	User 		[]User 		`gorm:"foreignKey:DepartmentID"`
+	DepID       uint   `gorm:"primaryKey" db:"dep_id"`
+	DepName     string `db:"dep_name"`
+	DepMail     string `db:"dep_mail"`
+	ManagerMail string `db:"manager_mail"`
 }

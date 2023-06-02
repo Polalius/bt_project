@@ -3,13 +3,12 @@ import { Link as RouterLink } from "react-router-dom";
 
 import { Box, Button, Container, IconButton, Paper, Typography } from '@mui/material';
 import { DataGrid, GridColDef, GridRenderCellParams, GridRowParams } from '@mui/x-data-grid';
-import { EmployeeInterface } from '../../models/IEmployee';
-import { LeaveInterface } from '../../models/ILeave';
+import { LeavesInterface } from '../../models/ILeave';
 import EditIcon from '@mui/icons-material/Edit';
-import { GetEmployeeID, ListLeave, ListLeaveList, ListLeaveListByDepID, ListLeaveListByDepIDnSNWait, ListLeaveListByDepIDnSWait, ListLeaveWait } from '../../services/HttpClientService';
+import {  ListLeave, } from '../../services/HttpClientService';
 function PayrollShow(){
 
-    const [leavelist, setLeavelist] = useState<LeaveInterface[]>([])
+    const [leavelist, setLeavelist] = useState<LeavesInterface[]>([])
 
     const getLeaveList = async () => {
         let res = await ListLeave();

@@ -1,18 +1,26 @@
-import { DepartmentInterface } from "./IDepartmemt";
-import { RoleInterface } from "./IRole";
+
 
 export interface SigninInterface {
     username: string,
     password: string,
 }
 export interface UserInterface {
-    UserName: string,
+    ID?: number,
+    UserName?: string,
+    Name?: string,
+    Email?: string,
+    JobPosition?:		string,			
+	ManagerName?: 		string,
+	ManagerEmail?:	string,
+	DepartmentName?:	string,
+	DepartmentEmail?:	string,
     
 }
 export interface User1Interface {
-    Name: string;
-    Email: string;
-    User: string;
-    Role: string;
-    Department: string;  
+    UserSerial: number;
+    UserName: string;
+    UserLname: string;
+    DepName: string;
+    DepMail: string;
+    ManagerMail: string;  
 }
