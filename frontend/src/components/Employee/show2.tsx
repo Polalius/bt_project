@@ -80,7 +80,7 @@ function EmployeeShow2(){
                         <Typography
                             component="h2"
                             variant="h5"
-                            color="primary"
+                            color="secondary"
                             sx={{ fontWeight: 'bold' }}
                             gutterBottom
                             align='center'

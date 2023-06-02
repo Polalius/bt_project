@@ -215,11 +215,20 @@ func CountSW2(c *gin.Context) {
 	id := c.Param("id")
 	
 	if err := entity.DB().Table("switch_leaves").
+<<<<<<< HEAD
 	Select("COUNT(*)").Where("dep_id = ?",id).Where("status = 'pending approval'").
+=======
+	Select("COUNT(*)").Where("department_id = ?",id).Where("status = 'pending approval'").
+>>>>>>> 338cd53c0d6cc491f2fa5335ef4d32e8e8a81819
 	Scan(&count).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 	
 	c.JSON(http.StatusOK, gin.H{"data": count})
+<<<<<<< HEAD
 }
+=======
+}
+
+>>>>>>> 338cd53c0d6cc491f2fa5335ef4d32e8e8a81819

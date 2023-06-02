@@ -252,7 +252,8 @@ function Form() {
                     <Box>
                         <Typography
                             variant="h5"
-                            color="primary"
+                            align="center"
+                            color="secondary"
                             sx={{ padding: 2, fontWeight: "bold", marginTop: 1 }}
                         >
                             แบบฟอร์มลางาน

@@ -12,7 +12,11 @@ const RouterEmployee = () => {
             <Navbar />
             <div className='container-router'>
               <Routes>
+<<<<<<< HEAD
               <Route path="/" element={<HomeEmp/>} />
+=======
+                  <Route path="/" element={<HomeEmp/>} />
+>>>>>>> 338cd53c0d6cc491f2fa5335ef4d32e8e8a81819
                   <Route path="/รายการลางาน" element={<EmployeeShow  />} />
                   <Route path="/แบบฟอร์มขอลา" element={<Form  />} />
                   <Route path="/รายการสลับวันลา" element={<EmployeeShow2  />} />
