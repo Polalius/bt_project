@@ -95,26 +95,6 @@ export default function SwitchApprove(props: any){
     useEffect(() => {
             getSwitchByID(params);
         }, []);
-<<<<<<< HEAD
-=======
-        async function mail() {
-          let data = {
-              email:  ManEmail,
-              password: "gplilgnlhvmsiedr",
-              empemail: EmpEmail
-          };
-          console.log(data)
-          axios.post('http://localhost:8080/mail4', data)
-        .then(response => {
-          console.log(response.data);
-          // ทำสิ่งที่คุณต้องการเมื่อส่งอีเมลสำเร็จ
-        })
-        .catch(error => {
-          console.error(error);
-          // ทำสิ่งที่คุณต้องการเมื่อเกิดข้อผิดพลาดในการส่งอีเมล
-        });
-      }
->>>>>>> 338cd53c0d6cc491f2fa5335ef4d32e8e8a81819
     return (
         <div>
       <IconButton

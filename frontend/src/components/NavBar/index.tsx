@@ -8,10 +8,6 @@ import { Link as RouterLink } from "react-router-dom";
 import { IconButton, Toolbar, Typography, Button, Box, Badge, CssBaseline, MenuItem, Drawer, Divider, Tooltip, Avatar, Menu } from "@mui/material";
 import { orange, blueGrey } from "@mui/material/colors";
 import HomeIcon from "@mui/icons-material/Home";
-<<<<<<< HEAD
-=======
-import PostAddIcon from '@mui/icons-material/PostAdd';
->>>>>>> 338cd53c0d6cc491f2fa5335ef4d32e8e8a81819
 import HailIcon from '@mui/icons-material/Hail';
 import TransferWithinAStationIcon from '@mui/icons-material/TransferWithinAStation';
 import EventNoteIcon from '@mui/icons-material/EventNote';
@@ -24,7 +20,7 @@ import ListItem from "@mui/material/ListItem";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import { GetUserID } from "../../services/HttpClientService";
-import { SigninInterface, UserInterface } from "../../models/ISignin";
+import { SigninInterface, User1Interface, UserInterface } from "../../models/ISignin";
 let theme = createTheme();
   
   const drawerWidth = 320; //ความยาวของ แถบเมนู
@@ -109,7 +105,7 @@ export default function Navbar() {
   const themep = useTheme();
   const [open, setOpen] = React.useState(false);
   const [role, setRole] = React.useState("");
-  const [user, setUser] = React.useState<UserInterface>();
+  const [user, setUser] = React.useState<User1Interface>();
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open1 = Boolean(anchorEl);
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
@@ -187,7 +183,7 @@ export default function Navbar() {
         },
       });
       break;
-    case "payroll":
+    case "2":
       menu = menupayroll;
       break;
     
@@ -250,7 +246,7 @@ export default function Navbar() {
           >
             <StyledBadge 
             overlap="rectangular"
-            anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+            anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
             
             variant="dot"> 
               

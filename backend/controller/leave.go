@@ -304,16 +304,3 @@ func CountL4(c *gin.Context) {
 	
 	c.JSON(http.StatusOK, gin.H{"data": count})
 }
-func CountL4(c *gin.Context) {
-	var count int
-
-	id := c.Param("id")
-	if err := entity.DB().Table("leave_lists").
-	Select("COUNT(*)").Where("department_id = ?",id).Where("status = 'pending approval'").
-	Scan(&count).Error; err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
-	}
-	
-	c.JSON(http.StatusOK, gin.H{"data": count})
-}

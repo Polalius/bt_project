@@ -67,24 +67,10 @@ func main() {
 	r.PATCH("/switch_leaves", controller.UpdateSwitch)
 	r.GET("/countsw/:id", controller.CountSW)
 	r.GET("/countsw2/:id", controller.CountSW2)
-<<<<<<< HEAD
-=======
-
-	r.GET("/leavetypes", controller.ListLeaveType)
-	
-	r.GET("/department/:id", controller.GetDepartment)
-
-	r.GET("/manager/:id", controller.GetManager)
-	r.GET("/manager1/:id", controller.GetManager1)
-
-
->>>>>>> 338cd53c0d6cc491f2fa5335ef4d32e8e8a81819
 	r.POST("/leavelists", controller.CreateLeaveList)
 	r.POST("/signin", controller.Signin)
 	r.GET("/valid", controller.Validation)
 	r.POST("/mail", controller.SendEmailHandler)
 	r.POST("/mail2", controller.SendEmailHandler2)
-	r.POST("/mail3", controller.SendEmailHandler3)
-	r.POST("/mail4", controller.SendEmailHandler4)
 	r.Run()
 }

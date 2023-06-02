@@ -13,6 +13,7 @@ import ManagerSwitchShow from "../components/Manager/switchshow"
 import MyTable from "../components/Manager/switchtest"
 import { useState } from "react"
 import PayrollShow from "../components/Payroll/payroll"
+import SwitchPayrollShow from "../components/Payroll/switch_payroll"
 
 const RouterAdmin = () => {
     const [role, setRole] = useState<String>("")
@@ -22,8 +23,12 @@ const RouterAdmin = () => {
             <div className='container-router'>
               <Routes>
               <Route path="/" element={<Home />} />
-              <Route path="/รายการลางาน" element={<PayrollShow  />} />
-                  
+              <Route path="/รายการการลางาน" element={<PayrollShow  />} />
+              <Route path="/รายการลางาน" element={<EmployeeShow  />} />
+                <Route path="/แบบฟอร์มขอลา" element={<Form  />} />
+                <Route path="/รายการสลับวันลา" element={<EmployeeShow2  />} />
+                <Route path="/รายการการสลับวันลา" element={<SwitchPayrollShow  />} />
+                <Route path="/แบบฟอร์มสลับวันลา" element={<Form2/>} />    
               </Routes>
             
             </div>

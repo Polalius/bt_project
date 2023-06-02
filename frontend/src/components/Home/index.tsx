@@ -162,18 +162,18 @@ function formatMinutesToTime(minutes: any) {
             <Typography marginTop={1}>พนักงานลาทั้งหมด: {formatMinutesToDate(co1)}</Typography>
             </Grid>
             <Grid item xs={4}>
-              <Badge badgeContent={co4} color="warning">
+              
             <Button 
               variant="contained"
               className='bte'
               color="primary"
               sx={{ borderRadius: 20, '&:hover': { color: '#065D95', backgroundColor: '#e3f2fd' } }}
               component={RouterLink}
-              to="/รายการลางาน"
+              to="/รายการการลางาน"
             >
               รายการลางาน
-            </Button></Badge>
-            <Typography marginTop={1}>รายการลางาน: {co4} รายการ</Typography>    
+            </Button>
+              
             </Grid>
             </Grid>
             <TableContainer component={Paper} sx={{width: 'auto', margin: 2}}>
@@ -230,18 +230,18 @@ function formatMinutesToTime(minutes: any) {
             </Button>
             <Typography marginTop={1}>พนักงานสลับวันลา: {co} ครั้ง</Typography></Grid>
             <Grid item xs={4}>
-              <Badge badgeContent={co5} color="warning">
+              
             <Button 
               variant="contained"
               className='bte'
               color="primary"
               sx={{ borderRadius: 20, '&:hover': { color: '#065D95', backgroundColor: '#e3f2fd' } }}
               component={RouterLink}
-              to="/รายการคำร้องขอสลับวันลา"
+              to="/รายการการสลับวันลา"
             >
-              อนุมัติสลับวันลา
-            </Button></Badge>
-            <Typography marginTop={1}>รายการรออนุมัติ: {co5} รายการ</Typography>
+              รายการสลับวันลา
+            </Button>
+            
             </Grid></Grid>
             <TableContainer component={Paper} sx={{width: 'auto', margin: 2}}>
               <Table size='small'>
