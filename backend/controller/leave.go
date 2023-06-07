@@ -119,6 +119,22 @@ func ListLeaveList(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"data": leavelists})
 }
 // LIST /leave_list
+func ListLeaveListP(c *gin.Context) {
+	var leavelists []entity.LeaveLists
+	
+	if err := entity.DB().Table("leave_lists").
+	Select("*").
+	Joins("inner join departments on departments.dep_id = leave_lists.dep_id").
+	Joins("inner join users on users.user_serial = leave_lists.user_serial").
+	Where("leave_lists.status = 'approved'").
+	Find(&leavelists).Error; err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"data": leavelists})
+}
+// LIST /leave_list
 func ListLeaveListByUserID(c *gin.Context) {
 	var leavelists []entity.LeaveLists
 	u_id := c.Param("id")

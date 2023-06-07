@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react';
 import { Link as RouterLink } from "react-router-dom";
 import * as ExcelJS from 'exceljs';
-import { Box, Button, Container, Paper, Typography } from '@mui/material';
-
+import { Box, Button, Container, Paper,TablePagination,Typography } from '@mui/material';
+import {  Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material'
 import { LeavesInterface } from '../../models/ILeave';
-import { ListLeave, ListLeaveListByDepIDnSNWait } from '../../services/HttpClientService';
+import { ListLeave, ListLeaveListByDepIDnSNWait, ListLeaveP } from '../../services/HttpClientService';
 import moment from 'moment';
 function PayrollShow(){
 
@@ -17,7 +17,7 @@ function PayrollShow(){
   };
     const [leavelist, setLeavelist] = useState<LeavesInterface[]>([])
     const getLeaveList = async () => {
-        let res = await ListLeave();
+        let res = await ListLeaveP();
         if (res.data) {
             setLeavelist(res.data);
             console.log(Array(res))
@@ -28,6 +28,17 @@ function PayrollShow(){
       const reversedDate = `${strParts[2]}-${strParts[1]}`;
       return reversedDate
   }
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
+
+  const handleChangePage = (event: unknown, newPage: number) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setRowsPerPage(+event.target.value);
+    setPage(0);
+  };
     useEffect(() => {
         getLeaveList();
     }, []);
@@ -98,12 +109,11 @@ function PayrollShow(){
       <Container className="container" maxWidth="lg" >
       <Paper 
       className="paper"
-                elevation={6}
-                sx={{
-                  height: '80vh',
-                padding: 2,
-                borderRadius: 3,
-                }}>
+      elevation={6}
+      sx={{
+      padding: 2.5,
+      borderRadius: 3,
+      }}>
           <Box
                     display="flex"
                 >
@@ -129,25 +139,44 @@ function PayrollShow(){
                         >
                             ประวัติอนุมัติการลา
                         </Typography>
-                    </Box></Box>
-        <div className='div'>
-        <input type="month" value={filterDate} onChange={handleFilterDateChange}/>
-      <button onClick={handleExportExcel}>Export to Excel</button>
-      <table>
-        <thead>
-          <tr>
-            <th>พนักงาน</th>
-            <th>ประเภทการลา</th>
-            <th>วันที่ลา</th>
-            <th>เวลา</th>
-            <th>ถึงวันที่</th>
-            <th>เวลา</th>
-            <th>แผนก/ฝ่าย</th>
-            <th>สถานะ</th>
-          </tr>
-        </thead>
-        <tbody>
-          {leavelist.filter((row) => {
+                    </Box>
+                    </Box>
+              <Box sx={{ borderRadius: 20 }}>
+                <input type="month" value={filterDate} onChange={handleFilterDateChange}/>
+                <button onClick={handleExportExcel}>Export to Excel</button>
+                    
+                    <TableContainer component={Paper} sx={{width: 'auto', margin: 2}}>
+              <Table size='small'>
+                <TableHead>
+                  <TableRow>
+                    <TableCell width="">
+                      ชื่อ-นามสกุล
+                    </TableCell>
+                    <TableCell>
+                      การลา
+                    </TableCell>
+                    <TableCell>
+                      ลาวันที่
+                    </TableCell>
+                    <TableCell>
+                      เวลา
+                    </TableCell>
+                    <TableCell>
+                      ถึงวันที่
+                    </TableCell>
+                    <TableCell>
+                      เวลา
+                    </TableCell>
+                    <TableCell>
+                    แผนก/ฝ่าย
+                    </TableCell>
+                    <TableCell>
+                      สถานะ
+                    </TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {leavelist.filter((row) => {
         // กรองข้อมูลด้วยวันที่ LeaveDay ถ้า filterDate ไม่เป็น null
         if (filterDate) {
           return (
@@ -155,21 +184,32 @@ function PayrollShow(){
           );
         }
         return true;
-      }).map((row, index) => (
-            <tr key={index}>
-              <td>{row.UserLname}</td>
-              <td>{row.LeaveType}</td>
-              <td>{row.StartDate}</td>
-              <td>{formatMinutesToTime(row.StartTime)}</td>
-              <td>{row.StopDate}</td>
-              <td>{formatMinutesToTime(row.StopTime)}</td>
-              <td>{row.DepName}</td>
-              <td>{row.Status}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div></Paper></Container>
+      }).slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((item: LeavesInterface) => (
+                    <TableRow>
+                      <TableCell>{item.UserLname}</TableCell>
+                      <TableCell>{item.LeaveType}</TableCell>
+                      <TableCell>{item.StartDate}</TableCell>
+                      <TableCell>{formatMinutesToTime(item.StartTime)}</TableCell>
+                      <TableCell>{item.StopDate}</TableCell>
+                      <TableCell>{formatMinutesToTime(item.StopTime)}</TableCell>
+                      <TableCell>{item.DepName}</TableCell>
+                      <TableCell>{item.Status}</TableCell>
+                      
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </TableContainer>
+            <TablePagination
+                rowsPerPageOptions={[5, 10, 25]}
+                component="div"
+                count={leavelist.length}
+                rowsPerPage={rowsPerPage}
+                page={page}
+                onPageChange={handleChangePage}
+                onRowsPerPageChange={handleChangeRowsPerPage}
+            />
+                </Box></Paper></Container>
     )
 }
 export default PayrollShow

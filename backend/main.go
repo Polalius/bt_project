@@ -40,6 +40,7 @@ func main() {
 	r.GET("/user/:id", controller.GetUser)
 
 	r.GET("/leave", controller.ListLeaveList)
+	r.GET("/leave_pay", controller.ListLeaveListP)
 	
 	r.GET("/leavelist/:id", controller.GetLeaveList)
 	r.GET("/leave_eid/:id", controller.ListLeaveListByUserID1)
@@ -57,6 +58,7 @@ func main() {
 
 	r.GET("/switch/:id", controller.GetSwitchID)
 	r.GET("/switchs", controller.ListSwitch)//
+	r.GET("/switch_pay", controller.ListSwitchP)//
 	r.GET("/switch_id/:id", controller.ListSwitchByEmpID)//
 	r.GET("/switch_wait/:id", controller.ListSwitchWait)//
 	r.GET("/switch_nwait/:id", controller.ListSwitchNWait)//

@@ -34,6 +34,20 @@ func ListSwitch(c *gin.Context) {
 
 	c.JSON(http.StatusOK, gin.H{"data": leavelists})
 }
+func ListSwitchP(c *gin.Context) {
+	var leavelists []entity.SwitchLeaves
+	
+	if err := entity.DB().Table("switch_leaves").
+	Select("*").
+	Joins("inner join departments on departments.dep_id = switch_leaves.dep_id").
+	Joins("inner join users on users.user_serial = switch_leaves.user_serial").
+	Where("switch_leaves.status = 'approved'").Find(&leavelists).Error; err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"data": leavelists})
+}
 // LIST /leave_list
 func ListSwitchByEmpID(c *gin.Context) {
 	var leavelists []entity.SwitchLeaves

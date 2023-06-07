@@ -97,7 +97,7 @@ async function ListLeaveList() {
 
   return res;
   }
-  async function ListLeaveStatus() {
+  async function ListLeaveP() {
     const requestOptions = {
       method: "GET",
       headers: {
@@ -106,7 +106,7 @@ async function ListLeaveList() {
       },
     };
   
-    let res = await fetch(`${apiUrl}/leavestatus`, requestOptions)
+    let res = await fetch(`${apiUrl}/leave_pay`, requestOptions)
     .then((response) => response.json())
     .then((res) => {
       if (res) {
@@ -668,6 +668,25 @@ async function ListLeaveList() {
 
   return res;
   }
+  async function ListSwitchP() {
+    const requestOptions = {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+        "Content-Type": "application/json",
+      },
+    };
+  
+    let res = await fetch(`${apiUrl}/switch_pay`, requestOptions)
+    .then((response) => response.json())
+    .then((res) => {
+      if (res) {
+        return res;
+      } 
+    });
+
+  return res;
+  }
   async function ListSwitchWait(id:any) {
     const requestOptions = {
       method: "GET",
@@ -747,7 +766,7 @@ async function ListLeaveList() {
     ListLeaveList,
     ListLeaveType,
     ListLeave,
-    ListLeaveStatus,
+    ListLeaveP,
     // ListLeaveStatusDate,
     ListLeaveByEID,
     ListLeaveWait,
@@ -775,6 +794,7 @@ async function ListLeaveList() {
     GetSwitchByID,
     ListSwitchByEID,
     ListSwitch,
+    ListSwitchP,
     ListSwitchWait,
     ListSwitchByEmpID,
     ListSwitchByEmpID1,

@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
 import * as ExcelJS from 'exceljs';
 import { SwitchsInterface } from '../../models/ISwitch';
-import { ListSwitch, ListSwitchByDepIDnSNWait } from '../../services/HttpClientService';
-
+import { ListSwitch, ListSwitchByDepIDnSNWait, ListSwitchP } from '../../services/HttpClientService';
+import {  Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow } from '@mui/material'
 import { Link as RouterLink } from "react-router-dom";
 import moment from 'moment';
 import { Box, Button, Container, Paper, Typography } from '@mui/material';
@@ -26,7 +26,7 @@ function SwitchPayrollShow(){
     };
     const [switchs, setSwitch] = useState<SwitchsInterface[]>([])
       const getSwitch = async () => {
-          let res = await ListSwitch();
+          let res = await ListSwitchP();
           if (res.data) {
               setSwitch(res.data);
               console.log(res.data)
@@ -37,6 +37,17 @@ function SwitchPayrollShow(){
         const reversedDate = `${strParts[2]}-${strParts[1]}`;
         return reversedDate
     }
+    const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
+
+  const handleChangePage = (event: unknown, newPage: number) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setRowsPerPage(+event.target.value);
+    setPage(0);
+  };
       useEffect(() => {    
           
           getSwitch()
@@ -95,7 +106,13 @@ function SwitchPayrollShow(){
           console.log(`Error: ${error.message}`);
         });
     };
-    
+    function formatMinutesToTime(minutes: any) {
+      const hours = Math.floor(minutes / 60);
+      const minutesPart = minutes % 60;
+      const hoursStr = String(hours).padStart(2, '0');
+      const minutesStr = String(minutesPart).padStart(2, '0');
+      return `${hoursStr}:${minutesStr}`;
+    }
     return (
       <Container className="container" maxWidth="lg" >
         <Paper 
@@ -132,45 +149,69 @@ function SwitchPayrollShow(){
                               ประวัติอนุมัติสลับวันลา
                           </Typography>
                       </Box></Box>
-      <div className='div'>
-        <input type="month" value={filterDate} onChange={handleFilterDateChange}/>
-        <button onClick={handleExportExcel}>Export to Excel</button>
-        <table>
-          <thead>
-            <tr>
-              <th>พนักงาน</th>
-              <th>วันที่สลับ</th>
-              <th>จากเวลา</th>
-              <th>ถึงเวลา</th>
-              <th>วันที่มาทำงาน</th>
-              <th>แผนก/ฝ่าย</th>
-              <th>สถานะ</th>
-            </tr>
-          </thead>
-          <tbody>
-            {switchs.filter((row) => {
-          // กรองข้อมูลด้วยวันที่ LeaveDay ถ้า filterDate ไม่เป็น null
-          if (filterDate) {
-            return (
-              reverseDate(row.WorkDay) === filterDate
-            );
-          }
-          return true;
-        }).map((row, index) => (
-              <tr key={index}>
-                <td>{row.UserLname}</td>
-                <td>{row.LeaveDay}</td>
-                <td>{row.FromTime ? formatTime(row.FromTime) : ''}</td>
-                <td>{row.ToTime ? formatTime(row.ToTime) : ''}</td>
-                <td>{row.WorkDay }</td>
-                <td>{row.DepName}</td>
-                <td>{row.Status}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-        
-      </div></Paper></Container>
+      <Box sx={{ borderRadius: 20 }}>
+                <input type="month" value={filterDate} onChange={handleFilterDateChange}/>
+                <button onClick={handleExportExcel}>Export to Excel</button>
+                    <TableContainer component={Paper} sx={{width: 'auto', margin: 2}}>
+              <Table size='small'>
+                <TableHead>
+                  <TableRow>
+                    <TableCell width="">
+                      ชื่อ-นามสกุล
+                    </TableCell>
+                    <TableCell>
+                      วันที่สลับ
+                    </TableCell>
+                    <TableCell>
+                      จากเวลา
+                    </TableCell>
+                    <TableCell>
+                      ถึงเวลา
+                    </TableCell>
+                    <TableCell>
+                      วันที่มาทำงาน
+                    </TableCell>
+                    <TableCell>
+                    แผนก/ฝ่าย
+                    </TableCell>
+                    <TableCell>
+                      สถานะ
+                    </TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                {switchs.filter((row) => {
+        // กรองข้อมูลด้วยวันที่ LeaveDay ถ้า filterDate ไม่เป็น null
+        if (filterDate) {
+          return (
+            reverseDate(row.LeaveDay) === filterDate
+          );
+        }
+        return true;
+      }).slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((item: SwitchsInterface) => (
+                    <TableRow>
+                      <TableCell>{item.UserLname}</TableCell>
+                      <TableCell>{item.LeaveDay}</TableCell>
+                      <TableCell>{formatMinutesToTime(item.FromTime)}</TableCell>
+                      <TableCell>{formatMinutesToTime(item.ToTime)}</TableCell>
+                      <TableCell>{item.WorkDay}</TableCell>
+                      <TableCell>{item.DepName}</TableCell>
+                      <TableCell>{item.Status}</TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </TableContainer>
+            <TablePagination
+                rowsPerPageOptions={[5, 10, 25]}
+                component="div"
+                count={switchs.length}
+                rowsPerPage={rowsPerPage}
+                page={page}
+                onPageChange={handleChangePage}
+                onRowsPerPageChange={handleChangeRowsPerPage}
+            />
+                </Box></Paper></Container>
     );
 }
 export default SwitchPayrollShow

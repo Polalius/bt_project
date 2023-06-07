@@ -185,6 +185,19 @@ export default function Navbar() {
       break;
     case "2":
       menu = menupayroll;
+      theme = createTheme({
+        palette: {
+          primary: {
+            main: "#5D75FF",
+          },
+          secondary: {
+            main: '#F4F6F6',
+          },
+          info: {
+            main: "#F5CBA7"
+          }
+        },
+      });
       break;
     
     default:

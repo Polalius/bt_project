@@ -58,6 +58,8 @@ function Form2() {
           setWork('');
         }
       };
+    const eightAM = dayjs().set('hour', 8).startOf('hour');
+    const fivePM = dayjs().set('hour', 17).set('minute', 0);
     const reverseDate = (str: string) => {
         let strParts = str.split('/');
         const reversedDate = `${strParts[1]}/${strParts[0]}/${strParts[2]}`;
@@ -251,6 +253,8 @@ function Form2() {
                         <TimePicker
                             label="เวลา"
                             ampm={false}
+                            minTime={eightAM.toDate()}
+                            maxTime={fivePM.toDate()}
                             value={ftime !== null ? new Date(0, 0, 0, Math.floor(ftime / 60), ftime % 60) : null}
                             onChange={handleChange1}
                             format="HH:mm"
@@ -262,6 +266,8 @@ function Form2() {
                         <TimePicker
                             label="ถึงเวลา"
                             ampm={false}
+                            minTime={eightAM.toDate()}
+                            maxTime={fivePM.toDate()}
                             value={ttime !== null ? new Date(0, 0, 0, Math.floor(ttime / 60), ttime % 60) : null}
                             onChange={handleChange2}
                             format="HH:mm"
