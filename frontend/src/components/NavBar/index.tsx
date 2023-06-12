@@ -106,6 +106,7 @@ export default function Navbar() {
   const [open, setOpen] = React.useState(false);
   const [role, setRole] = React.useState("");
   const [user, setUser] = React.useState<User1Interface>();
+  
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open1 = Boolean(anchorEl);
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
@@ -211,11 +212,28 @@ export default function Navbar() {
         console.log(res)
     }
   }
+  const getPayroll = async () => {
+    let data ={
+      UserSerial: 0,
+      UserName: "Payroll111",
+      UserLname: "payrolll",
+      DepName: "payroll",
+      DepMail: "string",
+      ManagerMail: "string",
+    }
+    setUser(data)
+  }
+  const r = localStorage.getItem("position")
   useEffect(() => {
     const getToken = localStorage.getItem("token");
     if (getToken) {
-      setRole(localStorage.getItem("position") || "");
-      getUserID(localStorage.getItem("user_serial"))
+      setRole(r || "");
+      if (r != "2") {
+        getUserID(localStorage.getItem("user_serial"))
+      }else{
+        getPayroll()
+      }
+      
     }
   }, [])
   return (

@@ -11,10 +11,7 @@ import { AlertProps, Box, Button, Container,
     Paper, Select, SelectChangeEvent, Snackbar, Stack, TextField, Typography } from "@mui/material";
 import { DatePicker, DateTimePicker, LocalizationProvider, TimeField, TimePicker } from '@mui/x-date-pickers';
 
-
-import { LeaveInterface, LeaveTypeInterface } from "../../models/ILeave";
-
-import { CreateLeavaList, CreateSwitchLeave, GetDepartmentID, GetEmployeeID, GetEmployeeID1, GetManagerID, ListLeaveType } from "../../services/HttpClientService";
+import { CreateLeavaList, CreateSwitchLeave, GetEmployeeID, GetEmployeeID1, GetManagerID, ListLeaveType } from "../../services/HttpClientService";
 import { SwitchInterface } from "../../models/ISwitch";
 import axios from "axios";
 import { User1Interface } from "../../models/ISignin";

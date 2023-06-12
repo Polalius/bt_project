@@ -145,7 +145,7 @@ function ManagerShow(){
                 
                 <Box sx={{ borderRadius: 20 }}>
                     
-                <input type="month" value={filterDate} onChange={handleFilterDateChange}/>
+                
                     {/* <DataGrid
                         rows={leavelist}
                         getRowId={(row) => row.ID}
@@ -157,6 +157,7 @@ function ManagerShow(){
                         
                     /> */}
                     <TableContainer component={Paper} sx={{width: 'auto', margin: 2}}>
+                      <input type="month" value={filterDate} onChange={handleFilterDateChange}/>
               <Table size='small'>
                 <TableHead>
                   <TableRow>
@@ -195,7 +196,7 @@ function ManagerShow(){
       }).slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((item: LeavesInterface) => (
                     <TableRow>
                       <TableCell>{item.UserLname}</TableCell>
-                      <TableCell>{item.LeaveType}</TableCell>
+                      <TableCell>{item.TypeName}</TableCell>
                       <TableCell>{item.StartDate}</TableCell>
                       <TableCell>{formatMinutesToTime(item.StartTime)}</TableCell>
                       <TableCell>{item.StopDate}</TableCell>

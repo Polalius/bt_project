@@ -13,7 +13,7 @@ import (
 // List All User
 func ListUser(c *gin.Context) {
 	var users []entity.UserAuthen
-	if err := entity.DB().Raw("SELECT * FROM user_authens").Scan(&users).Error; err != nil {
+	if err := entity.DB1().Raw("SELECT * FROM user_authens").Scan(&users).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
@@ -36,7 +36,7 @@ type userres struct{
 func GetUser(c *gin.Context) {
 	var user userres
 	id := c.Param("id")
-	if err := entity.DB().Table("user_authens").
+	if err := entity.DB1().Table("user_authens").
 	Select("user_authens.user_serial, user_authens.user_name, users.user_lname, departments.dep_name, departments.dep_mail, departments.manager_mail").
 	Joins("inner join users on users.user_serial = user_authens.user_serial").
 	Joins("inner join departments on departments.dep_id = user_authens.dep_id").
@@ -61,12 +61,12 @@ func UpdateUser(c *gin.Context) {
 		return
 	}
 
-	if tx := entity.DB().Where("id = ?", user.UserSerial).First(&user); tx.RowsAffected == 0 {
+	if tx := entity.DB1().Where("id = ?", user.UserSerial).First(&user); tx.RowsAffected == 0 {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "user not found"})
 		return
 	}
 
-	if err := entity.DB().Save(&user).Error; err != nil {
+	if err := entity.DB1().Save(&user).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
@@ -80,7 +80,7 @@ func UpdateUser(c *gin.Context) {
 // DELETE /users/:id
 func DeleteUser(c *gin.Context) {
 	id := c.Param("id")
-	if tx := entity.DB().Exec("DELETE FROM users WHETE id = ?", id); tx.RowsAffected == 0 {
+	if tx := entity.DB1().Exec("DELETE FROM users WHETE id = ?", id); tx.RowsAffected == 0 {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "user not found"})
 		return
 	}

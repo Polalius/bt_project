@@ -51,7 +51,7 @@ export default function Approve(props: any){
         try {let data = {
             ID: params,
             UserSerial: leavelist?.UserSerial,
-            LeaveType: leavelist?.LeaveType,
+            LeaveType: leavelist?.TypeID,
             
             StartTime: leavelist?.StartTime,
             StopTime: leavelist?.StopTime,
@@ -75,7 +75,7 @@ export default function Approve(props: any){
         let data = {
             ID: params,
             UserSerial: leavelist?.UserSerial,
-            LeaveType: leavelist?.LeaveType,
+            LeaveType: leavelist?.TypeID,
             
             StartTime: leavelist?.StartTime,
             StopTime: leavelist?.StopTime,

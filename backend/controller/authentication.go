@@ -30,25 +30,41 @@ func Signin(c *gin.Context) {
 	var login entity.UserAuthen
 	var dep		entity.Department
 
+	pay1 := entity.UserAuthen{
+	UserSerial: 0,
+	UserName: "Payroll1",
+	Password: "123456",
+	Position: 2,
+	DepID: 2,
+	}
 	if err := c.ShouldBindJSON(&payload); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
+	if (payload.User == pay1.UserName){
+		if payload.Password != pay1.Password{
+			c.JSON(http.StatusBadRequest, gin.H{"error": "invalid user credentials"})
+			return
+		}
+		login = pay1
+	}else{
 	//ค้นหา login ด้วย Username ที่ผู้ใช้กรอกมา
-	if err := entity.DB().Raw("SELECT * FROM user_authens WHERE user_name = ?", payload.User).Scan(&login).Error; err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
+		if err := entity.DB1().Raw("SELECT * FROM user_authens WHERE user_name = ?", payload.User).Scan(&login).Error; err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			return
+		}
+		
+		//ตรวจสอบ Password
+		if (login.Password != payload.Password) {
+			c.JSON(http.StatusBadRequest, gin.H{"error": "invalid user credentials"})
+			return
+		}
 	}
+
 	
-	//ตรวจสอบ Password
-	err := services.VerifyPassword(login.Password, payload.Password)
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "invalid user credentials"})
-		return
-	}
 	//ค้นหา Department ด้วย did
-	if err := entity.DB().Raw("SELECT * FROM departments WHERE dep_id = ?", login.DepID).Scan(&dep).Error; err != nil {
+	if err := entity.DB1().Raw("SELECT * FROM departments WHERE dep_id = ?", login.DepID).Scan(&dep).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}

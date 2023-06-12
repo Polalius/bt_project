@@ -5,9 +5,9 @@ import { Link as RouterLink } from "react-router-dom";
 
 
 import { blueGrey } from '@mui/material/colors';
-import { CountL1, CountL2, CountL3, CountL4, CountSW, CountSW2, GetEmployeeID1, GetManagerID1, ListLeaveByEID, ListSwitchByEID, ListSwitchByEmpID, ListSwitchByEmpID1 } from '../../services/HttpClientService';
+import { CountL1, CountL2, CountL3, CountL4, CountSW, CountSW2, GetEmployeeID1, GetManagerID1, ListLeaveByEID, ListLeaveP1, ListSwitchByEID, ListSwitchByEmpID, ListSwitchByEmpID1, ListSwitchP1 } from '../../services/HttpClientService';
 import { User1Interface } from '../../models/ISignin';
-import { Leave1Interface, LeaveInterface, LeavesInterface } from '../../models/ILeave';
+import { LeavesInterface } from '../../models/ILeave';
 import moment from 'moment';
 import { Switch1Interface, SwitchsInterface } from '../../models/ISwitch';
 import HourglassBottomTwoToneIcon from '@mui/icons-material/HourglassBottomTwoTone';
@@ -22,16 +22,16 @@ export default function Home({role} : any) {
   const [co5, setCo5] = useState<number | null>(0);
   const [leavelist, setLeavelist] = useState<LeavesInterface[]>([])
   const [switcht, setSwitch] = useState<SwitchsInterface[]>([])
-  const getLeaveList = async (id:any) => {
-    let res = await ListLeaveByEID(id);
+  const getLeaveList = async () => {
+    let res = await ListLeaveP1();
     if (res.data) {
         setLeavelist(res.data);
     }
     
     console.log(res.data)
 };
-const getSwitch = async (id:any) => {
-    let res = await ListSwitchByEmpID1(id);
+const getSwitch = async () => {
+    let res = await ListSwitchP1();
     if (res.data) {
         setSwitch(res.data);
     }
@@ -55,73 +55,24 @@ function formatMinutesToTime(minutes: any) {
   const minutesStr = String(minutesPart).padStart(2, '0');
   return `${daysStr} วัน ${hoursStr} ชม. ${minutesStr} น.`;
   }
-  const getCount =async (id:any) => {
-    let res = await CountSW(id);
-    if (res){
-      console.log(res)
-      setCo(res)
-      
+  
+  const getEmployeeID = async () => {
+    let data ={
+      UserSerial: 0,
+      UserName: "Payroll111",
+      UserLname: "payrolll",
+      DepName: "payroll",
+      DepMail: "string",
+      ManagerMail: "string",
     }
-  }
-  const getCount1 =async (id:any) => {
-    let res = await CountL1(id);
-    if (res){
-      console.log(res)
-      setCo1(res)
-      
-    }
-  }
-  const getCount2 =async (id:any) => {
-    let res = await CountL2(id);
-    if (res){
-      console.log(res)
-      setCo2(res)
-      
-    }
-  }
-  const getCount3 =async (id:any) => {
-    let res = await CountL3(id);
-    if (res){
-      console.log(res)
-      setCo3(res)
-      
-    }
-  }
-  const getCount4 =async (id:any) => {
-    let res = await CountL4(id);
-    if (res){
-      console.log(res)
-      setCo4(res)
-      
-    }
-  }
-  const getCount5 =async (id:any) => {
-    let res = await CountSW2(id);
-    if (res){
-      console.log(res)
-      setCo5(res)
-      
-    }
-  }
-  const getEmployeeID = async (id:any) => {
-    let res = await GetEmployeeID1(id);
-    if (res){
-        setUser(res)
-        console.log(res)
-    }
+    setUser(data)
   }
   const uid = localStorage.getItem("user_serial") || "";
   const dep_id = localStorage.getItem("dep_id") || "";
   useEffect(() => {
-        getEmployeeID(uid);
-        getCount(uid);
-        getCount1(uid)
-        getCount2(uid)
-        getCount3(uid)
-        getCount4(dep_id)
-        getCount5(dep_id)
-        getLeaveList(JSON.parse(uid))
-        getSwitch(JSON.parse(uid))
+        getEmployeeID();
+        getLeaveList()
+        getSwitch()
   }, []);
   return (
     <Container maxWidth='xl' sx={{bgcolor:'#FFF', height: '91vh'}} >
@@ -136,31 +87,7 @@ function formatMinutesToTime(minutes: any) {
         <Grid item xs={8}>
           <Paper elevation={3} sx={{bgcolor:'#FFF', height: '74vh'}} className='lefte'>
             <Grid container>
-                <Grid item xs={8}>
-            <Button 
-              variant="contained"
-              className='bte'
-              color="primary"
-              sx={{ borderRadius: 20, '&:hover': { color: '#065D95', backgroundColor: '#e3f2fd' } }}
-              component={RouterLink}
-              to="/รายการลางาน"
-            >
-              ระบบลางาน
-            </Button>
-            <Typography marginTop={1}>
-            <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
-                <Grid item xs={3.5}>
-                  ลาป่วย :  <TextField  value={formatMinutesToDate(co2)} size='small' color='warning' sx={{width:165}}/>
-                </Grid>
-                <Grid item xs={4}>
-                  ลากิจ :<TextField  value={formatMinutesToDate(co3)} size='small' color='warning' sx={{width:165}}/>
-                </Grid>
-  </Grid>
                 
-              </Typography>
-            
-            <Typography marginTop={1}>พนักงานลาทั้งหมด: {formatMinutesToDate(co1)}</Typography>
-            </Grid>
             <Grid item xs={4}>
               
             <Button 
@@ -207,7 +134,7 @@ function formatMinutesToTime(minutes: any) {
                   {leavelist.map((item: LeavesInterface) => (
                     <TableRow>
                       <TableCell>{item.UserLname}</TableCell>
-                      <TableCell>{item.LeaveType}</TableCell>
+                      <TableCell>{item.TypeName}</TableCell>
                       <TableCell>{item.StartDate}</TableCell>
                       <TableCell>{formatMinutesToTime(item.StartTime)}</TableCell>
                       <TableCell>{item.StopDate}</TableCell>
@@ -220,17 +147,7 @@ function formatMinutesToTime(minutes: any) {
             </TableContainer>
             <Grid container>
                 <Grid item xs={8}>
-            <Button component={RouterLink}
-              to="/รายการสลับวันลา"
-              variant="contained"
-              color="primary"
-              sx={{ borderRadius: 20, '&:hover': { color: '#065D95', backgroundColor: '#e3f2fd' } }}
-            >
-              ระบบสลับวันลา
-            </Button>
-            <Typography marginTop={1}>พนักงานสลับวันลา: {co} ครั้ง</Typography></Grid>
-            <Grid item xs={4}>
-              
+            
             <Button 
               variant="contained"
               className='bte'

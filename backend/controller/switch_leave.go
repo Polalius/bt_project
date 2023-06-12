@@ -14,7 +14,7 @@ import (
 func GetSwitchID(c *gin.Context) {
 	var leavelist entity.SwitchLeave
 	id := c.Param("id")
-	if err := entity.DB().Preload("UserAuthen").Preload("Department").Raw("SELECT * FROM switch_leaves WHERE id = ?", id).Find(&leavelist).Error; err != nil {
+	if err := entity.DB2().Raw("SELECT * FROM switch_leaves WHERE id = ?", id).Find(&leavelist).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
@@ -24,10 +24,10 @@ func GetSwitchID(c *gin.Context) {
 func ListSwitch(c *gin.Context) {
 	var leavelists []entity.SwitchLeaves
 	
-	if err := entity.DB().Table("switch_leaves").
-	Select("*").
-	Joins("inner join departments on departments.dep_id = switch_leaves.dep_id").
-	Joins("inner join users on users.user_serial = switch_leaves.user_serial").Find(&leavelists).Error; err != nil {
+	if err := entity.DB2().Table("switch_leaves").
+	Select("switch_leaves.*, leave_db.users.*, leave_db.departments.*").
+	Joins("inner join leave_db.departments on leave_db.departments.dep_id = switch_leaves.dep_id").
+	Joins("inner join leave_db.users on leave_db.users.user_serial = switch_leaves.user_serial").Find(&leavelists).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
@@ -37,11 +37,24 @@ func ListSwitch(c *gin.Context) {
 func ListSwitchP(c *gin.Context) {
 	var leavelists []entity.SwitchLeaves
 	
-	if err := entity.DB().Table("switch_leaves").
-	Select("*").
-	Joins("inner join departments on departments.dep_id = switch_leaves.dep_id").
-	Joins("inner join users on users.user_serial = switch_leaves.user_serial").
+	if err := entity.DB2().Table("switch_leaves").
+	Select("switch_leaves.*, leave_db.users.*, leave_db.departments.*").
+	Joins("inner join leave_db.departments on leave_db.departments.dep_id = switch_leaves.dep_id").
+	Joins("inner join leave_db.users on leave_db.users.user_serial = switch_leaves.user_serial").
 	Where("switch_leaves.status = 'approved'").Find(&leavelists).Error; err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{"data": leavelists})
+}
+func ListSwitchP1(c *gin.Context) {
+	var leavelists []entity.SwitchLeaves
+	
+	if err := entity.DB2().Table("switch_leaves").
+	Select("switch_leaves.*, leave_db.users.*, leave_db.departments.*").
+	Joins("inner join leave_db.departments on leave_db.departments.dep_id = switch_leaves.dep_id").
+	Joins("inner join leave_db.users on leave_db.users.user_serial = switch_leaves.user_serial").
+	Where("switch_leaves.status = 'approved' ORDER BY switch_leaves.id DESC LIMIT 5").Find(&leavelists).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
@@ -52,10 +65,10 @@ func ListSwitchP(c *gin.Context) {
 func ListSwitchByEmpID(c *gin.Context) {
 	var leavelists []entity.SwitchLeaves
 	u_id := c.Param("id")
-	if err := entity.DB().Table("switch_leaves").
-	Select("*").
-	Joins("inner join departments on departments.dep_id = switch_leaves.dep_id").
-	Joins("inner join users on users.user_serial = switch_leaves.user_serial").
+	if err := entity.DB2().Table("switch_leaves").
+	Select("switch_leaves.*, leave_db.users.*, leave_db.departments.*").
+	Joins("inner join leave_db.departments on leave_db.departments.dep_id = switch_leaves.dep_id").
+	Joins("inner join leave_db.users on leave_db.users.user_serial = switch_leaves.user_serial").
 	Where("switch_leaves.user_serial = ?", u_id).
 	Find(&leavelists).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
@@ -67,10 +80,10 @@ func ListSwitchByEmpID(c *gin.Context) {
 func ListSwitchByEmpID1(c *gin.Context) {
 	var leavelists []entity.SwitchLeaves
 	u_id := c.Param("id")
-	if err := entity.DB().Table("switch_leaves").
-	Select("*").
-	Joins("inner join departments on departments.dep_id = switch_leaves.dep_id").
-	Joins("inner join users on users.user_serial = switch_leaves.user_serial").
+	if err := entity.DB2().Table("switch_leaves").
+	Select("switch_leaves.*, leave_db.users.*, leave_db.departments.*").
+	Joins("inner join leave_db.departments on leave_db.departments.dep_id = switch_leaves.dep_id").
+	Joins("inner join leave_db.users on leave_db.users.user_serial = switch_leaves.user_serial").
 	Where("switch_leaves.user_serial = ? ORDER BY switch_leaves.id DESC LIMIT 3", u_id).
 	Find(&leavelists).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
@@ -82,10 +95,10 @@ func ListSwitchByEmpID1(c *gin.Context) {
 func ListSwitchWait(c *gin.Context) {
 	var leavelists []entity.SwitchLeaves
 	u_id := c.Param("id")
-	if err := entity.DB().Table("switch_leaves").
-	Select("*").
-	Joins("inner join departments on departments.dep_id = switch_leaves.dep_id").
-	Joins("inner join users on users.user_serial = switch_leaves.user_serial").
+	if err := entity.DB2().Table("switch_leaves").
+	Select("switch_leaves.*, leave_db.users.*, leave_db.departments.*").
+	Joins("inner join leave_db.departments on leave_db.departments.dep_id = switch_leaves.dep_id").
+	Joins("inner join leave_db.users on leave_db.users.user_serial = switch_leaves.user_serial").
 	Where("switch_leaves.dep_id = ? AND switch_leaves.status = 'pending approval'", u_id).
 	Find(&leavelists).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
@@ -97,10 +110,10 @@ func ListSwitchWait(c *gin.Context) {
 func ListSwitchNWait(c *gin.Context) {
 	var leavelists []entity.SwitchLeaves
 	u_id := c.Param("id")
-	if err := entity.DB().Table("switch_leaves").
-	Select("*").
-	Joins("inner join departments on departments.dep_id = switch_leaves.dep_id").
-	Joins("inner join users on users.user_serial = switch_leaves.user_serial").
+	if err := entity.DB2().Table("switch_leaves").
+	Select("switch_leaves.*, leave_db.users.*, leave_db.departments.*").
+	Joins("inner join leave_db.departments on leave_db.departments.dep_id = switch_leaves.dep_id").
+	Joins("inner join leave_db.users on leave_db.users.user_serial = switch_leaves.user_serial").
 	Where("switch_leaves.dep_id = ? AND switch_leaves.status = 'approved'", u_id).
 	Find(&leavelists).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
@@ -113,7 +126,7 @@ func ListSwitchNWait(c *gin.Context) {
 func ListSwitchByDepID(c *gin.Context) {
 	var leavelists []entity.SwitchLeave
 	man_id := c.Param("id")
-	if err := entity.DB().Preload("UserAuthen").Preload("Department").Raw("SELECT * FROM switch_leaves WHERE department_name = ?", man_id).Find(&leavelists).Error; err != nil {
+	if err := entity.DB2().Raw("SELECT * FROM switch_leaves WHERE department_name = ?", man_id).Find(&leavelists).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
@@ -125,7 +138,7 @@ func ListSwitchByDate(c *gin.Context) {
 	man_id := c.Param("id")
 	from := c.Query("from")
 	to := c.Query("to")
-	if err := entity.DB().Preload("UserAuthen").Preload("Department").Where("department_name = ? AND (leave_day BETWEEN ? AND ?)", man_id, from, to).Find(&leavelists).Error; err != nil {
+	if err := entity.DB2().Where("department_name = ? AND (leave_day BETWEEN ? AND ?)", man_id, from, to).Find(&leavelists).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
@@ -144,16 +157,16 @@ func CreateSwitchLeave(c *gin.Context){
 	}
 
 	// ค้นหา employee ด้วย id
-	if tx := entity.DB().Where("user_serial = ?", switchleaves.UserSerial).First(&employees); tx.RowsAffected == 0 {
+	if tx := entity.DB1().Where("user_serial = ?", switchleaves.UserSerial).First(&employees); tx.RowsAffected == 0 {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "employees not found"})
 		return
 	}
-	if tx := entity.DB().Where("dep_id = ?", switchleaves.DepID).First(&depart); tx.RowsAffected == 0 {
+	if tx := entity.DB1().Where("dep_id = ?", switchleaves.DepID).First(&depart); tx.RowsAffected == 0 {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "department not found"})
 		return
 	}
 
-	if tx := entity.DB().Where("user_serial = ? AND (leave_day = ?) AND ((from_time BETWEEN ? AND ?) OR (to_time BETWEEN ? AND ?))", switchleaves.UserSerial, switchleaves.LeaveDay, switchleaves.FromTime, switchleaves.ToTime, switchleaves.FromTime, switchleaves.ToTime).First(&switchleaves); tx.RowsAffected != 0 {
+	if tx := entity.DB2().Where("user_serial = ? AND (leave_day = ?) AND ((from_time BETWEEN ? AND ?) OR (to_time BETWEEN ? AND ?))", switchleaves.UserSerial, switchleaves.LeaveDay, switchleaves.FromTime, switchleaves.ToTime, switchleaves.FromTime, switchleaves.ToTime).First(&switchleaves); tx.RowsAffected != 0 {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "มีการลาเวลานี้ไปแล้ว"})
 		return
 	}
@@ -176,7 +189,7 @@ func CreateSwitchLeave(c *gin.Context){
 	}
 
 	// 13: บันทึก
-	if err := entity.DB().Create(&sw_l).Error; err != nil {
+	if err := entity.DB2().Create(&sw_l).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
@@ -197,7 +210,7 @@ func UpdateSwitch(c *gin.Context){
 		})
 		return
 	}
-	if tx := entity.DB().Where("id = ?", newswitch.ID).First(&switchs); tx.RowsAffected == 0 {
+	if tx := entity.DB2().Where("id = ?", newswitch.ID).First(&switchs); tx.RowsAffected == 0 {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Switch Leave not found"})
 		return
 	}
@@ -205,7 +218,7 @@ func UpdateSwitch(c *gin.Context){
 	switchs.Status = newswitch.Status
 
 	// ขั้นตอนการ validate
-	if err := entity.DB().Save(&switchs).Error; err != nil {
+	if err := entity.DB2().Save(&switchs).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
@@ -217,7 +230,7 @@ func CountSW(c *gin.Context) {
 
 	id := c.Param("id")
 	
-	if err := entity.DB().Table("switch_leaves").
+	if err := entity.DB2().Table("switch_leaves").
 	Select("COUNT(*)").Where("user_serial = ?",id).Where("status = 'approved'").
 	Scan(&count).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
@@ -231,7 +244,7 @@ func CountSW2(c *gin.Context) {
 
 	id := c.Param("id")
 	
-	if err := entity.DB().Table("switch_leaves").
+	if err := entity.DB2().Table("switch_leaves").
 	Select("COUNT(*)").Where("dep_id = ?",id).Where("status = 'pending approval'").
 
 	Scan(&count).Error; err != nil {

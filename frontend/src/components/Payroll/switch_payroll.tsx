@@ -1,20 +1,42 @@
 import { useEffect, useState } from 'react';
 import * as ExcelJS from 'exceljs';
 import { SwitchsInterface } from '../../models/ISwitch';
-import { ListSwitch, ListSwitchByDepIDnSNWait, ListSwitchP } from '../../services/HttpClientService';
+import { ListDepartments, ListSwitch, ListSwitchByDepIDnSNWait, ListSwitchP } from '../../services/HttpClientService';
 import {  Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow } from '@mui/material'
 import { Link as RouterLink } from "react-router-dom";
 import moment from 'moment';
 import { Box, Button, Container, Paper, Typography } from '@mui/material';
+import { DepartmentInterface } from '../../models/ILeave';
 function SwitchPayrollShow(){
     const [filterDate, setFilterDate] = useState("");
   
     const handleFilterDateChange = (event:any) => {
       const selectedDate = event.target.value;
-      const formattedDate = moment(selectedDate).format('YYYY-MM');
-      console.log(formattedDate);
-      setFilterDate(formattedDate);
+      if(selectedDate == ""){
+        setFilterDate("") 
+      }else{
+        const formattedDate = moment(selectedDate).format('YYYY-MM');
+        setFilterDate(formattedDate);
+      }
     };
+    const [filterUserLname, setFilterUserLname] = useState("");
+  const handleFilterUserLnameChange = (event: any) => {
+    const value = event.target.value;
+    setFilterUserLname(value);
+  };
+  const [filterDepName, setFilterDepName] = useState("");
+  const handleFilterDepNameChange = (event: any) => {
+    const value = event.target.value;
+    setFilterDepName(value);
+  };
+  const [dep, setDep] = useState<DepartmentInterface[]>([]);
+  const getDepartment = async () => {
+    let res = await ListDepartments();
+    if (res.data) {
+      setDep(res.data);
+    }
+    console.log(res.data)
+};
     const formatTime = (minutes: number) => {
       const hours = Math.floor(minutes / 60); // หารเพื่อหาจำนวนชั่วโมง
       const mins = minutes % 60; // หาเศษนาทีที่เหลือ
@@ -49,7 +71,7 @@ function SwitchPayrollShow(){
     setPage(0);
   };
       useEffect(() => {    
-          
+          getDepartment()
           getSwitch()
           
       }, []);
@@ -60,8 +82,15 @@ function SwitchPayrollShow(){
       const filteredSwitchs = switchs.filter((row) => {
         if (filterDate) {
           return (
-            reverseDate(row.WorkDay) === filterDate
+            reverseDate(row.LeaveDay) === filterDate && row.UserLname.toLowerCase().includes(filterUserLname.toLowerCase()) && row.DepName.toLowerCase().includes(filterDepName.toLowerCase())
           );
+        }
+        // กรองข้อมูลด้วย UserLname
+        if (filterUserLname) {
+          return row.UserLname.toLowerCase().includes(filterUserLname.toLowerCase());
+        }
+        if (filterDepName) {
+          return row.DepName.toLowerCase().includes(filterDepName.toLowerCase());
         }
         return true;
       });
@@ -150,9 +179,24 @@ function SwitchPayrollShow(){
                           </Typography>
                       </Box></Box>
       <Box sx={{ borderRadius: 20 }}>
-                <input type="month" value={filterDate} onChange={handleFilterDateChange}/>
-                <button onClick={handleExportExcel}>Export to Excel</button>
+                
                     <TableContainer component={Paper} sx={{width: 'auto', margin: 2}}>
+                      <input type="month" value={filterDate} onChange={handleFilterDateChange}/>
+                      <input type="text" value={filterUserLname} onChange={handleFilterUserLnameChange} placeholder="ค้นหาชื่อ-นามสกุล"/>
+                      <select
+                   value={filterDepName}
+                   onChange={handleFilterDepNameChange}
+                  >
+                    <option aria-label="None" value="">
+                                        ค้นหาแผนก
+                                </option>
+                                {dep.map((item: DepartmentInterface) => (
+                                    <option value={item.DepName} key={item.DepID}>
+                                        {item.DepName}
+                                    </option>
+                                ))}
+                  </select>
+                <button onClick={handleExportExcel}>Export to Excel</button>
               <Table size='small'>
                 <TableHead>
                   <TableRow>
@@ -184,8 +228,15 @@ function SwitchPayrollShow(){
         // กรองข้อมูลด้วยวันที่ LeaveDay ถ้า filterDate ไม่เป็น null
         if (filterDate) {
           return (
-            reverseDate(row.LeaveDay) === filterDate
+            reverseDate(row.LeaveDay) === filterDate && row.UserLname.toLowerCase().includes(filterUserLname.toLowerCase()) && row.DepName.toLowerCase().includes(filterDepName.toLowerCase())
           );
+        }
+        // กรองข้อมูลด้วย UserLname
+        if (filterUserLname) {
+          return row.UserLname.toLowerCase().includes(filterUserLname.toLowerCase());
+        }
+        if (filterDepName) {
+          return row.DepName.toLowerCase().includes(filterDepName.toLowerCase());
         }
         return true;
       }).slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((item: SwitchsInterface) => (

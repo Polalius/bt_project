@@ -5,7 +5,6 @@ import { Box, Button, Container, Paper, TablePagination, Typography } from '@mui
 import { DataGrid, GridColDef, GridRenderCellParams,  GridToolbarFilterButton } from '@mui/x-data-grid';
 import {  Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material'
 
-import { LeaveInterface } from '../../models/ILeave';
 
 import { GetEmployeeID, ListLeaveListByEmpID, ListSwitchByEmpID } from '../../services/HttpClientService';
 import { SwitchInterface, SwitchsInterface } from '../../models/ISwitch';
@@ -14,15 +13,23 @@ function EmployeeShow2(){
     const [filterDate, setFilterDate] = useState("");
   const handleFilterDateChange = (event:any) => {
     const selectedDate = event.target.value;
-    const formattedDate = moment(selectedDate).format('YYYY-MM');
-  console.log(formattedDate);
-  setFilterDate(formattedDate);
+    if(selectedDate == ""){
+      setFilterDate("") 
+    }else{
+      const formattedDate = moment(selectedDate).format('YYYY-MM');
+      setFilterDate(formattedDate);
+    }
   };
   const reverseDate = (str: any) => {
       let strParts = str.split('/');
       const reversedDate = `${strParts[2]}-${strParts[1]}`;
       return reversedDate
   }
+  const [filterStatus, setFilterStatus] = useState("");
+  const handleFilterStatusChange = (event: any) => {
+    const value = event.target.value;
+    setFilterStatus(value);
+  };
 
     const [leavelist, setLeavelist] = useState<SwitchsInterface[]>([])
 
@@ -125,7 +132,7 @@ function EmployeeShow2(){
                     </Box>
                 </Box>
                 <Box sx={{ borderRadius: 20 }}>
-                <input type="month" value={filterDate} onChange={handleFilterDateChange}/>
+                
                     {/* <DataGrid
                         rows={leavelist}
                         getRowId={(row) => row.ID}
@@ -136,6 +143,17 @@ function EmployeeShow2(){
                         sx={{ mt: 2, backgroundColor: '#fff' }}
                     /> */}
                     <TableContainer component={Paper} sx={{width: 'auto', margin: 2}}>
+                      <input type="month" value={filterDate} onChange={handleFilterDateChange}/>
+                      <select
+                   value={filterStatus}
+                   onChange={handleFilterStatusChange}
+                  >
+                    <option aria-label="None" value="">
+                                        สถานะอนุมัติ
+                                </option>
+                    <option value="approved">approved</option>
+                    <option value="pending approval">pending approval</option>
+                  </select>
               <Table size='small'>
                 <TableHead>
                   <TableRow>
@@ -164,8 +182,11 @@ function EmployeeShow2(){
         // กรองข้อมูลด้วยวันที่ LeaveDay ถ้า filterDate ไม่เป็น null
         if (filterDate) {
           return (
-            reverseDate(row.LeaveDay) === filterDate
+            reverseDate(row.LeaveDay) === filterDate  && row.Status.toLowerCase().includes(filterStatus.toLowerCase())
           );
+        }
+        if (filterStatus) {
+          return row.Status.toLowerCase().includes(filterStatus.toLowerCase());
         }
         return true;
       }).slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((item: SwitchsInterface) => (

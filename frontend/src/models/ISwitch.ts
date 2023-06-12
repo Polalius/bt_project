@@ -38,5 +38,5 @@ export interface SwitchsInterface{
     ToTime?: number | null;
     Count?: number | null;
     WorkDay?:  string | null;
-    Status?: string;   
+    Status: string;   
 }

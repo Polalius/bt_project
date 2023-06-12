@@ -8,14 +8,13 @@ import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import MuiAlert from "@mui/material/Alert";
 import { AlertProps, Box, Button, Container, 
     CssBaseline, Divider, FormControl, Grid, 
-    InputLabel, 
-    MenuItem, 
     Paper, Select, SelectChangeEvent, Snackbar, Stack, TextField, Typography } from "@mui/material";
 import { DateTimePicker, LocalizationProvider } from '@mui/x-date-pickers';
 
 
-import { CreateLeavaList, GetDepartmentID, GetEmployeeID, GetEmployeeID1, GetManagerID, ListLeaveType } from "../../services/HttpClientService";
-import { LeavesInterface } from "../../models/ILeave";
+import { LeaveInterface, LeaveTypeInterface } from "../../models/ILeave";
+
+import { CreateLeavaList, GetEmployeeID1, GetManagerID, ListLeaveType } from "../../services/HttpClientService";
 import { User1Interface } from "../../models/ISignin";
 
 
@@ -24,8 +23,10 @@ const Alert = forwardRef<HTMLDivElement, AlertProps>(function Alert(props,ref,) 
     return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
 });
 
-function Form() {
-    const [leavelist, setLeavelist] = useState<Partial<LeavesInterface>>({});
+function Form1() {
+
+    const [leavelist, setLeavelist] = useState<Partial<LeaveInterface>>({});
+    const [ltype, setLType] = useState<LeaveTypeInterface[]>([]);
     const [start, setStart] = React.useState<Date | null>();
     const [stop, setStop] = React.useState<Date | null>();
     const [startdate, setStartDate] = useState<string>('');
@@ -68,12 +69,6 @@ function Form() {
             setStopTime(null)
           }
       };
-    const getEmployeeID = async (id:any) => {
-        let res = await GetEmployeeID1(id);
-        if (res){
-            setUser(res)
-        }
-    }
     const compareDates = (start_date: string, stop_date: string) => {
         // แยกวันที่, เดือน, และปีจากสตริง
         const startParts = start_date.split('/');
@@ -134,8 +129,20 @@ function Form() {
         }
       }
 
+    const getLeaveType = async () => {
+        let res = await ListLeaveType();
+        if (res.data) {
+          setLType(res.data);
+        }
+        console.log(res.data)
+    };
 
-
+    const getEmployeeID = async (id:any) => {
+        let res = await GetEmployeeID1(id);
+        if (res){
+            setUser(res)
+        }
+    }
     const convertType = (data: string | number | undefined | null) => {
         let val = typeof data === "string" ? parseInt(data) : data;
         return val;
@@ -152,17 +159,19 @@ function Form() {
           setError(false);
       };
 
-      const handleChange = (event: SelectChangeEvent<string>) => {
+      const handleChange = (event: SelectChangeEvent<number>) => {
         const name = event.target.name as keyof typeof leavelist;
         setLeavelist({
             ...leavelist,
             [name]: event.target.value,
         });
+        
     };
     const uid = localStorage.getItem("user_serial") || "";
     const dep_id = localStorage.getItem("dep_id") || "";
     useEffect(()=>{
         getEmployeeID(JSON.parse(uid));
+        getLeaveType()
     }, []);
     async function mail() {
         let data = {
@@ -184,7 +193,7 @@ function Form() {
     async function submit(){
         let data = {
             UserSerial: convertType(user?.UserSerial) ?? 0,
-            LeaveType: leavelist.LeaveType ?? '',
+            TypeID: convertType(leavelist?.TypeID) ?? 0,
             StartDate: startdate,
             StartTime: starttime,
             Stopdate: stopdate,
@@ -252,8 +261,7 @@ function Form() {
                     <Box>
                         <Typography
                             variant="h5"
-                            align="center"
-                            color="secondary"
+                            color="primary"
                             sx={{ padding: 2, fontWeight: "bold", marginTop: 1 }}
                         >
                             แบบฟอร์มลางาน
@@ -268,24 +276,25 @@ function Form() {
                     <Grid item xs={0.5}><Typography>เรื่อง:</Typography></Grid>
                     <Grid item xs={8} sx={{ mt: 1 }}>
                         <FormControl variant="outlined"  >
-                        <InputLabel id="demo-simple-select-label">หัวข้อการลา</InputLabel>
                             <Select
                                 required
-                                labelId="demo-simple-select-label"
-                                id="demo-simple-select"
                                 size='small'
                                 sx={{ borderRadius: 3, bgcolor: '#fff', width: 200}}
-                                value={leavelist.LeaveType}
+                                value={leavelist.TypeID}
                                 onChange={handleChange}
                                 inputProps={{
-                                    name: "LeaveType",
+                                    name: "TypeID",
                                 }}
-                                label="หัวข้อการลา"
-                                
+                                native
                             >
-                                <MenuItem value="ลาป่วย">ลาป่วย</MenuItem>
-                                <MenuItem value="ลากิจ">ลากิจ</MenuItem>
-                                
+                                <option aria-label="None" value="">
+                                        หัวข้อการลา
+                                </option>
+                                {ltype.map((item: LeaveTypeInterface) => (
+                                    <option value={Number(item.TypeID)} key={item.TypeID}>
+                                        {item.TypeName}
+                                    </option>
+                                ))}
                             </Select>
                         </FormControl>
                         
@@ -294,7 +303,6 @@ function Form() {
                     <Grid item xs={12}><Typography align="left" textTransform="capitalize">Email:{" "+ user?.DepMail}</Typography></Grid>
                     <Grid item xs={12}><Typography align="left" textTransform="capitalize">แผนก:{" "+user?.DepName}</Typography></Grid>
                     <Grid item xs={12}><Typography align="left" textTransform="capitalize">ผู้จัดการแผนก:{user?.ManagerMail}</Typography></Grid>
-                    
                     
                     <LocalizationProvider dateAdapter={AdapterDateFns}>
                         <Grid item xs={1.8}><Typography>ขอลาตั้งแต่</Typography></Grid>
@@ -361,4 +369,4 @@ function Form() {
         </div>
     )
 }
-export default Form
+export default Form1

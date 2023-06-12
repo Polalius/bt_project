@@ -64,7 +64,7 @@ export default function Signin(){
             </Snackbar>
             <Snackbar open={error} autoHideDuration={6000} onClose={handleClose}>
                 <Alert onClose={handleClose} severity="error">
-                    อีเมลหรือรหัสผ่านไม่ถูกต้อง
+                    ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง
                 </Alert>
             </Snackbar>
 

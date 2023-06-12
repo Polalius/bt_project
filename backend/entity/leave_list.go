@@ -12,7 +12,7 @@ type LeaveList struct {
 	ID          uint `gorm:"primaryKey;autoIncrement"`
 	UserSerial  uint
 	
-	LeaveType   string
+	TypeID   	uint
 	DepID       uint
 	
 	StartDate   string     `valid:"required~กรุณากรอกวันที่และเวลา"`
@@ -25,7 +25,7 @@ type LeaveList struct {
 type LeaveList2 struct {
 	ID          uint 
 	UserSerial  uint
-	LeaveType   string
+	TypeID		uint
 	DepID       uint
 	StartDate   string
 	StartTime   int
@@ -38,7 +38,8 @@ type LeaveLists struct {
 	ID					uint
 	UserSerial   		uint
 	UserLname			string
-	LeaveType			string
+	TypeID				uint
+	TypeName			string
 	DepID  				uint
 	DepName				string
 	StartDate   		string		`valid:"required~กรุณากรอกวันที่และเวลา"`

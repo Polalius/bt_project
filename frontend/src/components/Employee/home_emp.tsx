@@ -7,7 +7,7 @@ import './home_emp.css'
 import { blueGrey } from '@mui/material/colors';
 import { CountL1, CountL2, CountL3, CountSW, GetEmployeeID1, GetManagerID1, ListLeaveByEID, ListSwitchByEID, ListSwitchByEmpID, ListSwitchByEmpID1 } from '../../services/HttpClientService';
 import { User1Interface, UserInterface } from '../../models/ISignin';
-import { Leave1Interface, LeaveInterface, LeavesInterface } from '../../models/ILeave';
+import { LeavesInterface } from '../../models/ILeave';
 import moment from 'moment';
 import { Switch1Interface, SwitchsInterface } from '../../models/ISwitch';
 import Approve from '../Manager/approve';
@@ -169,7 +169,7 @@ function formatMinutesToTime(minutes: any) {
                   {leavelist.map((item: LeavesInterface) => (
                     <TableRow>
                       <TableCell>{item.UserLname}</TableCell>
-                      <TableCell>{item.LeaveType}</TableCell>
+                      <TableCell>{item.TypeName}</TableCell>
                       <TableCell>{item.StartDate}</TableCell>
                       <TableCell>{formatMinutesToTime(item.StartTime)}</TableCell>
                       <TableCell>{item.StopDate}</TableCell>

@@ -16,6 +16,7 @@ func CreateLeaveList(c *gin.Context) {
 	var user entity.UserAuthen
 	var leavelists entity.LeaveList
 	var depart entity.Department
+	var typ entity.LeaveType
 
 	// ผลลัพธ์ที่ได้จากขั้นตอนที่  จะถูก bind เข้าตัวแปร leavelists
 	if err := c.ShouldBindJSON(&leavelists); err != nil {
@@ -23,45 +24,48 @@ func CreateLeaveList(c *gin.Context) {
 		return
 	}
 	// ค้นหา user ด้วย id
-	if tx := entity.DB().Table("user_authens").Select("*").Where("user_serial = ?", leavelists.UserSerial).First(&user); tx.RowsAffected == 0 {
+	if tx := entity.DB1().Table("user_authens").Select("*").Where("user_serial = ?", leavelists.UserSerial).First(&user); tx.RowsAffected == 0 {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "user not found"})
 		return
 	}
-	
+	if tx := entity.DB1().Where("type_id = ?", leavelists.TypeID).First(&typ); tx.RowsAffected == 0 {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "leave type not found"})
+		return
+	}
 	//ค้นหา แผนก ด้วย id
-	if tx := entity.DB().Where("dep_id = ?", leavelists.DepID).First(&depart); tx.RowsAffected == 0 {
+	if tx := entity.DB1().Where("dep_id = ?", leavelists.DepID).First(&depart); tx.RowsAffected == 0 {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "department not found"})
 		return
 	}
 	//เช็ค ลาซ้ำ
 	if leavelists.StartDate == leavelists.StopDate {
-		if tx := entity.DB().Where("user_serial = ? AND (start_date = ?) AND (start_date = stop_date) AND ( ? BETWEEN start_time AND stop_time)", leavelists.UserSerial, leavelists.StartDate, leavelists.StartTime).First(&leavelists); tx.RowsAffected != 0 {
+		if tx := entity.DB2().Where("user_serial = ? AND (start_date = ?) AND (start_date = stop_date) AND ( ? BETWEEN start_time AND stop_time)", leavelists.UserSerial, leavelists.StartDate, leavelists.StartTime).First(&leavelists); tx.RowsAffected != 0 {
 			c.JSON(http.StatusBadRequest, gin.H{"error": "มีการลาเวลานี้ไปแล้ว วันเดียวกัน1"})
 			return
 		}
-		if tx := entity.DB().Where("user_serial = ? AND (start_date = ?) AND (start_date = stop_date) AND ( ? BETWEEN start_time AND stop_time)", leavelists.UserSerial, leavelists.StartDate, leavelists.StopTime).First(&leavelists); tx.RowsAffected != 0 {
+		if tx := entity.DB2().Where("user_serial = ? AND (start_date = ?) AND (start_date = stop_date) AND ( ? BETWEEN start_time AND stop_time)", leavelists.UserSerial, leavelists.StartDate, leavelists.StopTime).First(&leavelists); tx.RowsAffected != 0 {
 			c.JSON(http.StatusBadRequest, gin.H{"error": "มีการลาเวลานี้ไปแล้ว วันเดียวกัน2"})
 			return
 		}
-		if tx := entity.DB().Where("user_serial = ? AND (stop_date = ?) AND (start_date != stop_date) AND ( ? BETWEEN 480 AND stop_time)", leavelists.UserSerial, leavelists.StartDate, leavelists.StopTime).First(&leavelists); tx.RowsAffected != 0 {
+		if tx := entity.DB2().Where("user_serial = ? AND (stop_date = ?) AND (start_date != stop_date) AND ( ? BETWEEN 480 AND stop_time)", leavelists.UserSerial, leavelists.StartDate, leavelists.StopTime).First(&leavelists); tx.RowsAffected != 0 {
 			c.JSON(http.StatusBadRequest, gin.H{"error": "มีการลาเวลานี้ไปแล้ว วันเดียวกัน7"})
 			return
 		}
-		if tx := entity.DB().Where("user_serial = ? AND (start_date = ?) AND (start_date != stop_date) AND (? BETWEEN start_time and 1020)", leavelists.UserSerial, leavelists.StartDate, leavelists.StopTime).First(&leavelists); tx.RowsAffected != 0 {
+		if tx := entity.DB2().Where("user_serial = ? AND (start_date = ?) AND (start_date != stop_date) AND (? BETWEEN start_time and 1020)", leavelists.UserSerial, leavelists.StartDate, leavelists.StopTime).First(&leavelists); tx.RowsAffected != 0 {
 			c.JSON(http.StatusBadRequest, gin.H{"error": "มีการลาเวลานี้ไปแล้ว6"})
 			return
 		}
 	}
 	if leavelists.StartDate != leavelists.StopDate {
-	if tx := entity.DB().Where("user_serial = ? AND (start_date = ?) AND (start_date != stop_date) AND (? BETWEEN start_time and 1020)", leavelists.UserSerial, leavelists.StartDate, leavelists.StartTime).First(&leavelists); tx.RowsAffected != 0 {
+	if tx := entity.DB2().Where("user_serial = ? AND (start_date = ?) AND (start_date != stop_date) AND (? BETWEEN start_time and 1020)", leavelists.UserSerial, leavelists.StartDate, leavelists.StartTime).First(&leavelists); tx.RowsAffected != 0 {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "มีการลาเวลานี้ไปแล้ว3"})
 		return
 	}
-	if tx := entity.DB().Where("user_serial = ? AND (start_date = ?) AND (start_date != stop_date) AND (stop_date = ?) AND (? BETWEEN 480 and stop_time)", leavelists.UserSerial, leavelists.StartDate, leavelists.StopDate, leavelists.StartTime).First(&leavelists); tx.RowsAffected != 0 {
+	if tx := entity.DB2().Where("user_serial = ? AND (start_date = ?) AND (start_date != stop_date) AND (stop_date = ?) AND (? BETWEEN 480 and stop_time)", leavelists.UserSerial, leavelists.StartDate, leavelists.StopDate, leavelists.StartTime).First(&leavelists); tx.RowsAffected != 0 {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "มีการลาเวลานี้ไปแล้ว4"})
 		return
 	}
-	if tx := entity.DB().Where("user_serial = ? AND (stop_date = ?) AND (start_date != stop_date) AND (? BETWEEN 480 AND stop_time)", leavelists.UserSerial, leavelists.StartDate, leavelists.StartTime).First(&leavelists); tx.RowsAffected != 0 {
+	if tx := entity.DB2().Where("user_serial = ? AND (stop_date = ?) AND (start_date != stop_date) AND (? BETWEEN 480 AND stop_time)", leavelists.UserSerial, leavelists.StartDate, leavelists.StartTime).First(&leavelists); tx.RowsAffected != 0 {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "มีการลาเวลานี้ไปแล้ว5"})
 		return
 	}
@@ -69,7 +73,7 @@ func CreateLeaveList(c *gin.Context) {
 	// 12: สร้าง leave_list
 	l_list := entity.LeaveList{
 		UserSerial: user.UserSerial,             // โยงความสัมพันธ์กับ Entity User
-		LeaveType: leavelists.LeaveType,					// โยงความสัมพันธ์กับ Entity Leave type
+		TypeID: leavelists.TypeID,					// โยงความสัมพันธ์กับ Entity Leave type
 		StartDate: leavelists.StartDate,                
 		StartTime: leavelists.StartTime, // ตั้งค่าฟิลด์ Start_time
 		StopDate: leavelists.StopDate,
@@ -85,7 +89,7 @@ func CreateLeaveList(c *gin.Context) {
 	}
 
 	// 13: บันทึก
-	if err := entity.DB().Create(&l_list).Error; err != nil {
+	if err := entity.DB2().Create(&l_list).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
@@ -96,7 +100,7 @@ func CreateLeaveList(c *gin.Context) {
 func GetLeaveList(c *gin.Context) {
 	var leavelist entity.LeaveList
 	id := c.Param("id")
-	if err := entity.DB().Preload("UserAuthen").Preload("Department").Raw("SELECT * FROM leave_lists WHERE id = ?", id).Find(&leavelist).Error; err != nil {
+	if err := entity.DB2().Raw("SELECT * FROM leave_lists WHERE id = ?", id).Find(&leavelist).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
@@ -107,10 +111,11 @@ func GetLeaveList(c *gin.Context) {
 func ListLeaveList(c *gin.Context) {
 	var leavelists []entity.LeaveLists
 	
-	if err := entity.DB().Table("leave_lists").
-	Select("*").
-	Joins("inner join departments on departments.dep_id = leave_lists.dep_id").
-	Joins("inner join users on users.user_serial = leave_lists.user_serial").
+	if err := entity.DB2().Table("leave_lists").
+	Select("leave_lists*, leave_db.users.*, leave_db.departments.*, leave_db.leave_types.*").
+	Joins("inner join leave_db.departments on leave_db.departments.dep_id = leave_lists.dep_id").
+	Joins("inner join leave_db.leave_types on leave_db.leave_types.type_id = leave_lists.type_id").
+	Joins("inner join leave_db.users on leave_db.users.user_serial = leave_lists.user_serial").
 	Find(&leavelists).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
@@ -122,11 +127,28 @@ func ListLeaveList(c *gin.Context) {
 func ListLeaveListP(c *gin.Context) {
 	var leavelists []entity.LeaveLists
 	
-	if err := entity.DB().Table("leave_lists").
-	Select("*").
-	Joins("inner join departments on departments.dep_id = leave_lists.dep_id").
-	Joins("inner join users on users.user_serial = leave_lists.user_serial").
+	if err := entity.DB2().Table("leave_lists").
+	Select("leave_lists.*, leave_db.users.*, leave_db.departments.*, leave_db.leave_types.*").
+	Joins("inner join leave_db.departments on leave_db.departments.dep_id = leave_lists.dep_id").
+	Joins("inner join leave_db.leave_types on leave_db.leave_types.type_id = leave_lists.type_id").
+	Joins("inner join leave_db.users on leave_db.users.user_serial = leave_lists.user_serial").
 	Where("leave_lists.status = 'approved'").
+	Find(&leavelists).Error; err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"data": leavelists})
+}
+func ListLeaveListP1(c *gin.Context) {
+	var leavelists []entity.LeaveLists
+	
+	if err := entity.DB2().Table("leave_lists").
+	Select("leave_lists.*, leave_db.users.*, leave_db.departments.*, leave_db.leave_types.*").
+	Joins("inner join leave_db.departments on leave_db.departments.dep_id = leave_lists.dep_id").
+	Joins("inner join leave_db.leave_types on leave_db.leave_types.type_id = leave_lists.type_id").
+	Joins("inner join leave_db.users on leave_db.users.user_serial = leave_lists.user_serial").
+	Where("leave_lists.status = 'approved' ORDER BY leave_lists.id DESC LIMIT 5").
 	Find(&leavelists).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
@@ -138,10 +160,11 @@ func ListLeaveListP(c *gin.Context) {
 func ListLeaveListByUserID(c *gin.Context) {
 	var leavelists []entity.LeaveLists
 	u_id := c.Param("id")
-	if err := entity.DB().Table("leave_lists").
-	Select("*").
-	Joins("inner join departments on departments.dep_id = leave_lists.dep_id").
-	Joins("inner join users on users.user_serial = leave_lists.user_serial").
+	if err := entity.DB2().Table("leave_lists").
+	Select("leave_lists.*, leave_db.users.*, leave_db.departments.*, leave_db.leave_types.*").
+	Joins("inner join leave_db.departments on leave_db.departments.dep_id = leave_lists.dep_id").
+	Joins("inner join leave_db.leave_types on leave_db.leave_types.type_id = leave_lists.type_id").
+	Joins("inner join leave_db.users on leave_db.users.user_serial = leave_lists.user_serial").
 	Where("leave_lists.user_serial = ?", u_id).
 	Find(&leavelists).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
@@ -153,10 +176,11 @@ func ListLeaveListByUserID(c *gin.Context) {
 func ListLeaveListByUserID1(c *gin.Context) {
 	var leavelists []entity.LeaveLists
 	u_id := c.Param("id")
-	if err := entity.DB().Table("leave_lists").
-	Select("*").
-	Joins("inner join departments on departments.dep_id = leave_lists.dep_id").
-	Joins("inner join users on users.user_serial = leave_lists.user_serial").
+	if err := entity.DB2().Table("leave_lists").
+	Select("leave_lists.*, leave_db.users.*, leave_db.departments.*, leave_db.leave_types.*").
+	Joins("inner join leave_db.departments on leave_db.departments.dep_id = leave_lists.dep_id").
+	Joins("inner join leave_db.leave_types on leave_db.leave_types.type_id = leave_lists.type_id").
+	Joins("inner join leave_db.users on leave_db.users.user_serial = leave_lists.user_serial").
 	Where("leave_lists.user_serial = ? ORDER BY leave_lists.id DESC LIMIT 3", u_id).
 	Find(&leavelists).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
@@ -168,10 +192,11 @@ func ListLeaveListByUserID1(c *gin.Context) {
 func ListLeaveListByDepWait(c *gin.Context) {
 	var leavelists []entity.LeaveLists
 	u_id := c.Param("id")
-	if err := entity.DB().Table("leave_lists").
-	Select("*").
-	Joins("inner join departments on departments.dep_id = leave_lists.dep_id").
-	Joins("inner join users on users.user_serial = leave_lists.user_serial").
+	if err := entity.DB2().Table("leave_lists").
+	Select("leave_lists.*, leave_db.users.*, leave_db.departments.*, leave_db.leave_types.*").
+	Joins("inner join leave_db.departments on leave_db.departments.dep_id = leave_lists.dep_id").
+	Joins("inner join leave_db.leave_types on leave_db.leave_types.type_id = leave_lists.type_id").
+	Joins("inner join leave_db.users on leave_db.users.user_serial = leave_lists.user_serial").
 	Where("leave_lists.dep_id = ? AND leave_lists.status = 'pending approval'", u_id).
 	Find(&leavelists).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
@@ -184,7 +209,7 @@ func ListLeaveListByDepWait(c *gin.Context) {
 func ListLeaveListByDepName(c *gin.Context) {
 	var leavelists []entity.LeaveList
 	d_id := c.Param("id")
-	if err := entity.DB().Preload("UserAuthen").Preload("Department").Preload("LeaveType").Raw("SELECT * FROM leave_lists WHERE department_name = ?", d_id).Find(&leavelists).Error; err != nil {
+	if err := entity.DB2().Raw("SELECT * FROM leave_lists WHERE department_name = ?", d_id).Find(&leavelists).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
@@ -195,10 +220,11 @@ func ListLeaveListByDepName(c *gin.Context) {
 func ListLeaveListByDepIDnSwait(c *gin.Context) {
 	var leavelists []entity.LeaveList
 	d_id := c.Param("id")
-	if err := entity.DB().Table("leave_lists").
-	Select("*").
-	Joins("inner join departments on departments.dep_id = leave_lists.dep_id").
-	Joins("inner join users on users.user_serial = leave_lists.user_serial").
+	if err := entity.DB2().Table("leave_lists").
+	Select("leave_lists.*, leave_db.users.*, leave_db.departments.*, leave_db.leave_types.*").
+	Joins("inner join leave_db.departments on leave_db.departments.dep_id = leave_lists.dep_id").
+	Joins("inner join leave_db.leave_types on leave_db.leave_types.type_id = leave_lists.type_id").
+	Joins("inner join leave_db.users on leave_db.users.user_serial = leave_lists.user_serial").
 	Where("leave_lists.dep_id = ? AND leave_lists.status = 'approved'", d_id).
 	Find(&leavelists).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
@@ -210,10 +236,11 @@ func ListLeaveListByDepIDnSwait(c *gin.Context) {
 func ListLeaveListByDepIDnSNwait(c *gin.Context) {
 	var leavelists []entity.LeaveLists
 	d_id := c.Param("id")
-	if err := entity.DB().Table("leave_lists").
-	Select("*").
-	Joins("inner join departments on departments.dep_id = leave_lists.dep_id").
-	Joins("inner join users on users.user_serial = leave_lists.user_serial").
+	if err := entity.DB2().Table("leave_lists").
+	Select("leave_lists.*, leave_db.users.*, leave_db.departments.*, leave_db.leave_types.*").
+	Joins("inner join leave_db.departments on leave_db.departments.dep_id = leave_lists.dep_id").
+	Joins("inner join leave_db.leave_types on leave_db.leave_types.type_id = leave_lists.type_id").
+	Joins("inner join leave_db.users on leave_db.users.user_serial = leave_lists.user_serial").
 	Where("leave_lists.dep_id = ? AND leave_lists.status = 'approved'", d_id).
 	Find(&leavelists).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
@@ -225,7 +252,7 @@ func ListLeaveListByDepIDnSNwait(c *gin.Context) {
 // DELETE /leave_list/:id
 func DeleteLeaveListByID(c *gin.Context) {
 	id := c.Param("id")
-	if tx := entity.DB().Exec("DELETE FROM leave_lists WHERE id = ?", id); tx.RowsAffected == 0 {
+	if tx := entity.DB2().Exec("DELETE FROM leave_lists WHERE id = ?", id); tx.RowsAffected == 0 {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "list not found"})
 		return
 	}
@@ -249,7 +276,7 @@ func UpdateLeaveList(c *gin.Context){
 		})
 		return
 	}
-	if tx := entity.DB().Where("id = ?", newleavelist.ID).First(&leavelist); tx.RowsAffected == 0 {
+	if tx := entity.DB2().Where("id = ?", newleavelist.ID).First(&leavelist); tx.RowsAffected == 0 {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Leave not found"})
 		return
 	}
@@ -260,7 +287,7 @@ func UpdateLeaveList(c *gin.Context){
 	leavelist.Status = newleavelist.Status
 
 	// ขั้นตอนการ validate
-	if err := entity.DB().Save(&leavelist).Error; err != nil {
+	if err := entity.DB2().Save(&leavelist).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
@@ -271,7 +298,7 @@ func CountL1(c *gin.Context) {
 	var count int
 
 	id := c.Param("id")
-	if err := entity.DB().Table("leave_lists").
+	if err := entity.DB2().Table("leave_lists").
 	Select("SUM(count_l)").Where("user_serial = ?",id).Where("status = 'approved'").
 	Scan(&count).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
@@ -284,8 +311,8 @@ func CountL2(c *gin.Context) {
 	var count int
 
 	id := c.Param("id")
-	if err := entity.DB().Table("leave_lists").
-	Select("SUM(count_l)").Where("user_serial = ?",id).Where("status = 'approved'").Where("leave_type = 'ลาป่วย'").
+	if err := entity.DB2().Table("leave_lists").
+	Select("SUM(count_l)").Where("user_serial = ?",id).Where("status = 'approved'").Where("type_id = 1").
 	Scan(&count).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
@@ -297,8 +324,8 @@ func CountL3(c *gin.Context) {
 	var count int
 
 	id := c.Param("id")
-	if err := entity.DB().Table("leave_lists").
-	Select("SUM(count_l)").Where("user_serial = ?",id).Where("status = 'approved'").Where("leave_type = 'ลากิจ'").
+	if err := entity.DB2().Table("leave_lists").
+	Select("SUM(count_l)").Where("user_serial = ?",id).Where("status = 'approved'").Where("type_id = 2").
 	Scan(&count).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
@@ -311,7 +338,7 @@ func CountL4(c *gin.Context) {
 
 	id := c.Param("id")
 	
-	if err := entity.DB().Table("leave_lists").
+	if err := entity.DB2().Table("leave_lists").
 	Select("COUNT(*)").Where("dep_id = ?",id).Where("status = 'pending approval'").
 	Scan(&count).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
@@ -319,4 +346,35 @@ func CountL4(c *gin.Context) {
 	}
 	
 	c.JSON(http.StatusOK, gin.H{"data": count})
+}
+func GetLeaveType(c *gin.Context) {
+	var l_type entity.LeaveType
+	id := c.Param("id")
+	if err := entity.DB1().Raw("SELECT * FROM leave_types WHERE type_id = ?", id).Scan(&l_type).Error; err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"data": l_type})
+}
+
+// List /leave_type
+func ListLeaveType(c *gin.Context) {
+	var l_types []entity.LeaveType
+	if err := entity.DB1().Raw("SELECT * FROM leave_types").Scan(&l_types).Error; err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"data": l_types})
+}
+// List /leave_type
+func ListDepartment(c *gin.Context) {
+	var dep []entity.Department
+	if err := entity.DB1().Raw("SELECT * FROM departments").Scan(&dep).Error; err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"data": dep})
 }

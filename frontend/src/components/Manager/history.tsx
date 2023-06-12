@@ -3,7 +3,7 @@ import { Link as RouterLink } from "react-router-dom";
 import * as ExcelJS from 'exceljs';
 import { Box, Button, Container, Paper, Stack, Typography } from '@mui/material';
 
-import { Leave1Interface, LeaveInterface, LeavesInterface } from '../../models/ILeave';
+import { LeavesInterface } from '../../models/ILeave';
 import { ListLeaveListByDepIDnSNWait } from '../../services/HttpClientService';
 import React from 'react';
 import moment from 'moment';
@@ -62,10 +62,10 @@ function ManagerHistory(){
     // เพิ่มข้อมูลลงในตาราง
     filteredSwitchs.forEach(row => {
       console.log(row);
-      const { UserLname, LeaveType, StartDate,StartTime,StopDate,StopTime,DepName, Status } = row;
+      const { UserLname, TypeName, StartDate,StartTime,StopDate,StopTime,DepName, Status } = row;
       worksheet.addRow({
         UserLname,
-        LeaveType,
+        TypeName,
         StartDate,
         StartTime: formatMinutesToTime(StartTime),
         StopDate,
@@ -161,7 +161,7 @@ function ManagerHistory(){
       }).map((row, index) => (
             <tr key={index}>
               <td>{row.UserLname}</td>
-              <td>{row.LeaveType}</td>
+              <td>{row.TypeName}</td>
               <td>{row.StartDate}</td>
               <td>{formatMinutesToTime(row.StartTime)}</td>
               <td>{row.StopDate}</td>

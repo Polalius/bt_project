@@ -1,16 +1,7 @@
-import dayjs, { Dayjs } from "dayjs";
-
-import { User1Interface, UserInterface } from "./ISignin";
-
-export interface LeaveTypeInterface{
-    ID?: number;
-    TypeName?: string;
-    Information?: string;
-}
 export interface LeaveInterface{
     ID?: number;
     UserSerial?: number;
-    LeaveType?: string;
+    TypeID?: number;
     StartDate?:  string | null;
     StartTime?:  number | null;
 	StopDate?:    string | null;
@@ -58,12 +49,22 @@ export interface LeavesInterface{
     UserLname: string;
     DepName: string;
     DepMail: string; 
-    LeaveType?: string;
+    TypeName: string;
     ManagerMail: string;
     StartDate?:  string | null;
     StartTime?:  number | null;
 	StopDate?:    string | null;
 	StopTime?:    number | null;
-    Status?: string;
+    Status: string;
     
+}
+export interface LeaveTypeInterface{
+    TypeID?: number;
+    TypeName?: string;   
+}
+export interface DepartmentInterface{
+    DepID?: number;
+    DepName?: string;   
+    DepMail:     string;
+	ManagerMail: string;
 }

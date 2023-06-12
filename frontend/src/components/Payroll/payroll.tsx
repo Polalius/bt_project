@@ -3,17 +3,21 @@ import { Link as RouterLink } from "react-router-dom";
 import * as ExcelJS from 'exceljs';
 import { Box, Button, Container, Paper,TablePagination,Typography } from '@mui/material';
 import {  Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material'
-import { LeavesInterface } from '../../models/ILeave';
-import { ListLeave, ListLeaveListByDepIDnSNWait, ListLeaveP } from '../../services/HttpClientService';
+import { DepartmentInterface, LeaveTypeInterface, LeavesInterface } from '../../models/ILeave';
+import { ListDepartments, ListLeave, ListLeaveListByDepIDnSNWait, ListLeaveP, ListLeaveType } from '../../services/HttpClientService';
 import moment from 'moment';
 function PayrollShow(){
 
     const [filterDate, setFilterDate] = useState("");
   const handleFilterDateChange = (event:any) => {
     const selectedDate = event.target.value;
-    const formattedDate = moment(selectedDate).format('YYYY-MM');
-  console.log(formattedDate);
-  setFilterDate(formattedDate);
+    if(selectedDate == ""){
+      setFilterDate("") 
+    }else{
+      const formattedDate = moment(selectedDate).format('YYYY-MM');
+      setFilterDate(formattedDate);
+    }
+    
   };
     const [leavelist, setLeavelist] = useState<LeavesInterface[]>([])
     const getLeaveList = async () => {
@@ -23,11 +27,42 @@ function PayrollShow(){
             console.log(Array(res))
         }
     };
+    const [ltype, setLType] = useState<LeaveTypeInterface[]>([]);
+  const getLeaveType = async () => {
+    let res = await ListLeaveType();
+    if (res.data) {
+      setLType(res.data);
+    }
+    console.log(res.data)
+};
+  const [dep, setDep] = useState<DepartmentInterface[]>([]);
+  const getDepartment = async () => {
+    let res = await ListDepartments();
+    if (res.data) {
+      setDep(res.data);
+    }
+    console.log(res.data)
+};
     const reverseDate = (str: any) => {
       let strParts = str.split('/');
       const reversedDate = `${strParts[2]}-${strParts[1]}`;
       return reversedDate
   }
+  const [filterUserLname, setFilterUserLname] = useState("");
+  const handleFilterUserLnameChange = (event: any) => {
+    const value = event.target.value;
+    setFilterUserLname(value);
+  };
+  const [filterDepName, setFilterDepName] = useState("");
+  const handleFilterDepNameChange = (event: any) => {
+    const value = event.target.value;
+    setFilterDepName(value);
+  };
+  const [filterLeaveType, setFilterLeaveType] = useState("");
+  const handleFilterLeaveTypeChange = (event: any) => {
+    const value = event.target.value;
+    setFilterLeaveType(value);
+  };
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
 
@@ -41,6 +76,8 @@ function PayrollShow(){
   };
     useEffect(() => {
         getLeaveList();
+        getLeaveType()
+        getDepartment()
     }, []);
 
     const handleExportExcel = () => {
@@ -48,11 +85,19 @@ function PayrollShow(){
     const workbook = new ExcelJS.Workbook();
     const worksheet = workbook.addWorksheet('My Worksheet');
       const filteredSwitchs = leavelist.filter((row) => {
-      if (filterDate) {
-        return (
-          reverseDate(row.StartDate) === filterDate
-        );
-      }
+        if (filterDate != "") {
+          return reverseDate(row.StartDate) === filterDate && row.UserLname.toLowerCase().includes(filterUserLname.toLowerCase()) && row.TypeName.toLowerCase().includes(filterLeaveType.toLowerCase()) && row.DepName.toLowerCase().includes(filterDepName.toLowerCase());
+        }
+        // กรองข้อมูลด้วย UserLname
+        if (filterUserLname) {
+          return row.UserLname.toLowerCase().includes(filterUserLname.toLowerCase());
+        }
+        if (filterLeaveType) {
+          return row.TypeName.toLowerCase().includes(filterLeaveType.toLowerCase());
+        }
+        if (filterDepName) {
+          return row.DepName.toLowerCase().includes(filterDepName.toLowerCase());
+        }
       return true;
     });
     // เพิ่มหัวข้อตาราง
@@ -70,10 +115,10 @@ function PayrollShow(){
     // เพิ่มข้อมูลลงในตาราง
     filteredSwitchs.forEach(row => {
       console.log(row);
-      const { UserLname, LeaveType, StartDate,StartTime,StopDate,StopTime,DepName, Status } = row;
+      const { UserLname, TypeName, StartDate,StartTime,StopDate,StopTime,DepName, Status } = row;
       worksheet.addRow({
         UserLname,
-        LeaveType,
+        TypeName,
         StartDate,
         StartTime: formatMinutesToTime(StartTime),
         StopDate,
@@ -142,10 +187,39 @@ function PayrollShow(){
                     </Box>
                     </Box>
               <Box sx={{ borderRadius: 20 }}>
-                <input type="month" value={filterDate} onChange={handleFilterDateChange}/>
-                <button onClick={handleExportExcel}>Export to Excel</button>
+                
                     
                     <TableContainer component={Paper} sx={{width: 'auto', margin: 2}}>
+                      <input type="month" value={filterDate} onChange={handleFilterDateChange}/>
+                <input type="text" value={filterUserLname} onChange={handleFilterUserLnameChange} placeholder="ค้นหาชื่อ-นามสกุล"/>
+                <select
+                   value={filterLeaveType}
+                   onChange={handleFilterLeaveTypeChange}
+                  >
+                    <option aria-label="None" value="">
+                                        ค้นหาการลา
+                                </option>
+                                {ltype.map((item: LeaveTypeInterface) => (
+                                    <option value={item.TypeName} key={item.TypeID}>
+                                        {item.TypeName}
+                                    </option>
+                                ))}
+                  </select>
+                  <select
+                   value={filterDepName}
+                   onChange={handleFilterDepNameChange}
+                  >
+                    <option aria-label="None" value="">
+                                        ค้นหาแผนก
+                                </option>
+                                {dep.map((item: DepartmentInterface) => (
+                                    <option value={item.DepName} key={item.DepID}>
+                                        {item.DepName}
+                                    </option>
+                                ))}
+                  </select>
+                <input type="text" value={filterDepName} onChange={handleFilterDepNameChange} placeholder="ค้นหาแผนก"/>
+                <button onClick={handleExportExcel}>Export to Excel</button>
               <Table size='small'>
                 <TableHead>
                   <TableRow>
@@ -178,16 +252,24 @@ function PayrollShow(){
                 <TableBody>
                   {leavelist.filter((row) => {
         // กรองข้อมูลด้วยวันที่ LeaveDay ถ้า filterDate ไม่เป็น null
-        if (filterDate) {
-          return (
-            reverseDate(row.StartDate) === filterDate
-          );
+        if (filterDate != "") {
+          return reverseDate(row.StartDate) === filterDate && row.UserLname.toLowerCase().includes(filterUserLname.toLowerCase()) && row.TypeName.toLowerCase().includes(filterLeaveType.toLowerCase()) && row.DepName.toLowerCase().includes(filterDepName.toLowerCase());
+        }
+        // กรองข้อมูลด้วย UserLname
+        if (filterUserLname) {
+          return row.UserLname.toLowerCase().includes(filterUserLname.toLowerCase());
+        }
+        if (filterLeaveType) {
+          return row.TypeName.toLowerCase().includes(filterLeaveType.toLowerCase());
+        }
+        if (filterDepName) {
+          return row.DepName.toLowerCase().includes(filterDepName.toLowerCase());
         }
         return true;
       }).slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((item: LeavesInterface) => (
                     <TableRow>
                       <TableCell>{item.UserLname}</TableCell>
-                      <TableCell>{item.LeaveType}</TableCell>
+                      <TableCell>{item.TypeName}</TableCell>
                       <TableCell>{item.StartDate}</TableCell>
                       <TableCell>{formatMinutesToTime(item.StartTime)}</TableCell>
                       <TableCell>{item.StopDate}</TableCell>

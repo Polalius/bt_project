@@ -150,8 +150,9 @@ function ManagerSwitchShow(){
                         slots={{toolbar: GridToolbarFilterButton}}
                         sx={{ mt: 2, backgroundColor: '#fff' }}
                     /> */}
-                    <input type="month" value={filterDate} onChange={handleFilterDateChange}/>
+                    
                     <TableContainer component={Paper} sx={{width: 'auto', margin: 2}}>
+                      <input type="month" value={filterDate} onChange={handleFilterDateChange}/>
               <Table size='small'>
                 <TableHead>
                   <TableRow>

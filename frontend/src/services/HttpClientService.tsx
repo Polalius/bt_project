@@ -30,7 +30,7 @@ async function ListLeaveList() {
       },
     };
   
-    let res = await fetch(`${apiUrl}/leavetypes`, requestOptions)
+    let res = await fetch(`${apiUrl}/leave_types`, requestOptions)
       .then((response) => response.json())
       .then((res) => {
         if (res) {
@@ -107,6 +107,25 @@ async function ListLeaveList() {
     };
   
     let res = await fetch(`${apiUrl}/leave_pay`, requestOptions)
+    .then((response) => response.json())
+    .then((res) => {
+      if (res) {
+        return res;
+      } 
+    });
+
+  return res;
+  }
+  async function ListLeaveP1() {
+    const requestOptions = {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+        "Content-Type": "application/json",
+      },
+    };
+  
+    let res = await fetch(`${apiUrl}/leave_pay1`, requestOptions)
     .then((response) => response.json())
     .then((res) => {
       if (res) {
@@ -363,7 +382,7 @@ async function ListLeaveList() {
   
     return res;
   }
-  async function GetDepartmentID(id:any) {
+  async function ListDepartments() {
     const requestOptions = {
       method: "GET",
       headers: {
@@ -372,11 +391,11 @@ async function ListLeaveList() {
       },
     };
   
-    let res = await fetch(`${apiUrl}/department/${id}`, requestOptions)
+    let res = await fetch(`${apiUrl}/departments`, requestOptions)
       .then((response) => response.json())
       .then((res) => {
-        if (res.data) {
-          return res.data;
+        if (res) {
+          return res;
         } 
       });
   
@@ -687,6 +706,25 @@ async function ListLeaveList() {
 
   return res;
   }
+  async function ListSwitchP1() {
+    const requestOptions = {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+        "Content-Type": "application/json",
+      },
+    };
+  
+    let res = await fetch(`${apiUrl}/switch_pay1`, requestOptions)
+    .then((response) => response.json())
+    .then((res) => {
+      if (res) {
+        return res;
+      } 
+    });
+
+  return res;
+  }
   async function ListSwitchWait(id:any) {
     const requestOptions = {
       method: "GET",
@@ -767,6 +805,7 @@ async function ListLeaveList() {
     ListLeaveType,
     ListLeave,
     ListLeaveP,
+    ListLeaveP1,
     // ListLeaveStatusDate,
     ListLeaveByEID,
     ListLeaveWait,
@@ -788,13 +827,14 @@ async function ListLeaveList() {
     GetManagerID,
     GetManagerID1,
     GetUserID,
-    GetDepartmentID,
+    ListDepartments,
     CountSW,
     CountSW2,
     GetSwitchByID,
     ListSwitchByEID,
     ListSwitch,
     ListSwitchP,
+    ListSwitchP1,
     ListSwitchWait,
     ListSwitchByEmpID,
     ListSwitchByEmpID1,
