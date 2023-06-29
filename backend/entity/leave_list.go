@@ -12,7 +12,7 @@ type LeaveList struct {
 	ID          uint `gorm:"primaryKey;autoIncrement"`
 	UserSerial  uint
 	
-	TypeID   	uint
+	Bh   		string
 	DepID       uint
 	
 	StartDate   string     `valid:"required~กรุณากรอกวันที่และเวลา"`
@@ -35,19 +35,19 @@ type LeaveList2 struct {
 	Status      string
 }
 type LeaveLists struct {
-	ID					uint
-	UserSerial   		uint
-	UserLname			string
-	TypeID				uint
-	TypeName			string
-	DepID  				uint
-	DepName				string
-	StartDate   		string		`valid:"required~กรุณากรอกวันที่และเวลา"`
-	StartTime   		int	
-	StopDate    		string		`valid:"required~กรุณากรอกวันที่และเวลา"`
-	StopTime    		int
-	CountL				int	
-	Status       		string
+	ID					uint	`gorm:"primaryKey" db:"id"`
+	UserSerial   		uint	`db:"user_serial"`
+	UserLname			string	`db:"user_lname"`
+	Bh					uint	`db:"bh"`
+	Mc					string	`db:"mc"`
+	DepID  				uint	`db:"dep_id"`
+	DepName				string	`db:"dep_name"`
+	StartDate   		string	`db:"start_date"`
+	StartTime   		int		`db:"start_time"`
+	StopDate    		string	`db:"stop_date"`
+	StopTime    		int		`db:"stop_time"`
+	CountL				int		`db:"count_l"`
+	Status       		string	`db:"status"`
 }
 type LeaveList1 struct {
 	ID					uint

@@ -7,7 +7,7 @@ type Department struct {
 	ManagerMail string `db:"manager_mail"`
 }
 type LeaveType struct {
-	TypeID       uint   `gorm:"primaryKey" db:"type_id"`
-	TypeName     string `db:"type_name"`
+	Bh       string   `gorm:"primaryKey" db:"bh"`
+	Mc     string `db:"mc"`
 	
 }

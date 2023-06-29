@@ -1,25 +1,17 @@
-import { Badge, Button, Grid, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Typography, createTheme } from '@mui/material'
 import { Container } from '@mui/system'
 import { useEffect, useState } from 'react'
 import { Link as RouterLink } from "react-router-dom";
 
+import { Button, Grid, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, createTheme } from '@mui/material'
 
-import { blueGrey } from '@mui/material/colors';
-import { CountL1, CountL2, CountL3, CountL4, CountSW, CountSW2, GetEmployeeID1, GetManagerID1, ListLeaveByEID, ListLeaveP1, ListSwitchByEID, ListSwitchByEmpID, ListSwitchByEmpID1, ListSwitchP1 } from '../../services/HttpClientService';
+import { ListLeaveP1, ListSwitchP1 } from '../../services/HttpClientService';
+
 import { User1Interface } from '../../models/ISignin';
 import { LeavesInterface } from '../../models/ILeave';
-import moment from 'moment';
-import { Switch1Interface, SwitchsInterface } from '../../models/ISwitch';
-import HourglassBottomTwoToneIcon from '@mui/icons-material/HourglassBottomTwoTone';
-let theme = createTheme();
+import { SwitchsInterface } from '../../models/ISwitch';
+
 export default function Home({role} : any) {
   const [user ,setUser] = useState<User1Interface>();
-  const [co, setCo] = useState<number | null>(0);
-  const [co1, setCo1] = useState<number | null>(0);
-  const [co2, setCo2] = useState<number | null>(0);
-  const [co3, setCo3] = useState<number | null>(0);
-  const [co4, setCo4] = useState<number | null>(0);
-  const [co5, setCo5] = useState<number | null>(0);
   const [leavelist, setLeavelist] = useState<LeavesInterface[]>([])
   const [switcht, setSwitch] = useState<SwitchsInterface[]>([])
   const getLeaveList = async () => {
@@ -27,18 +19,16 @@ export default function Home({role} : any) {
     if (res.data) {
         setLeavelist(res.data);
     }
-    
     console.log(res.data)
-};
-const getSwitch = async () => {
+  };
+  const getSwitch = async () => {
     let res = await ListSwitchP1();
     if (res.data) {
         setSwitch(res.data);
     }
-    
     console.log(res.data)
-};
-function formatMinutesToTime(minutes: any) {
+  };
+  function formatMinutesToTime(minutes: any) {
     const hours = Math.floor(minutes / 60);
     const minutesPart = minutes % 60;
     const hoursStr = String(hours).padStart(2, '0');
@@ -47,13 +37,13 @@ function formatMinutesToTime(minutes: any) {
   }
   function formatMinutesToDate(minutes: any) {
     const days = Math.floor(minutes / (24 * 60));
-  const remainingMinutes = minutes % (24 * 60);
-  const hours = Math.floor(remainingMinutes / 60);
-  const minutesPart = remainingMinutes % 60;
-  const daysStr = String(days).padStart(2, '0');
-  const hoursStr = String(hours).padStart(2, '0');
-  const minutesStr = String(minutesPart).padStart(2, '0');
-  return `${daysStr} วัน ${hoursStr} ชม. ${minutesStr} น.`;
+    const remainingMinutes = minutes % (24 * 60);
+    const hours = Math.floor(remainingMinutes / 60);
+    const minutesPart = remainingMinutes % 60;
+    const daysStr = String(days).padStart(2, '0');
+    const hoursStr = String(hours).padStart(2, '0');
+    const minutesStr = String(minutesPart).padStart(2, '0');
+    return `${daysStr} วัน ${hoursStr} ชม. ${minutesStr} น.`;
   }
   
   const getEmployeeID = async () => {
@@ -67,13 +57,13 @@ function formatMinutesToTime(minutes: any) {
     }
     setUser(data)
   }
-  const uid = localStorage.getItem("user_serial") || "";
-  const dep_id = localStorage.getItem("dep_id") || "";
+
   useEffect(() => {
         getEmployeeID();
         getLeaveList()
         getSwitch()
   }, []);
+
   return (
     <Container maxWidth='xl' sx={{bgcolor:'#FFF', height: '91vh'}} >
       <Grid container spacing={2}>
@@ -86,22 +76,19 @@ function formatMinutesToTime(minutes: any) {
       <Grid container spacing={2} sx={{bgcolor:'#FFF'}}>
         <Grid item xs={8}>
           <Paper elevation={3} sx={{bgcolor:'#FFF', height: '74vh'}} className='lefte'>
-            <Grid container>
-                
-            <Grid item xs={4}>
-              
-            <Button 
-              variant="contained"
-              className='bte'
-              color="primary"
-              sx={{ borderRadius: 20, '&:hover': { color: '#065D95', backgroundColor: '#e3f2fd' } }}
-              component={RouterLink}
-              to="/รายการการลางาน"
-            >
-              รายการลางาน
-            </Button>
-              
-            </Grid>
+            <Grid container>    
+              <Grid item xs={4}>  
+                <Button 
+                  variant="contained"
+                  className='bte'
+                  color="primary"
+                  sx={{ borderRadius: 20, '&:hover': { color: '#065D95', backgroundColor: '#e3f2fd' } }}
+                  component={RouterLink}
+                  to="/รายการการลางาน"
+                >
+                  รายการลางาน
+                </Button>
+              </Grid>
             </Grid>
             <TableContainer component={Paper} sx={{width: 'auto', margin: 2}}>
               <Table size='small'>
@@ -134,7 +121,7 @@ function formatMinutesToTime(minutes: any) {
                   {leavelist.map((item: LeavesInterface) => (
                     <TableRow>
                       <TableCell>{item.UserLname}</TableCell>
-                      <TableCell>{item.TypeName}</TableCell>
+                      <TableCell>{item.Mc}</TableCell>
                       <TableCell>{item.StartDate}</TableCell>
                       <TableCell>{formatMinutesToTime(item.StartTime)}</TableCell>
                       <TableCell>{item.StopDate}</TableCell>
@@ -146,20 +133,19 @@ function formatMinutesToTime(minutes: any) {
               </Table>
             </TableContainer>
             <Grid container>
-                <Grid item xs={8}>
-            
-            <Button 
-              variant="contained"
-              className='bte'
-              color="primary"
-              sx={{ borderRadius: 20, '&:hover': { color: '#065D95', backgroundColor: '#e3f2fd' } }}
-              component={RouterLink}
-              to="/รายการการสลับวันลา"
-            >
-              รายการสลับวันลา
-            </Button>
-            
-            </Grid></Grid>
+              <Grid item xs={8}>
+                <Button 
+                  variant="contained"
+                  className='bte'
+                  color="primary"
+                  sx={{ borderRadius: 20, '&:hover': { color: '#065D95', backgroundColor: '#e3f2fd' } }}
+                  component={RouterLink}
+                  to="/รายการการสลับวันลา"
+                >
+                  รายการสลับวันลา
+                </Button>
+              </Grid>
+            </Grid>
             <TableContainer component={Paper} sx={{width: 'auto', margin: 2}}>
               <Table size='small'>
                 <TableHead>

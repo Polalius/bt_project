@@ -2,7 +2,7 @@
 
 export interface SigninInterface {
     username: string,
-    password: string,
+    userpass: string,
 }
 export interface UserInterface {
     ID?: number,

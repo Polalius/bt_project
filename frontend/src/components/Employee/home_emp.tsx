@@ -1,17 +1,16 @@
-import { Button, Grid, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Typography, createTheme } from '@mui/material'
 import { Container } from '@mui/system'
 import { useEffect, useState } from 'react'
 import { Link as RouterLink } from "react-router-dom";
 import './home_emp.css'
 
-import { blueGrey } from '@mui/material/colors';
-import { CountL1, CountL2, CountL3, CountSW, GetEmployeeID1, GetManagerID1, ListLeaveByEID, ListSwitchByEID, ListSwitchByEmpID, ListSwitchByEmpID1 } from '../../services/HttpClientService';
+import { Button, Grid, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Typography, createTheme } from '@mui/material'
+
+import { CountL1, CountL2, CountL3, CountSW, GetEmployeeID1, ListLeaveByEID, ListSwitchByEmpID1 } from '../../services/HttpClientService';
+
 import { User1Interface, UserInterface } from '../../models/ISignin';
 import { LeavesInterface } from '../../models/ILeave';
-import moment from 'moment';
 import { Switch1Interface, SwitchsInterface } from '../../models/ISwitch';
-import Approve from '../Manager/approve';
-let theme = createTheme();
+
 export default function HomeEmp() {
   const [user ,setUser] = useState<User1Interface>();
   const [co, setCo] = useState<number | null>(0);
@@ -98,8 +97,8 @@ function formatMinutesToTime(minutes: any) {
         getEmployeeID(uid);
         getCount(uid);
         getCount1(uid)
-        getCount2(uid)
-        getCount3(uid)
+        // getCount2(uid)
+        // getCount3(uid)
         getLeaveList(JSON.parse(uid))
         getSwitch(JSON.parse(uid))
   }, []);
@@ -127,12 +126,12 @@ function formatMinutesToTime(minutes: any) {
             </Button>
             <Typography marginTop={1}>
             <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
-                <Grid item xs={3.5}>
+                {/* <Grid item xs={3.5}>
                   ลาป่วย :  <TextField  value={formatMinutesToDate(co2)} size='small' color='warning' sx={{width:165}}/>
                 </Grid>
                 <Grid item xs={6}>
                   ลากิจ :<TextField  value={formatMinutesToDate(co3)} size='small' color='warning' sx={{width:165}}/>
-                </Grid>
+                </Grid> */}
   </Grid>
                 
               </Typography>
@@ -169,13 +168,12 @@ function formatMinutesToTime(minutes: any) {
                   {leavelist.map((item: LeavesInterface) => (
                     <TableRow>
                       <TableCell>{item.UserLname}</TableCell>
-                      <TableCell>{item.TypeName}</TableCell>
+                      <TableCell>{item.Mc}</TableCell>
                       <TableCell>{item.StartDate}</TableCell>
                       <TableCell>{formatMinutesToTime(item.StartTime)}</TableCell>
                       <TableCell>{item.StopDate}</TableCell>
                       <TableCell>{formatMinutesToTime(item.StopTime)}</TableCell>
-                      <TableCell>{item.Status}</TableCell>
-                      
+                      <TableCell>{item.Status}</TableCell>  
                     </TableRow>
                   ))}
                 </TableBody>

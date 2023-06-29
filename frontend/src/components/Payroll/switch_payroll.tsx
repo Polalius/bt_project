@@ -1,34 +1,41 @@
 import { useEffect, useState } from 'react';
 import * as ExcelJS from 'exceljs';
-import { SwitchsInterface } from '../../models/ISwitch';
-import { ListDepartments, ListSwitch, ListSwitchByDepIDnSNWait, ListSwitchP } from '../../services/HttpClientService';
-import {  Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow } from '@mui/material'
 import { Link as RouterLink } from "react-router-dom";
 import moment from 'moment';
+
+import {  Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow } from '@mui/material'
 import { Box, Button, Container, Paper, Typography } from '@mui/material';
+
 import { DepartmentInterface } from '../../models/ILeave';
+import { SwitchsInterface } from '../../models/ISwitch';
+
+import { ListDepartments, ListSwitchP } from '../../services/HttpClientService';
+
 function SwitchPayrollShow(){
-    const [filterDate, setFilterDate] = useState("");
-  
-    const handleFilterDateChange = (event:any) => {
-      const selectedDate = event.target.value;
-      if(selectedDate == ""){
-        setFilterDate("") 
-      }else{
-        const formattedDate = moment(selectedDate).format('YYYY-MM');
-        setFilterDate(formattedDate);
-      }
-    };
-    const [filterUserLname, setFilterUserLname] = useState("");
+
+  const [filterDate, setFilterDate] = useState("");
+  const handleFilterDateChange = (event:any) => {
+    const selectedDate = event.target.value;
+    if(selectedDate == ""){
+      setFilterDate("") 
+    }else{
+      const formattedDate = moment(selectedDate).format('YYYY-MM');
+      setFilterDate(formattedDate);
+    }
+  };
+
+  const [filterUserLname, setFilterUserLname] = useState("");
   const handleFilterUserLnameChange = (event: any) => {
     const value = event.target.value;
     setFilterUserLname(value);
   };
+
   const [filterDepName, setFilterDepName] = useState("");
   const handleFilterDepNameChange = (event: any) => {
     const value = event.target.value;
     setFilterDepName(value);
   };
+
   const [dep, setDep] = useState<DepartmentInterface[]>([]);
   const getDepartment = async () => {
     let res = await ListDepartments();
@@ -36,30 +43,31 @@ function SwitchPayrollShow(){
       setDep(res.data);
     }
     console.log(res.data)
-};
-    const formatTime = (minutes: number) => {
-      const hours = Math.floor(minutes / 60); // หารเพื่อหาจำนวนชั่วโมง
-      const mins = minutes % 60; // หาเศษนาทีที่เหลือ
-    
-      const formattedHours = String(hours).padStart(2, '0'); // แปลงชั่วโมงให้มี 2 หลัก
-      const formattedMins = String(mins).padStart(2, '0'); // แปลงนาทีให้มี 2 หลัก
-    
-      return `${formattedHours}:${formattedMins}`; // ส่งค่าเวลาในรูปแบบ "HH:mm น."
-    };
-    const [switchs, setSwitch] = useState<SwitchsInterface[]>([])
-      const getSwitch = async () => {
-          let res = await ListSwitchP();
-          if (res.data) {
-              setSwitch(res.data);
-              console.log(res.data)
-          }
-      };
-      const reverseDate = (str: any) => {
-        let strParts = str.split('/');
-        const reversedDate = `${strParts[2]}-${strParts[1]}`;
-        return reversedDate
+  };
+
+  const formatTime = (minutes: number) => {
+    const hours = Math.floor(minutes / 60); // หารเพื่อหาจำนวนชั่วโมง
+    const mins = minutes % 60; // หาเศษนาทีที่เหลือ
+    const formattedHours = String(hours).padStart(2, '0'); // แปลงชั่วโมงให้มี 2 หลัก
+    const formattedMins = String(mins).padStart(2, '0'); // แปลงนาทีให้มี 2 หลัก
+    return `${formattedHours}:${formattedMins}`; // ส่งค่าเวลาในรูปแบบ "HH:mm น."
+  };
+
+  const [switchs, setSwitch] = useState<SwitchsInterface[]>([])
+  const getSwitch = async () => {
+    let res = await ListSwitchP();
+    if (res.data) {
+      setSwitch(res.data);
+      console.log(res.data)
     }
-    const [page, setPage] = useState(0);
+  };
+
+  const reverseDate = (str: any) => {
+    let strParts = str.split('/');
+    const reversedDate = `${strParts[2]}-${strParts[1]}`;
+    return reversedDate
+  }
+  const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
 
   const handleChangePage = (event: unknown, newPage: number) => {
@@ -70,12 +78,13 @@ function SwitchPayrollShow(){
     setRowsPerPage(+event.target.value);
     setPage(0);
   };
-      useEffect(() => {    
-          getDepartment()
-          getSwitch()
-          
-      }, []);
-    const handleExportExcel = () => {
+
+  useEffect(() => {    
+    getDepartment()
+    getSwitch()    
+  }, []);
+
+  const handleExportExcel = () => {
       // สร้าง workbook ใหม่
       const workbook = new ExcelJS.Workbook();
       const worksheet = workbook.addWorksheet('My Worksheet');
@@ -135,6 +144,7 @@ function SwitchPayrollShow(){
           console.log(`Error: ${error.message}`);
         });
     };
+
     function formatMinutesToTime(minutes: any) {
       const hours = Math.floor(minutes / 60);
       const minutesPart = minutes % 60;
@@ -142,61 +152,59 @@ function SwitchPayrollShow(){
       const minutesStr = String(minutesPart).padStart(2, '0');
       return `${hoursStr}:${minutesStr}`;
     }
-    return (
-      <Container className="container" maxWidth="lg" >
-        <Paper 
+  return (
+    <Container className="container" maxWidth="lg" >
+      <Paper 
         className="paper"
-                  elevation={6}
-                  sx={{
-                    height: '80vh',
-                  padding: 2,
-                  borderRadius: 3,
-                  }}>
-                    <Box
-                      display="flex"
-                  >
-                    <Box>
-                      <Button
-                              component={RouterLink}
-                              to="/"
-                              variant="contained"
-                              color="primary"
-                              sx={{ borderRadius: 20, '&:hover': { color: '#065D95', backgroundColor: '#e3f2fd' } }}
-                          >
-                              กลับ
-                          </Button>
-                      </Box>
-                    <Box flexGrow={1}>
-                          <Typography
-                              component="h2"
-                              variant="h5"
-                              color="secondary"
-                              sx={{ fontWeight: 'bold' }}
-                              gutterBottom
-                              align='center'
-                          >
-                              ประวัติอนุมัติสลับวันลา
-                          </Typography>
-                      </Box></Box>
-      <Box sx={{ borderRadius: 20 }}>
-                
-                    <TableContainer component={Paper} sx={{width: 'auto', margin: 2}}>
-                      <input type="month" value={filterDate} onChange={handleFilterDateChange}/>
-                      <input type="text" value={filterUserLname} onChange={handleFilterUserLnameChange} placeholder="ค้นหาชื่อ-นามสกุล"/>
-                      <select
-                   value={filterDepName}
-                   onChange={handleFilterDepNameChange}
-                  >
-                    <option aria-label="None" value="">
-                                        ค้นหาแผนก
-                                </option>
-                                {dep.map((item: DepartmentInterface) => (
-                                    <option value={item.DepName} key={item.DepID}>
-                                        {item.DepName}
-                                    </option>
-                                ))}
-                  </select>
-                <button onClick={handleExportExcel}>Export to Excel</button>
+        elevation={6}
+        sx={{
+            height: '80vh',
+            padding: 2,
+            borderRadius: 3,
+        }}>
+          <Box
+            display="flex"
+          >
+            <Box>
+              <Button
+                component={RouterLink}
+                to="/"
+                variant="contained"
+                color="primary"
+                sx={{ borderRadius: 20, '&:hover': { color: '#065D95', backgroundColor: '#e3f2fd' } }}
+              >
+                กลับ
+              </Button>
+            </Box>
+            <Box flexGrow={1}>
+              <Typography
+                component="h2"
+                variant="h5"
+                color="secondary"
+                sx={{ fontWeight: 'bold' }}
+                gutterBottom
+                align='center'
+              >
+                ประวัติอนุมัติสลับวันลา
+              </Typography>
+            </Box>
+          </Box>
+          <Box sx={{ borderRadius: 20 }}>
+            <TableContainer component={Paper} sx={{width: 'auto', margin: 2}}>
+              <input type="month" value={filterDate} onChange={handleFilterDateChange}/>
+              <input type="text" value={filterUserLname} onChange={handleFilterUserLnameChange} placeholder="ค้นหาชื่อ-นามสกุล"/>
+              <select
+                value={filterDepName}
+                onChange={handleFilterDepNameChange}
+              >
+                <option aria-label="None" value="">ค้นหาแผนก</option>
+                {dep.map((item: DepartmentInterface) => (
+                  <option value={item.DepName} key={item.DepID}>
+                    {item.DepName}
+                  </option>
+                ))}
+              </select>
+              <button onClick={handleExportExcel}>Export to Excel</button>
               <Table size='small'>
                 <TableHead>
                   <TableRow>
@@ -224,22 +232,22 @@ function SwitchPayrollShow(){
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                {switchs.filter((row) => {
-        // กรองข้อมูลด้วยวันที่ LeaveDay ถ้า filterDate ไม่เป็น null
-        if (filterDate) {
-          return (
-            reverseDate(row.LeaveDay) === filterDate && row.UserLname.toLowerCase().includes(filterUserLname.toLowerCase()) && row.DepName.toLowerCase().includes(filterDepName.toLowerCase())
-          );
-        }
-        // กรองข้อมูลด้วย UserLname
-        if (filterUserLname) {
-          return row.UserLname.toLowerCase().includes(filterUserLname.toLowerCase());
-        }
-        if (filterDepName) {
-          return row.DepName.toLowerCase().includes(filterDepName.toLowerCase());
-        }
-        return true;
-      }).slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((item: SwitchsInterface) => (
+                  {switchs.filter((row) => {
+                    // กรองข้อมูลด้วยวันที่ LeaveDay ถ้า filterDate ไม่เป็น null
+                    if (filterDate) {
+                      return (
+                        reverseDate(row.LeaveDay) === filterDate && row.UserLname.toLowerCase().includes(filterUserLname.toLowerCase()) && row.DepName.toLowerCase().includes(filterDepName.toLowerCase())
+                      );
+                    }
+                    // กรองข้อมูลด้วย UserLname
+                    if (filterUserLname) {
+                      return row.UserLname.toLowerCase().includes(filterUserLname.toLowerCase());
+                    }
+                    if (filterDepName) {
+                      return row.DepName.toLowerCase().includes(filterDepName.toLowerCase());
+                    }
+                    return true;
+                  }).slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((item: SwitchsInterface) => (
                     <TableRow>
                       <TableCell>{item.UserLname}</TableCell>
                       <TableCell>{item.LeaveDay}</TableCell>
@@ -262,7 +270,9 @@ function SwitchPayrollShow(){
                 onPageChange={handleChangePage}
                 onRowsPerPageChange={handleChangeRowsPerPage}
             />
-                </Box></Paper></Container>
-    );
+          </Box>
+      </Paper>
+    </Container>
+  );
 }
 export default SwitchPayrollShow

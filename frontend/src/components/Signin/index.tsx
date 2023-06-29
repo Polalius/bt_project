@@ -19,12 +19,9 @@ export default function Signin(){
         setError(false);
     };
 
-
-    //function change state handle when typing 
-
     const handleInputChange = (event: React.ChangeEvent<{ id?: string; value: any }>) => {
-        const id = event.target.id as keyof typeof signin; //id will collect attribute key event
-        const { value } = event.target; //value will collect value attribute
+        const id = event.target.id as keyof typeof signin; 
+        const { value } = event.target;
 
         setSignin({ ...signin, [id]: value })
         console.log(signin)
@@ -44,11 +41,12 @@ export default function Signin(){
             .then((res) => {
                 if (res.data) {
                     setSuccess(true);
-                    localStorage.setItem("token", res.data.Token)
+                    localStorage.setItem("token", res.data.token)
+                    localStorage.setItem("user_pass", res.data.user_pass)
                     localStorage.setItem("user_serial", res.data.user_serial)
-                    localStorage.setItem("position", res.data.position)
+                    localStorage.setItem("position", res.data.user_position)
                     localStorage.setItem("dep_id", res.data.dep_id)
-                    
+                    console.log(res.data)
                     window.location.reload()
                 } else {
                     setError(true)
@@ -107,11 +105,11 @@ export default function Signin(){
                                 required
                                 fullWidth
                                 label="Password"
-                                name="password"
+                                name="userpass"
                                 type="password"
-                                id="password"
+                                id="userpass"
                                 autoComplete="current-password"
-                                value={signin.password || ""}
+                                value={signin.userpass || ""}
                                 onChange={handleInputChange}
                                 onKeyPress={(e) => {
                                     if (e.key === "Enter") {

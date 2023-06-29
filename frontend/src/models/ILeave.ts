@@ -1,7 +1,7 @@
 export interface LeaveInterface{
     ID?: number;
     UserSerial?: number;
-    TypeID?: number;
+    Bh?: string | undefined;
     StartDate?:  string | null;
     StartTime?:  number | null;
 	StopDate?:    string | null;
@@ -49,7 +49,7 @@ export interface LeavesInterface{
     UserLname: string;
     DepName: string;
     DepMail: string; 
-    TypeName: string;
+    Mc: string;
     ManagerMail: string;
     StartDate?:  string | null;
     StartTime?:  number | null;
@@ -59,8 +59,8 @@ export interface LeavesInterface{
     
 }
 export interface LeaveTypeInterface{
-    TypeID?: number;
-    TypeName?: string;   
+    Bh?: string;
+    Mc?: string;   
 }
 export interface DepartmentInterface{
     DepID?: number;

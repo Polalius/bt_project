@@ -13,8 +13,7 @@ const RouterAdmin = () => {
               <Routes>
                 <Route path="/" element={<Home />} />
                 <Route path="/รายการการลางาน" element={<PayrollShow  />} />
-                <Route path="/รายการการสลับวันลา" element={<SwitchPayrollShow  />} />
-                 
+                <Route path="/รายการการสลับวันลา" element={<SwitchPayrollShow  />} />   
               </Routes>
             </div>
         </Router>

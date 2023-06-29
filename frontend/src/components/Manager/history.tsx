@@ -62,10 +62,10 @@ function ManagerHistory(){
     // เพิ่มข้อมูลลงในตาราง
     filteredSwitchs.forEach(row => {
       console.log(row);
-      const { UserLname, TypeName, StartDate,StartTime,StopDate,StopTime,DepName, Status } = row;
+      const { UserLname, Mc, StartDate,StartTime,StopDate,StopTime,DepName, Status } = row;
       worksheet.addRow({
         UserLname,
-        TypeName,
+        Mc,
         StartDate,
         StartTime: formatMinutesToTime(StartTime),
         StopDate,
@@ -161,7 +161,7 @@ function ManagerHistory(){
       }).map((row, index) => (
             <tr key={index}>
               <td>{row.UserLname}</td>
-              <td>{row.TypeName}</td>
+              <td>{row.Mc}</td>
               <td>{row.StartDate}</td>
               <td>{formatMinutesToTime(row.StartTime)}</td>
               <td>{row.StopDate}</td>

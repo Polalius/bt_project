@@ -71,22 +71,22 @@ function formatMinutesToTime(minutes: any) {
       
     }
   }
-  const getCount2 =async (id:any) => {
-    let res = await CountL2(id);
-    if (res){
-      console.log(res)
-      setCo2(res)
+  // const getCount2 =async (id:any) => {
+  //   let res = await CountL2(id);
+  //   if (res){
+  //     console.log(res)
+  //     setCo2(res)
       
-    }
-  }
-  const getCount3 =async (id:any) => {
-    let res = await CountL3(id);
-    if (res){
-      console.log(res)
-      setCo3(res)
+  //   }
+  // }
+  // const getCount3 =async (id:any) => {
+  //   let res = await CountL3(id);
+  //   if (res){
+  //     console.log(res)
+  //     setCo3(res)
       
-    }
-  }
+  //   }
+  // }
   const getCount4 =async (id:any) => {
     let res = await CountL4(id);
     if (res){
@@ -116,8 +116,8 @@ function formatMinutesToTime(minutes: any) {
         getEmployeeID(uid);
         getCount(uid);
         getCount1(uid)
-        getCount2(uid)
-        getCount3(uid)
+        // getCount2(uid)
+        // getCount3(uid)
         getCount4(dep_id)
         getCount5(dep_id)
         getLeaveList(JSON.parse(uid))
@@ -149,12 +149,12 @@ function formatMinutesToTime(minutes: any) {
             </Button>
             <Typography marginTop={1}>
             <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
-                <Grid item xs={3.5}>
+                {/* <Grid item xs={3.5}>
                   ลาป่วย :  <TextField  value={formatMinutesToDate(co2)} size='small' color='warning' sx={{width:165}}/>
                 </Grid>
                 <Grid item xs={4}>
                   ลากิจ :<TextField  value={formatMinutesToDate(co3)} size='small' color='warning' sx={{width:165}}/>
-                </Grid>
+                </Grid> */}
   </Grid>
                 
               </Typography>
@@ -207,7 +207,7 @@ function formatMinutesToTime(minutes: any) {
                   {leavelist.map((item: LeavesInterface) => (
                     <TableRow>
                       <TableCell>{item.UserLname}</TableCell>
-                      <TableCell>{item.TypeName}</TableCell>
+                      <TableCell>{item.Mc}</TableCell>
                       <TableCell>{item.StartDate}</TableCell>
                       <TableCell>{formatMinutesToTime(item.StartTime)}</TableCell>
                       <TableCell>{item.StopDate}</TableCell>

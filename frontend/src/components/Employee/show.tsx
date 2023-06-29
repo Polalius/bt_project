@@ -1,9 +1,12 @@
 import { useEffect, useState } from 'react';
 import { Link as RouterLink } from "react-router-dom";
 import moment from 'moment';
+
 import { Box, Button, Container, Paper, TablePagination, Typography } from '@mui/material';
 import {  Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material'
+
 import { LeaveTypeInterface, LeavesInterface } from '../../models/ILeave';
+
 import { ListLeaveListByEmpID, ListLeaveType } from '../../services/HttpClientService';
 
 
@@ -15,7 +18,7 @@ function EmployeeShow(){
       setLType(res.data);
     }
     console.log(res.data)
-};
+  };
 
   const [filterDate, setFilterDate] = useState("");
   const handleFilterDateChange = (event:any) => {
@@ -27,16 +30,19 @@ function EmployeeShow(){
       setFilterDate(formattedDate);
     }
   };
+
   const reverseDate = (str: any) => {
     let strParts = str.split('/');
     const reversedDate = `${strParts[2]}-${strParts[1]}`;
     return reversedDate
   }
+
   const [filterType, setFilterType] = useState("");
   const handleFilterTypeChange = (event: any) => {
     const value = event.target.value;
     setFilterType(value);
   };
+
   const [filterStatus, setFilterStatus] = useState("");
   const handleFilterStatusChange = (event: any) => {
     const value = event.target.value;
@@ -46,11 +52,12 @@ function EmployeeShow(){
   const [leavelist, setLeavelist] = useState<LeavesInterface[]>([])
   const getLeaveList = async (id:any) => {
     let res = await ListLeaveListByEmpID(id);
-    if (res.data) {
+    if (res) {
       setLeavelist(res.data);
-      console.log(res.data)
+      console.log(res)
     }
   };
+
   function formatMinutesToTime(minutes: any) {
     const hours = Math.floor(minutes / 60);
     const minutesPart = minutes % 60;
@@ -58,12 +65,7 @@ function EmployeeShow(){
     const minutesStr = String(minutesPart).padStart(2, '0');
     return `${hoursStr}:${minutesStr} น.`;
   }
-  function formatDate(value: string) {
-    const [day, month, year] = value.split('/');
-    const newdate = `${month}/${day}/${year}`
-    const date = new Date(newdate);
-    return date;
-  }
+
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
 
@@ -75,10 +77,12 @@ function EmployeeShow(){
     setRowsPerPage(+event.target.value);
     setPage(0);
   };
+
   useEffect(() => { 
     getLeaveList(JSON.parse(localStorage.getItem("user_serial") || ""));
     getLeaveType()
   }, []);
+  
   return (
     <div>
         <Container className="container" maxWidth="lg">
@@ -137,8 +141,8 @@ function EmployeeShow(){
                                         ค้นหาการลา
                                 </option>
                                 {ltype.map((item: LeaveTypeInterface) => (
-                                    <option value={item.TypeName} key={item.TypeID}>
-                                        {item.TypeName}
+                                    <option value={item.Mc} key={item.Bh}>
+                                        {item.Mc}
                                     </option>
                                 ))}
                   </select>
@@ -183,16 +187,16 @@ function EmployeeShow(){
                         // กรองข้อมูลด้วยวันที่ LeaveDay ถ้า filterDate ไม่เป็น null
                         if (filterDate) {
                           return (
-                            reverseDate(row.StartDate) === filterDate && row.TypeName.toLowerCase().includes(filterType.toLowerCase()) && row.Status.toLowerCase().includes(filterStatus.toLowerCase())
+                            reverseDate(row.StartDate) === filterDate && row.Mc.toLowerCase().includes(filterType.toLowerCase()) && row.Status.toLowerCase().includes(filterStatus.toLowerCase())
                           );
                         }
                         if (filterDate) {
                           return (
-                            row.TypeName.toLowerCase().includes(filterType.toLowerCase()) && row.Status.toLowerCase().includes(filterStatus.toLowerCase())
+                            row.Mc.toLowerCase().includes(filterType.toLowerCase()) && row.Status.toLowerCase().includes(filterStatus.toLowerCase())
                           );
                         }
                         if (filterType) {
-                          return row.TypeName.toLowerCase().includes(filterType.toLowerCase());
+                          return row.Mc.toLowerCase().includes(filterType.toLowerCase());
                         }
                         if (filterStatus) {
                           return row.Status.toLowerCase().includes(filterStatus.toLowerCase());
@@ -201,7 +205,7 @@ function EmployeeShow(){
                       }).slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((item: LeavesInterface) => (
                         <TableRow>
                           <TableCell>{item.UserLname}</TableCell>
-                          <TableCell>{item.TypeName}</TableCell>
+                          <TableCell>{item.Mc}</TableCell>
                           <TableCell>{item.StartDate}</TableCell>
                           <TableCell>{formatMinutesToTime(item.StartTime)}</TableCell>
                           <TableCell>{item.StopDate}</TableCell>

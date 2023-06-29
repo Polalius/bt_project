@@ -22,12 +22,8 @@ import ListItemText from "@mui/material/ListItemText";
 import { GetUserID } from "../../services/HttpClientService";
 import { SigninInterface, User1Interface, UserInterface } from "../../models/ISignin";
 let theme = createTheme();
-  
-  const drawerWidth = 320; //ความยาวของ แถบเมนู
-  
-  const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })<{
-    open?: boolean;
-  }>(({ theme, open }) => ({
+const drawerWidth = 320; //ความยาวของ แถบเมนู
+const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })<{ open?: boolean; }>(({ theme, open }) => ({
     flexGrow: 1,
     padding: theme.spacing(1),
     transition: theme.transitions.create('margin', {
@@ -44,13 +40,9 @@ let theme = createTheme();
     }),
   }));
   
-  interface AppBarProps extends MuiAppBarProps {
-    open?: boolean;
-  }
+interface AppBarProps extends MuiAppBarProps { open?: boolean; }
   
-  const AppBar = styled(MuiAppBar, {
-    shouldForwardProp: (prop) => prop !== 'open',
-  })<AppBarProps>(({ theme, open }) => ({
+const AppBar = styled(MuiAppBar, { shouldForwardProp: (prop) => prop !== 'open', })<AppBarProps>(({ theme, open }) => ({
     transition: theme.transitions.create(['margin', 'width'], {
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.leavingScreen,
@@ -65,7 +57,7 @@ let theme = createTheme();
     }),
   }));
   
-  const DrawerHeader = styled('div')(({ theme }) => ({
+const DrawerHeader = styled('div')(({ theme }) => ({
     display: 'flex',
     alignItems: 'center',
     padding: theme.spacing(0, 1),
@@ -101,6 +93,7 @@ let theme = createTheme();
       },
     },
   }));
+
 export default function Navbar() {
   const themep = useTheme();
   const [open, setOpen] = React.useState(false);
@@ -109,6 +102,7 @@ export default function Navbar() {
   
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open1 = Boolean(anchorEl);
+
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
   };
@@ -209,7 +203,6 @@ export default function Navbar() {
     let res = await GetUserID(id);
     if (res) {
         setUser(res);
-        console.log(res)
     }
   }
   const getPayroll = async () => {
@@ -255,84 +248,81 @@ export default function Navbar() {
               <Typography variant="h6" color="secondary" noWrap component="div" fontFamily= 'Gloock'>
                 ระบบลางาน
               </Typography>
-              {/* <Typography color="secondary" >User:{user?.UserName}</Typography> */}
               
               <Tooltip title="Log-out">
-          <IconButton
-            onClick={handleClick}
-            size="small"
-            sx={{ ml: 2
-              , backgroundColor: '#EBEDEF', // กำหนดสีพื้นหลังเป็นโปร่งแสง
-            // border: '1px solid rgba(0, 0, 0, 0.5)', // กำหนดกรอบสี่เหลี่ยมเป็นเส้นขอบสีเทาอ่อน
-            borderRadius: '4px', // กำหนดรูปร่างของกรอบเป็นสี่เหลี่ยมมีเส้นมนแบบกลมมน (borderRadius)
-            padding: '4px', // กำหนดระยะห่างภายใน IconButton
-            display: 'flex',
-    alignItems: 'center',
-    flexDirection: 'column',
-            }}
-            
-            aria-controls={open ? 'account-menu' : undefined}
-            aria-haspopup="true"
-            aria-expanded={open ? 'true' : undefined}
-          >
-            <StyledBadge 
-            overlap="rectangular"
-            anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
-            
-            variant="dot"> 
-              
-              <Avatar sx={{ width: 32, height: 32 }} >{user?.UserName?.charAt(0).toUpperCase()}</Avatar>
-              <Typography align="justify" sx={{
-        fontSize: '20px',
-        marginTop: '2px', // กำหนดระยะห่างด้านบนของ Typography
-      }}>{user?.UserName.slice(1)}</Typography>
-            </StyledBadge>
-            
-          </IconButton>
-        </Tooltip>
+                <IconButton
+                  onClick={handleClick}
+                  size="small"
+                  sx={{ ml: 2
+                    , backgroundColor: '#EBEDEF', // กำหนดสีพื้นหลังเป็นโปร่งแสง
+                    // border: '1px solid rgba(0, 0, 0, 0.5)', // กำหนดกรอบสี่เหลี่ยมเป็นเส้นขอบสีเทาอ่อน
+                    borderRadius: '4px', // กำหนดรูปร่างของกรอบเป็นสี่เหลี่ยมมีเส้นมนแบบกลมมน (borderRadius)
+                    padding: '4px', // กำหนดระยะห่างภายใน IconButton
+                    display: 'flex',
+                    alignItems: 'center',
+                    flexDirection: 'column',
+                  }}
+                  
+                  aria-controls={open ? 'account-menu' : undefined}
+                  aria-haspopup="true"
+                  aria-expanded={open ? 'true' : undefined}
+                >
+                  <StyledBadge 
+                  overlap="rectangular"
+                  anchorOrigin={{ vertical: 'top', horizontal: 'right' }}  
+                  variant="dot"> 
+                    
+                    <Avatar sx={{ width: 32, height: 32 }} >{user?.UserName?.charAt(0).toUpperCase()}</Avatar>
+                    <Typography 
+                      align="justify" sx={{
+                      fontSize: '20px',
+                      marginTop: '2px', // กำหนดระยะห่างด้านบนของ Typography
+                      }}>{user?.UserName.slice(1)}
+                    </Typography>
+                  </StyledBadge>
+                  
+                </IconButton>
+              </Tooltip>
             </Box>
             <Menu
-        anchorEl={anchorEl}
-        id="account-menu"
-        open={open1}
-        onClose={handleClose}
-        onClick={handleClose}
-        PaperProps={{
-          elevation: 0,
-          sx: {
-            overflow: 'visible',
-            filter: 'drop-shadow(0px 2px 8px rgba(0,0,0,0.32))',
-            mt: 1.5,
-            '& .MuiAvatar-root': {
-              width: 32,
-              height: 32,
-              ml: -0.5,
-              mr: 1,
-            },
-            '&:before': {
-              content: '""',
-              display: 'block',
-              position: 'absolute',
-              top: 0,
-              right: 14,
-              width: 10,
-              height: 10,
-              bgcolor: 'background.paper',
-              transform: 'translateY(-50%) rotate(45deg)',
-              zIndex: 0,
-            },
-          },
-        }}
-        transformOrigin={{ horizontal: 'right', vertical: 'top' }}
-        anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
-      >
-        <MenuItem  onClick={SignOut}><LogoutIcon style={{ marginRight: ".5rem" }} />Log out</MenuItem>
-      </Menu>
-
+              anchorEl={anchorEl}
+              id="account-menu"
+              open={open1}
+              onClose={handleClose}
+              onClick={handleClose}
+              PaperProps={{
+                elevation: 0,
+                sx: {
+                  overflow: 'visible',
+                  filter: 'drop-shadow(0px 2px 8px rgba(0,0,0,0.32))',
+                  mt: 1.5,
+                  '& .MuiAvatar-root': {
+                    width: 32,
+                    height: 32,
+                    ml: -0.5,
+                    mr: 1,
+                  },
+                  '&:before': {
+                    content: '""',
+                    display: 'block',
+                    position: 'absolute',
+                    top: 0,
+                    right: 14,
+                    width: 10,
+                    height: 10,
+                    bgcolor: 'background.paper',
+                    transform: 'translateY(-50%) rotate(45deg)',
+                    zIndex: 0,
+                  },
+                },
+              }}
+              transformOrigin={{ horizontal: 'right', vertical: 'top' }}
+              anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
+            >
+              <MenuItem  onClick={SignOut}><LogoutIcon style={{ marginRight: ".5rem" }} />Log out</MenuItem>
+            </Menu>
           </Toolbar>
-
         </AppBar>
-
         <Drawer
           sx={{
             width: drawerWidth,
@@ -352,9 +342,7 @@ export default function Navbar() {
               {themep.direction === 'ltr' ? <ChevronLeftIcon /> : <ChevronRightIcon />}
             </IconButton> {/* ปุ่มกด < */}
           </DrawerHeader>
-
           <Divider />
-
           {menu.map((item, index) => (
             <ListItem key={index} button component={RouterLink} onClick={handleDrawerClose}
               to={item.path}>

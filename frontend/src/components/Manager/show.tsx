@@ -196,7 +196,7 @@ function ManagerShow(){
       }).slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((item: LeavesInterface) => (
                     <TableRow>
                       <TableCell>{item.UserLname}</TableCell>
-                      <TableCell>{item.TypeName}</TableCell>
+                      <TableCell>{item.Mc}</TableCell>
                       <TableCell>{item.StartDate}</TableCell>
                       <TableCell>{formatMinutesToTime(item.StartTime)}</TableCell>
                       <TableCell>{item.StopDate}</TableCell>

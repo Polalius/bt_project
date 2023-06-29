@@ -13,7 +13,7 @@ import (
 // List All User
 func ListUser(c *gin.Context) {
 	var users []entity.UserAuthen
-	if err := entity.DB1().Raw("SELECT * FROM user_authens").Scan(&users).Error; err != nil {
+	if err := entity.DB().Raw("SELECT * FROM bt_userauthen").Scan(&users).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
@@ -36,11 +36,11 @@ type userres struct{
 func GetUser(c *gin.Context) {
 	var user userres
 	id := c.Param("id")
-	if err := entity.DB1().Table("user_authens").
-	Select("user_authens.user_serial, user_authens.user_name, users.user_lname, departments.dep_name, departments.dep_mail, departments.manager_mail").
-	Joins("inner join users on users.user_serial = user_authens.user_serial").
-	Joins("inner join departments on departments.dep_id = user_authens.dep_id").
-	Where("user_authens.user_serial = ?", id).
+	if err := entity.DB().Table("bt_userauthen").
+	Select("bt_userauthen.user_serial, bt_userauthen.user_name, dt_user.user_lname, bt_department.dep_name, bt_department.dep_mail, bt_department.manager_mail").
+	Joins("inner join dt_user on dt_user.user_serial = bt_userauthen.user_serial").
+	Joins("inner join bt_department on bt_department.dep_id = bt_userauthen.dep_id").
+	Where("bt_userauthen.user_serial = ?", id).
 	Find(&user).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
@@ -49,41 +49,4 @@ func GetUser(c *gin.Context) {
 		"status": "OK",
 		"data":   user,
 	})
-}
-
-// PATCH /users
-func UpdateUser(c *gin.Context) {
-	var user entity.UserAuthen
-	if err := c.ShouldBindJSON(&user); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"error": err.Error(),
-		})
-		return
-	}
-
-	if tx := entity.DB1().Where("id = ?", user.UserSerial).First(&user); tx.RowsAffected == 0 {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "user not found"})
-		return
-	}
-
-	if err := entity.DB1().Save(&user).Error; err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
-	}
-
-	c.JSON(http.StatusOK, gin.H{
-		"status": "Update Success",
-		"data":   user,
-	})
-}
-
-// DELETE /users/:id
-func DeleteUser(c *gin.Context) {
-	id := c.Param("id")
-	if tx := entity.DB1().Exec("DELETE FROM users WHETE id = ?", id); tx.RowsAffected == 0 {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "user not found"})
-		return
-	}
-
-	c.JSON(http.StatusOK, gin.H{"data": id})
 }
